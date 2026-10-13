@@ -1,16 +1,19 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CardTorneoComponent } from '../../components/card-torneo/card-torneo.component';
+import { DirettaTwitchComponent } from '../../components/diretta-twitch/diretta-twitch.component';
 import { Torneo } from '../../models/torneo.model';
 import { TorneiService } from '../../services/tornei.service';
 
 @Component({
   selector: 'app-live',
-  imports: [CardTorneoComponent],
+  imports: [CardTorneoComponent, DirettaTwitchComponent],
   templateUrl: './live.component.html',
   styleUrl: './live.component.css',
 })
 export class LiveComponent implements OnInit {
   private torneiService = inject(TorneiService);
+
+  readonly canaleTwitch = 'riberaribell';
 
   tornei = signal<Torneo[]>([]);
   caricamento = signal(true);
