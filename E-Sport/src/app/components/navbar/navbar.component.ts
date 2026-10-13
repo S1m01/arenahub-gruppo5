@@ -45,7 +45,7 @@ export class NavbarComponent {
       ],
       sezione: (p) => p === '/' || p === '/tornei-chiusi' || p.startsWith('/tornei/'),
     },
-    { label: 'Top giocate' },
+    { label: 'Top giocate', link: '/top-giocate' },
     {
       label: 'Classifica',
       tendina: [

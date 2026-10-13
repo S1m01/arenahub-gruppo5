@@ -1,8 +1,10 @@
 import { DatePipe, NgTemplateOutlet } from '@angular/common';
+import { CardGiocataComponent } from '../../components/card-giocata/card-giocata.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
+  Giocata,
   Partita,
   PosizioneGiocatore,
   PosizioneSquadra,
@@ -10,9 +12,10 @@ import {
   TorneoDettaglio,
 } from '../../models/torneo.model';
 import { AuthService } from '../../services/auth.service';
+import { GiocateService } from '../../services/giocate.service';
 import { TorneiService } from '../../services/tornei.service';
 
-type Scheda = 'PARTITE' | 'CLASSIFICA_SQUADRE' | 'CLASSIFICA_GIOCATORI';
+type Scheda = 'PARTITE' | 'CLASSIFICA_SQUADRE' | 'CLASSIFICA_GIOCATORI' | 'TOP_GIOCATE';
 
 type Azione =
   | { tipo: 'ACCEDI' }
@@ -21,13 +24,14 @@ type Azione =
 
 @Component({
   selector: 'app-torneo',
-  imports: [DatePipe, NgTemplateOutlet, RouterLink],
+  imports: [CardGiocataComponent, DatePipe, NgTemplateOutlet, RouterLink],
   templateUrl: './torneo.component.html',
   styleUrl: './torneo.component.css',
 })
 export class TorneoComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private torneiService = inject(TorneiService);
+  private giocateService = inject(GiocateService);
   auth = inject(AuthService);
 
   torneo = signal<TorneoDettaglio | null>(null);
@@ -35,6 +39,7 @@ export class TorneoComponent implements OnInit {
   partite = signal<Partita[]>([]);
   classifica = signal<PosizioneSquadra[]>([]);
   classificaGiocatori = signal<PosizioneGiocatore[]>([]);
+  giocate = signal<Giocata[]>([]);
 
   caricamento = signal(true);
   errore = signal<string | null>(null);
@@ -47,6 +52,7 @@ export class TorneoComponent implements OnInit {
     { id: 'PARTITE', label: 'Partite' },
     { id: 'CLASSIFICA_SQUADRE', label: 'Classifica squadre' },
     { id: 'CLASSIFICA_GIOCATORI', label: 'Classifica giocatori' },
+    { id: 'TOP_GIOCATE', label: 'Top giocate' },
   ];
 
   conRisultati = computed(() => {
@@ -194,6 +200,10 @@ export class TorneoComponent implements OnInit {
     this.torneiService.getClassificaGiocatori(t.id).subscribe({
       next: (c) => this.classificaGiocatori.set(c),
       error: () => this.classificaGiocatori.set([]),
+    });
+    this.giocateService.getGiocate(t.id).subscribe({
+      next: (g) => this.giocate.set(g),
+      error: () => this.giocate.set([]),
     });
   }
 }

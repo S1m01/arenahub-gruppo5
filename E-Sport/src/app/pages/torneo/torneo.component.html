@@ -102,7 +102,6 @@
             {{ s.label }}
           </button>
         }
-        <button type="button" class="scheda" disabled title="Presto disponibile">Top giocate</button>
       </div>
 
       @switch (scheda()) {
@@ -143,6 +142,18 @@
         @case ('CLASSIFICA_SQUADRE') {
           <h2 class="sottotitolo">Classifica squadre</h2>
           <ng-container *ngTemplateOutlet="tabellaSquadre" />
+        }
+        @case ('TOP_GIOCATE') {
+          <h2 class="sottotitolo">Top giocate del torneo</h2>
+          @if (giocate().length === 0) {
+            <p class="messaggio">Nessuna giocata per questo torneo.</p>
+          } @else {
+            <div class="griglia-giocate">
+              @for (g of giocate(); track g.id) {
+                <app-card-giocata [giocata]="g" [mostraTorneo]="false" />
+              }
+            </div>
+          }
         }
         @case ('CLASSIFICA_GIOCATORI') {
           <h2 class="sottotitolo">Classifica giocatori del torneo</h2>

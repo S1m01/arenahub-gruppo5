@@ -232,6 +232,12 @@
   align-items: start;
 }
 
+.griglia-giocate {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+  gap: 20px;
+}
+
 .tabella {
   width: 100%;
   border-collapse: separate;
