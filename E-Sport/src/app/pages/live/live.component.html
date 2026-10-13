@@ -4,6 +4,13 @@
     Live - Tornei in corso adesso
   </h1>
 
+  <section class="sezione" aria-labelledby="titolo-diretta">
+    <h2 id="titolo-diretta" class="sottotitolo">Diretta streaming</h2>
+    <app-diretta-twitch [canale]="canaleTwitch" />
+  </section>
+
+  <h2 class="sottotitolo">Tornei in corso</h2>
+
   @if (caricamento()) {
     <p class="messaggio">Caricamento tornei...</p>
   } @else if (errore()) {
