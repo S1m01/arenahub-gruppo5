@@ -11,4 +11,9 @@ INSERT INTO utente (id_utente, nome, cognome, email, password_hash, ruolo) OVERR
 (19, 'Anna',   'Gallo',    'anna@mail.it',   '$2a$10$4I3xUBwJ.oexMRilXi.ui.2B0iiYwz07l7.sEX54mazugbXjzHjVW', 'utente'),
 (20, 'Davide', 'Fontana',  'davide@mail.it', '$2a$10$xef84.7U3z9ZaUVzkNr6BebkIGOslgdwmGqz26IJJZqZLG2/UI.am', 'utente');
 
-SELECT setval(pg_get_serial_sequence('utente', 'id_utente'), (SELECT MAX(id_utente) FROM utente));
+INSERT INTO categoria (id_categoria, nome) OVERRIDING SYSTEM VALUE VALUES
+(1, 'Sparatutto'),
+(2, 'Calcio'),
+(3, 'Battle Royale'),
+(4, 'Picchiaduro'),
+(5, 'Strategia');
