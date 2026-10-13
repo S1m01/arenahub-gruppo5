@@ -24,6 +24,7 @@ import it.arenahub.backend.model.Utente;
 import it.arenahub.backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @RestController
@@ -54,6 +55,16 @@ public class AuthController {
 		SecurityContextHolder.setContext(context);
 		securityContextRepository.saveContext(context, request, response);
 		return UtenteResponse.da(utente);
+	}
+
+	@PostMapping("/logout")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void logout(HttpServletRequest request) {
+		HttpSession sessione = request.getSession(false);
+		if (sessione != null) {
+			sessione.invalidate();
+		}
+		SecurityContextHolder.clearContext();
 	}
 
 	@GetMapping("/me")
