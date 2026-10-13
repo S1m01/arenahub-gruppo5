@@ -1,6 +1,7 @@
 package it.arenahub.backend.model;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +34,7 @@ public class Iscrizione {
 	private Squadra squadra;
 
 	@Column(nullable = false)
-	private LocalDateTime data = LocalDateTime.now();
+	private LocalDateTime data = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
 	public Iscrizione() {
 	}
