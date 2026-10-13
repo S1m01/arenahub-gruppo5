@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import it.arenahub.backend.model.Utente;
 
-public interface UtenteRepository extends JpaRepository<Utente, Long> {
+public interface UtenteRepository extends JpaRepository<Utente, Integer> {
 
 	boolean existsByEmailIgnoreCase(String email);
 
