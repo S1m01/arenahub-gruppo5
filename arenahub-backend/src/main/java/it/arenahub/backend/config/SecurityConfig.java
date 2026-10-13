@@ -28,6 +28,7 @@ public class SecurityConfig {
 				.httpBasic(basic -> basic.disable())
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST, "/api/auth/registrazione", "/api/auth/login").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/categorie").permitAll()
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((req, res, e) -> scriviErrore(res, 401, "Utente non autenticato"))
