@@ -11,6 +11,9 @@ public interface TorneoRepository extends JpaRepository<Torneo, Integer> {
 	@Query(value = "SELECT COUNT(*) > 0 FROM partita WHERE id_torneo = :idTorneo AND stato = 'conclusa'", nativeQuery = true)
 	boolean haPartiteConcluse(@Param("idTorneo") Integer idTorneo);
 
+	@Query(value = "SELECT COUNT(*) > 0 FROM partita WHERE id_torneo = :idTorneo AND stato <> 'conclusa'", nativeQuery = true)
+	boolean haPartiteNonConcluse(@Param("idTorneo") Integer idTorneo);
+
 	@Query(value = "SELECT punti FROM classifica_giocatori_torneo WHERE id_torneo = :idTorneo AND id_utente = :idUtente", nativeQuery = true)
 	Long puntiGiocatore(@Param("idTorneo") Integer idTorneo, @Param("idUtente") Integer idUtente);
 

@@ -31,6 +31,10 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.GET, "/api/categorie", "/api/tornei", "/api/tornei/top", "/api/tornei/live",
 								"/api/tornei/*", "/api/tornei/*/squadre").permitAll()
 						.requestMatchers("/error").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/tornei").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/api/tornei/*").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PATCH, "/api/tornei/*/stato").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/api/tornei/*/iscritti").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((req, res, e) -> scriviErrore(res, 401, "Utente non autenticato"))
