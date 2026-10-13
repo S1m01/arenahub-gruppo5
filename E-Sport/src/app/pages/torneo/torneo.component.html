@@ -1,0 +1,220 @@
+<section class="pagina">
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento torneo...</p>
+  } @else if (errore()) {
+    <a routerLink="/" class="indietro">‹ Tutti i tornei</a>
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (torneo(); as t) {
+    <a [routerLink]="indietro().link" class="indietro">‹ {{ indietro().label }}</a>
+
+    <header class="hero">
+      <div class="hero-foto" [style.background-image]="sfondo(t)" role="img" [attr.aria-label]="t.nome"></div>
+      <div class="hero-testo">
+        <h1 class="nome">{{ t.nome }}</h1>
+        <p class="hero-gioco">{{ t.gioco }} · {{ t.categoria }}</p>
+        <div class="etichette">
+          <span class="pillola">{{ etichettaModalita(t) }}</span>
+          <span [class]="classeStato(t)">
+            @if (t.inCorso && t.stato !== 'CONCLUSO') {
+              <span class="pallino" aria-hidden="true"></span>
+            }
+            {{ etichettaStato(t) }}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="griglia-info">
+      <dl class="riquadro info">
+        <div>
+          <dt>Gioco</dt>
+          <dd>{{ t.gioco }}</dd>
+        </div>
+        <div>
+          <dt>Categoria</dt>
+          <dd>{{ t.categoria }}</dd>
+        </div>
+        <div>
+          <dt>Modalità</dt>
+          <dd>{{ descrizioneModalita(t) }}</dd>
+        </div>
+        <div>
+          <dt>Data inizio</dt>
+          <dd>{{ t.dataInizio | date: 'dd/MM/yyyy HH:mm' }}</dd>
+        </div>
+        <div>
+          <dt>Data fine</dt>
+          <dd>{{ t.dataFine | date: 'dd/MM/yyyy HH:mm' }}</dd>
+        </div>
+        <div>
+          <dt>{{ t.modalita === 'SINGOLO' ? 'Giocatori' : 'Squadre' }}</dt>
+          <dd>
+            {{ t.iscritti }} {{ t.modalita === 'SINGOLO' ? 'iscritti' : 'iscritte' }} su
+            {{ t.postiMassimi }}
+            @if (t.stato === 'APERTO') {
+              ({{ postiLiberi() }} posti liberi)
+            }
+          </dd>
+        </div>
+      </dl>
+
+      <div class="colonna-destra">
+        <div class="riquadro">
+          <h2 class="sottotitolo">Descrizione</h2>
+          <p class="descrizione">{{ t.descrizione || 'Nessuna descrizione.' }}</p>
+        </div>
+
+        @if (azione(); as a) {
+          @if (a.tipo === 'ACCEDI') {
+            <a routerLink="/login" class="btn-pieno azione">Accedi per iscriverti</a>
+          } @else if (a.tipo === 'ISCRIVITI') {
+            <button
+              type="button"
+              class="btn-pieno azione"
+              [disabled]="!a.attiva || invioIscrizione()"
+              [title]="a.attiva ? '' : 'Presto disponibile'"
+              (click)="iscriviti()"
+            >
+              {{ invioIscrizione() ? 'Iscrizione in corso...' : a.etichetta }}
+            </button>
+          } @else {
+            <p class="azione avviso">{{ a.testo }}</p>
+          }
+        }
+
+        @if (esitoIscrizione(); as e) {
+          <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+        }
+      </div>
+    </div>
+
+    @if (conRisultati()) {
+      <div class="schede" role="tablist">
+        @for (s of schede; track s.id) {
+          <button
+            type="button"
+            role="tab"
+            class="scheda"
+            [class.attiva]="scheda() === s.id"
+            [attr.aria-selected]="scheda() === s.id"
+            (click)="scheda.set(s.id)"
+          >
+            {{ s.label }}
+          </button>
+        }
+        <button type="button" class="scheda" disabled title="Presto disponibile">Top giocate</button>
+      </div>
+
+      @switch (scheda()) {
+        @case ('PARTITE') {
+          <div class="griglia-risultati">
+            <div>
+              <h2 class="sottotitolo">Partite</h2>
+              @if (partite().length === 0) {
+                <p class="messaggio">Nessuna partita.</p>
+              } @else {
+                <table class="tabella">
+                  <thead>
+                    <tr>
+                      <th>Turno</th>
+                      <th>Squadre</th>
+                      <th class="destra">Esito</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (p of partite(); track p.id) {
+                      <tr>
+                        <td>{{ p.turno }}</td>
+                        <td>{{ sfidanti(p) }}</td>
+                        <td class="destra numero" [class.tenue]="p.stato !== 'CONCLUSA'">{{ esito(p) }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+            </div>
+
+            <div>
+              <h2 class="sottotitolo">Classifica squadre</h2>
+              <ng-container *ngTemplateOutlet="tabellaSquadre" />
+            </div>
+          </div>
+        }
+        @case ('CLASSIFICA_SQUADRE') {
+          <h2 class="sottotitolo">Classifica squadre</h2>
+          <ng-container *ngTemplateOutlet="tabellaSquadre" />
+        }
+        @case ('CLASSIFICA_GIOCATORI') {
+          <h2 class="sottotitolo">Classifica giocatori del torneo</h2>
+          @if (classificaGiocatori().length === 0) {
+            <p class="messaggio">Classifica non ancora disponibile.</p>
+          } @else {
+            <table class="tabella">
+              <thead>
+                <tr>
+                  <th class="stretta">Pos.</th>
+                  <th>Giocatore</th>
+                  <th>Squadra</th>
+                  <th class="destra">Punti</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (g of classificaGiocatori(); track g.utenteId) {
+                  <tr>
+                    <td class="numero">{{ g.posizione }}</td>
+                    <td>{{ g.giocatore }}</td>
+                    <td>{{ g.squadra }}</td>
+                    <td class="destra numero">{{ g.punti }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        }
+      }
+    }
+
+    <div class="riquadro iscritte">
+      <h2 class="sottotitolo">{{ t.modalita === 'SINGOLO' ? 'Giocatori iscritti' : 'Squadre iscritte' }}</h2>
+      @if (squadre().length === 0) {
+        <p class="tenue">Ancora nessun iscritto.</p>
+      } @else {
+        <ul class="elenco-squadre">
+          @for (s of squadre(); track s.id) {
+            <li>
+              <strong>{{ s.nome }}</strong>
+              @if (t.modalita !== 'SINGOLO') {
+                <span class="tenue">({{ nomiComponenti(s) }})</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <ng-template #tabellaSquadre>
+      @if (classifica().length === 0) {
+        <p class="messaggio">Classifica non ancora disponibile.</p>
+      } @else {
+        <table class="tabella">
+          <thead>
+            <tr>
+              <th class="stretta">Pos.</th>
+              <th>Squadra</th>
+              <th class="destra">Punti</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of classifica(); track r.squadraId) {
+              <tr [class.primo]="r.posizione === 1">
+                <td class="numero">{{ r.posizione }}</td>
+                <td>{{ r.squadra }}</td>
+                <td class="destra numero">{{ r.punti }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </ng-template>
+  }
+</section>

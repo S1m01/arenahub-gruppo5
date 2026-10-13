@@ -22,10 +22,6 @@ export interface Utente {
   ruolo: 'UTENTE' | 'ADMIN';
 }
 
-/**
- * Risposta di POST /api/auth/login.
- * Adattala a quello che restituisce il backend (es. solo token, oppure token + utente).
- */
 export interface LoginResponse {
   token?: string;
   utente?: Utente;
@@ -43,17 +39,12 @@ export class AuthService {
   readonly loggato = computed(() => this.sessione() !== null);
   readonly token = computed(() => this.sessione()?.token ?? null);
 
-  /** POST /api/auth/login — errori: 400 dati non validi, 401 credenziali errate */
   login(dati: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>('/api/auth/login', dati)
       .pipe(tap((risposta) => this.salvaSessione(risposta)));
   }
 
-  /**
-   * POST /api/auth/registrazione — errori: 400 dati non validi, 409 email già in uso.
-   * Il backend apre già la sessione: dopo la registrazione l'utente risulta loggato.
-   */
   registrazione(dati: RegistrazioneRequest): Observable<Utente> {
     return this.http
       .post<Utente>('/api/auth/registrazione', dati)
@@ -64,18 +55,14 @@ export class AuthService {
     this.sessione.set(sessione);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(sessione));
-    } catch {
-      /* storage non disponibile: la sessione resta solo in memoria */
-    }
+    } catch {}
   }
 
   logout(): void {
     this.sessione.set(null);
     try {
       localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignora */
-    }
+    } catch {}
   }
 
   private leggiSessione(): LoginResponse | null {

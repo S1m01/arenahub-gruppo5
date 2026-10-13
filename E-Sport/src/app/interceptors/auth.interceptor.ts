@@ -2,7 +2,6 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-/** Aggiunge "Authorization: Bearer <token>" alle chiamate /api quando l'utente è loggato. */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(AuthService).token();
   if (token && req.url.startsWith('/api')) {

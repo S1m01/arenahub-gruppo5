@@ -40,7 +40,6 @@ export class RegistrazioneComponent {
     const dati = { nome: nome.trim(), cognome: cognome.trim(), email: email.trim(), password };
 
     this.auth.registrazione(dati).subscribe({
-      // Dopo la registrazione si entra già loggati
       next: () => {
         this.invio.set(false);
         this.router.navigate(['/']);

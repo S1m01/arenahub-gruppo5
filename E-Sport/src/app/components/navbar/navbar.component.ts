@@ -16,7 +16,6 @@ export class NavbarComponent {
 
   tendinaAperta = signal(false);
 
-  /** true sulle pagine "Tornei aperti" e "Tornei chiusi": evidenzia la voce TORNEI */
   sezioneTornei = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
@@ -25,7 +24,6 @@ export class NavbarComponent {
     { initialValue: this.eSezioneTornei(this.router.url) }
   );
 
-  /** Voci di menu: per ora solo visibili, non cliccabili (pagine non ancora sviluppate). */
   readonly vociFuture = [
     { label: 'Top giocate', tendina: false },
     { label: 'Classifica', tendina: true },
@@ -42,7 +40,6 @@ export class NavbarComponent {
     this.tendinaAperta.set(false);
   }
 
-  /** Chiude la tendina cliccando fuori o premendo Esc */
   @HostListener('document:click')
   @HostListener('document:keydown.escape')
   chiudiDaFuori(): void {
@@ -56,6 +53,6 @@ export class NavbarComponent {
 
   private eSezioneTornei(url: string): boolean {
     const percorso = url.split(/[?#]/)[0];
-    return percorso === '/' || percorso === '/tornei-chiusi';
+    return percorso === '/' || percorso === '/tornei-chiusi' || percorso.startsWith('/tornei/');
   }
 }

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Categoria, Torneo } from '../../models/torneo.model';
 import { TorneiService } from '../../services/tornei.service';
 
@@ -9,23 +9,20 @@ type Ordinamento = 'DATA' | 'NOME' | 'ISCRITTI';
 
 @Component({
   selector: 'app-home',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
   private torneiService = inject(TorneiService);
 
-  /** true sulla pagina "Tornei chiusi" (archivio dei conclusi), false sulla home "Tornei aperti" */
   readonly chiusi = inject(ActivatedRoute).snapshot.data['tipo'] === 'chiusi';
 
-  // Stato (signal: la vista si aggiorna anche se la risposta HTTP arriva fuori da Zone.js)
   tornei = signal<Torneo[]>([]);
   categorie = signal<Categoria[]>([]);
   caricamento = signal(true);
   errore = signal<string | null>(null);
 
-  // Filtri
   ricerca = signal('');
   categoria = signal('TUTTE');
   stato = signal<FiltroStato>('TUTTI');
@@ -111,7 +108,6 @@ export class HomeComponent implements OnInit {
     return t.inCorso ? 'Vedi partite' : 'Dettaglio torneo';
   }
 
-  /** null = nessuno stile inline, così resta lo sfondo scuro di riserva definito nel CSS */
   sfondo(t: Torneo): string | null {
     return t.foto ? `url('${t.foto}')` : null;
   }

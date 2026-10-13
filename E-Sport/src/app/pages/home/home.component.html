@@ -21,7 +21,6 @@
       </select>
     </label>
 
-    <!-- Nei tornei chiusi sono tutti conclusi: il filtro stato non serve -->
     @if (!chiusi) {
       <label class="filtro">
         <span>Stato</span>
@@ -86,10 +85,7 @@
               </div>
             </dl>
 
-            <!-- Le pagine di dettaglio/partite non sono ancora sviluppate: pulsante disabilitato -->
-            <button type="button" class="btn-pieno largo" disabled title="Presto disponibile">
-              {{ etichettaPulsante(t) }}
-            </button>
+            <a [routerLink]="['/tornei', t.id]" class="btn-pieno largo">{{ etichettaPulsante(t) }}</a>
           </div>
         </article>
       }
