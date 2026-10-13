@@ -1,0 +1,31 @@
+<header class="navbar">
+  <div class="riga-alta">
+    <a routerLink="/" class="logo" aria-label="Lazio Digital - torna alla home">
+      <img src="logo-laziodigital.png" alt="Lazio Digital ITS Academy" />
+    </a>
+
+    <div class="azioni">
+      @if (auth.loggato()) {
+        <span class="saluto">Ciao, {{ auth.utente()?.nome ?? 'utente' }}</span>
+        <button type="button" class="btn-outline" (click)="esci()">Esci</button>
+      } @else {
+        <a routerLink="/login" class="btn-pieno">Login</a>
+      }
+    </div>
+  </div>
+
+  <nav class="menu" aria-label="Menu principale">
+    <ul>
+      @for (voce of voci; track voce.label) {
+        <li>
+          <span class="voce" aria-disabled="true" title="Presto disponibile">
+            {{ voce.label }}
+            @if (voce.tendina) {
+              <span class="freccia" aria-hidden="true">▾</span>
+            }
+          </span>
+        </li>
+      }
+    </ul>
+  </nav>
+</header>

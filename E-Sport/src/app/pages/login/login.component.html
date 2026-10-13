@@ -1,0 +1,48 @@
+<section class="pagina centrata">
+  <form class="scheda" [formGroup]="form" (ngSubmit)="accedi()" novalidate>
+    <h1 class="titolo">Login</h1>
+
+    @if (erroreServer()) {
+      <p class="errore-server" role="alert">{{ erroreServer() }}</p>
+    }
+
+    <label class="campo-gruppo">
+      <span>Email</span>
+      <input
+        type="email"
+        class="campo"
+        formControlName="email"
+        autocomplete="email"
+        [class.non-valido]="campoNonValido('email')"
+      />
+      @if (campoNonValido('email')) {
+        <small class="errore-campo">
+          {{ form.controls.email.hasError('required') ? 'Inserisci la tua email' : 'Email non valida' }}
+        </small>
+      }
+    </label>
+
+    <label class="campo-gruppo">
+      <span>Password</span>
+      <input
+        type="password"
+        class="campo"
+        formControlName="password"
+        autocomplete="current-password"
+        [class.non-valido]="campoNonValido('password')"
+      />
+      @if (campoNonValido('password')) {
+        <small class="errore-campo">Inserisci la password</small>
+      }
+    </label>
+
+    <button type="submit" class="btn-pieno largo" [disabled]="invio()">
+      {{ invio() ? 'Accesso in corso...' : 'Login' }}
+    </button>
+
+    <!-- La pagina di registrazione non è ancora sviluppata -->
+    <button type="button" class="btn-outline largo" disabled title="Presto disponibile">
+      Registrati
+    </button>
+  </form>
+</section>
