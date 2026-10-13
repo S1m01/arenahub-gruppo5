@@ -1,0 +1,182 @@
+.titolo {
+  margin: 0 0 20px;
+}
+
+.filtro {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 260px;
+  margin-bottom: 24px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.tabella {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabella th {
+  padding: 14px 18px;
+  background: var(--testo);
+  color: #fff;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tabella td {
+  padding: 14px 18px;
+  border-top: 1px solid var(--bordo);
+}
+
+.tabella tbody tr:first-child td {
+  border-top: 0;
+}
+
+.tabella tbody tr:hover td {
+  background: var(--sfondo);
+}
+
+.podio-riga td {
+  font-weight: 700;
+}
+
+.stretta {
+  width: 90px;
+}
+
+.destra {
+  text-align: right !important;
+}
+
+.numero {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.podio {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  max-width: 720px;
+  margin: 56px auto 0;
+  padding-bottom: 0;
+  border-bottom: 3px solid var(--testo);
+}
+
+.gradino {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px 12px;
+  background: var(--superficie);
+  border: 2px solid var(--bordo);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+}
+
+.gradino.primo {
+  min-height: 240px;
+  border-color: var(--giallo);
+  border-width: 3px;
+}
+
+.gradino.secondo {
+  min-height: 190px;
+  border-color: #b8bcc4;
+}
+
+.gradino.terzo {
+  min-height: 150px;
+  border-color: #cd8a4f;
+}
+
+.medaglia {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-weight: 800;
+  color: var(--testo);
+  background: var(--sfondo);
+}
+
+.primo .medaglia {
+  background: var(--giallo);
+}
+
+.secondo .medaglia {
+  background: #dfe2e7;
+}
+
+.terzo .medaglia {
+  background: #ecc39d;
+}
+
+.podio-nome {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.podio-punti {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--testo-tenue);
+}
+
+.centro {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.messaggio {
+  padding: 32px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+@media (max-width: 560px) {
+  .filtro {
+    display: flex;
+    min-width: 0;
+  }
+  .podio {
+    gap: 8px;
+  }
+  .gradino {
+    padding: 14px 6px;
+  }
+  .podio-nome {
+    font-size: 0.9rem;
+  }
+  .tabella th,
+  .tabella td {
+    padding: 12px;
+  }
+}

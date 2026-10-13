@@ -1,6 +1,7 @@
 import {
   Categoria,
   Partita,
+  PosizioneClassifica,
   PosizioneGiocatore,
   PosizioneSquadra,
   Squadra,
@@ -70,16 +71,21 @@ export const TORNEI_DEMO: TorneoDettaglio[] = [
     stato: 'CONCLUSO',
     inCorso: false,
     foto: 'img/pallavolo.webp',
-    descrizione: 'Squadre miste da 6 giocatori, partite al meglio dei 3 set.',
+    descrizione: 'Squadre miste da 6 giocatori, partite al meglio dei 3 set. Il punteggio indica i punti fatti in tutta la partita.',
   },
 ];
 
-let prossimoUtente = 100;
+const idUtenti = new Map<string, number>();
+
+function idUtente(nomeCompleto: string): number {
+  if (!idUtenti.has(nomeCompleto)) idUtenti.set(nomeCompleto, 100 + idUtenti.size);
+  return idUtenti.get(nomeCompleto)!;
+}
 
 function squadra(id: number, nome: string, giocatori: string[]): Squadra {
   const componenti = giocatori.map((g) => {
     const [nomeG, cognome] = g.split(' ');
-    return { utenteId: prossimoUtente++, nome: nomeG, cognome };
+    return { utenteId: idUtente(g), nome: nomeG, cognome };
   });
   return { id, nome, capitanoId: componenti[0].utenteId, componenti };
 }
@@ -105,10 +111,10 @@ const SQUADRE_DEMO: Record<number, Squadra[]> = {
     squadra(34, 'Settebello', ['Giulia Bianchi', 'Andrea Marino']),
   ],
   4: [
-    squadra(41, 'Muro Alto', ['Davide Greco', 'Chiara Ricci', 'Matteo Lombardi', 'Federica Costa', 'Simone Fontana', 'Alessia Moretti']),
+    squadra(41, 'Muro Alto', ['Luca Verdi', 'Chiara Ricci', 'Matteo Lombardi', 'Federica Costa', 'Simone Fontana', 'Alessia Moretti']),
     squadra(42, 'Schiacciasassi', ['Lorenzo Barbieri', 'Martina Rinaldi', 'Riccardo Caruso', 'Giorgia Ferri', 'Tommaso Gatti', 'Ilaria Testa']),
-    squadra(43, 'Bagher Boys', ['Nicola Serra', 'Valentina Pellegrini', 'Fabio Vitale', 'Roberta Leone', 'Stefano Longo', 'Silvia Mancini']),
-    squadra(44, 'Set Point', ['Antonio Gentile', 'Laura Martini', 'Giacomo Sala', 'Beatrice Fabbri', 'Emanuele Bruno', 'Camilla Villa']),
+    squadra(43, 'Bagher Boys', ['Sara Neri', 'Valentina Pellegrini', 'Fabio Vitale', 'Roberta Leone', 'Stefano Longo', 'Silvia Mancini']),
+    squadra(44, 'Set Point', ['Giulia Bianchi', 'Laura Martini', 'Giacomo Sala', 'Beatrice Fabbri', 'Emanuele Bruno', 'Camilla Villa']),
   ],
 };
 
@@ -142,10 +148,10 @@ const PARTITE_DEMO: Record<number, Partita[]> = {
     partita(303, 3, 'Finale', '2026-10-03T17:30:00', [31, 64], [34, 56]),
   ],
   4: [
-    partita(401, 4, 'Semifinale 1', '2026-09-27T09:00:00', [41, 2], [42, 1]),
-    partita(402, 4, 'Semifinale 2', '2026-09-27T11:00:00', [43, 0], [44, 2]),
-    partita(403, 4, 'Finale 3° posto', '2026-09-27T14:00:00', [42, 2], [43, 0]),
-    partita(404, 4, 'Finale', '2026-09-27T16:00:00', [41, 1], [44, 2]),
+    partita(401, 4, 'Semifinale 1', '2026-09-27T09:00:00', [41, 63], [42, 58]),
+    partita(402, 4, 'Semifinale 2', '2026-09-27T11:00:00', [43, 41], [44, 50]),
+    partita(403, 4, 'Finale 3° posto', '2026-09-27T14:00:00', [42, 50], [43, 44]),
+    partita(404, 4, 'Finale', '2026-09-27T16:00:00', [41, 57], [44, 62]),
   ],
 };
 
@@ -198,4 +204,19 @@ export function classificaGiocatoriDemo(torneoId: number): PosizioneGiocatore[] 
     }))
   );
   return conPosizioni(righe);
+}
+
+export function classificaGeneraleDemo(categoria?: string): PosizioneClassifica[] {
+  const totali = new Map<number, { utenteId: number; giocatore: string; punti: number }>();
+  const tornei = TORNEI_DEMO.filter(
+    (t) => !categoria || t.categoria.toLowerCase() === categoria.toLowerCase()
+  );
+  for (const t of tornei) {
+    for (const g of classificaGiocatoriDemo(t.id)) {
+      const riga = totali.get(g.utenteId) ?? { utenteId: g.utenteId, giocatore: g.giocatore, punti: 0 };
+      riga.punti += g.punti;
+      totali.set(g.utenteId, riga);
+    }
+  }
+  return conPosizioni([...totali.values()].filter((r) => r.punti > 0));
 }

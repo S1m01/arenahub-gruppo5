@@ -4,6 +4,18 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 import { filter, map } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
+interface VoceTendina {
+  label: string;
+  link: string;
+}
+
+interface VoceMenu {
+  label: string;
+  link?: string;
+  tendina?: VoceTendina[];
+  sezione?: (percorso: string) => boolean;
+}
+
 @Component({
   selector: 'app-navbar',
   imports: [RouterLink, RouterLinkActive],
@@ -14,36 +26,56 @@ export class NavbarComponent {
   auth = inject(AuthService);
   private router = inject(Router);
 
-  tendinaAperta = signal(false);
+  tendinaAperta = signal<string | null>(null);
 
-  sezioneTornei = toSignal(
+  percorso = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      map((e) => this.eSezioneTornei(e.urlAfterRedirects))
+      map((e) => this.soloPercorso(e.urlAfterRedirects))
     ),
-    { initialValue: this.eSezioneTornei(this.router.url) }
+    { initialValue: this.soloPercorso(this.router.url) }
   );
 
-  readonly voci: { label: string; tendina: boolean; link?: string }[] = [
-    { label: 'Top giocate', tendina: false },
-    { label: 'Classifica', tendina: true },
-    { label: 'Top tornei', tendina: false, link: '/top-tornei' },
-    { label: 'Live', tendina: false },
+  readonly voci: VoceMenu[] = [
+    {
+      label: 'Tornei',
+      tendina: [
+        { label: 'Tornei aperti', link: '/' },
+        { label: 'Tornei chiusi', link: '/tornei-chiusi' },
+      ],
+      sezione: (p) => p === '/' || p === '/tornei-chiusi' || p.startsWith('/tornei/'),
+    },
+    { label: 'Top giocate' },
+    {
+      label: 'Classifica',
+      tendina: [
+        { label: 'Classifica generale', link: '/classifica' },
+        { label: 'Classifica per categoria', link: '/classifica/categoria' },
+        { label: 'Classifica top', link: '/classifica/top' },
+      ],
+      sezione: (p) => p === '/classifica' || p.startsWith('/classifica/'),
+    },
+    { label: 'Top tornei', link: '/top-tornei' },
+    { label: 'Live', link: '/live' },
   ];
 
-  apriChiudiTendina(evento: MouseEvent): void {
+  attiva(voce: VoceMenu): boolean {
+    return voce.sezione?.(this.percorso()) ?? false;
+  }
+
+  apriChiudiTendina(voce: VoceMenu, evento: MouseEvent): void {
     evento.stopPropagation();
-    this.tendinaAperta.update((aperta) => !aperta);
+    this.tendinaAperta.update((aperta) => (aperta === voce.label ? null : voce.label));
   }
 
   chiudiTendina(): void {
-    this.tendinaAperta.set(false);
+    this.tendinaAperta.set(null);
   }
 
   @HostListener('document:click')
   @HostListener('document:keydown.escape')
   chiudiDaFuori(): void {
-    this.tendinaAperta.set(false);
+    this.tendinaAperta.set(null);
   }
 
   esci(): void {
@@ -51,8 +83,7 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
-  private eSezioneTornei(url: string): boolean {
-    const percorso = url.split(/[?#]/)[0];
-    return percorso === '/' || percorso === '/tornei-chiusi' || percorso.startsWith('/tornei/');
+  private soloPercorso(url: string): string {
+    return url.split(/[?#]/)[0];
   }
 }

@@ -1,0 +1,60 @@
+<section class="pagina">
+  <h1 class="titolo">{{ titolo }}</h1>
+
+  @if (tipo === 'categoria' && categorie().length > 0) {
+    <label class="filtro">
+      <span>Categoria</span>
+      <select class="campo" [value]="categoria()" (change)="scegliCategoria(valore($event))">
+        @for (c of categorie(); track c.id) {
+          <option [value]="c.nome">{{ c.nome }}</option>
+        }
+      </select>
+    </label>
+  }
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento classifica...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (righe().length === 0) {
+    <p class="messaggio">
+      @if (tipo === 'categoria') {
+        Nessun punto ancora assegnato in questa categoria.
+      } @else {
+        La classifica è ancora vuota: nessuna partita conclusa.
+      }
+    </p>
+  } @else if (tipo === 'top') {
+    <div class="podio">
+      @for (p of podio(); track p.riga!.utenteId) {
+        <div class="gradino" [class]="'gradino ' + p.classe">
+          <span class="medaglia">{{ p.riga!.posizione }}°</span>
+          <span class="podio-nome">{{ p.riga!.giocatore }}</span>
+          <span class="podio-punti">{{ p.riga!.punti }} pt</span>
+        </div>
+      }
+    </div>
+    <div class="centro">
+      <a routerLink="/classifica" class="btn-outline">Vedi classifica completa</a>
+    </div>
+  } @else {
+    <table class="tabella">
+      <thead>
+        <tr>
+          <th class="stretta">Pos.</th>
+          <th>Giocatore</th>
+          <th class="destra">Punti</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of righe(); track r.utenteId) {
+          <tr [class.podio-riga]="r.posizione <= 3">
+            <td class="numero">{{ r.posizione }}</td>
+            <td>{{ r.giocatore }}</td>
+            <td class="destra numero">{{ r.punti }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

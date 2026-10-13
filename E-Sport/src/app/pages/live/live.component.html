@@ -1,0 +1,23 @@
+<section class="pagina">
+  <h1 class="titolo">
+    <span class="punto-live" aria-hidden="true"></span>
+    Live - Tornei in corso adesso
+  </h1>
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento tornei...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (tornei().length === 0) {
+    <div class="vuoto">
+      <p class="vuoto-titolo">Nessun torneo in corso</p>
+      <p class="vuoto-testo">Al momento non c'è nulla in diretta. Torna a trovarci durante i prossimi tornei!</p>
+    </div>
+  } @else {
+    <div class="griglia">
+      @for (t of tornei(); track t.id) {
+        <app-card-torneo [torneo]="t" />
+      }
+    </div>
+  }
+</section>

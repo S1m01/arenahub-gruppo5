@@ -1,0 +1,71 @@
+.titolo {
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.punto-live {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--rosso);
+  box-shadow: 0 0 0 0 rgb(230 50 55 / 0.6);
+  animation: impulso 1.6s infinite;
+}
+
+@keyframes impulso {
+  70% {
+    box-shadow: 0 0 0 10px rgb(230 50 55 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(230 50 55 / 0);
+  }
+}
+
+.griglia {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.vuoto {
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.vuoto-titolo {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.vuoto-testo {
+  margin: 0;
+  color: var(--testo-tenue);
+}
+
+.messaggio {
+  padding: 32px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .punto-live {
+    animation: none;
+  }
+}

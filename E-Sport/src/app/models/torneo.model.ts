@@ -63,6 +63,13 @@ export interface PosizioneSquadra {
   partiteGiocate: number;
 }
 
+export interface PosizioneClassifica {
+  posizione: number;
+  utenteId: number;
+  giocatore: string;
+  punti: number;
+}
+
 export interface PosizioneGiocatore {
   posizione: number;
   utenteId: number;

@@ -16,56 +16,48 @@
 
   <nav class="menu" aria-label="Menu principale">
     <ul class="barra">
-      <li class="con-tendina">
-        <button
-          type="button"
-          class="voce cliccabile"
-          [class.attiva]="sezioneTornei()"
-          [attr.aria-expanded]="tendinaAperta()"
-          aria-haspopup="true"
-          (click)="apriChiudiTendina($event)"
-        >
-          Tornei <span class="freccia" aria-hidden="true">▾</span>
-        </button>
-
-        @if (tendinaAperta()) {
-          <ul class="tendina" role="menu">
-            <li role="none">
-              <a
-                role="menuitem"
-                routerLink="/"
-                routerLinkActive="corrente"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="chiudiTendina()"
-                >Tornei aperti</a
-              >
-            </li>
-            <li role="none">
-              <a
-                role="menuitem"
-                routerLink="/tornei-chiusi"
-                routerLinkActive="corrente"
-                (click)="chiudiTendina()"
-                >Tornei chiusi</a
-              >
-            </li>
-          </ul>
-        }
-      </li>
-
       @for (voce of voci; track voce.label) {
-        <li>
-          @if (voce.link) {
-            <a class="voce cliccabile" [routerLink]="voce.link" routerLinkActive="attiva">{{ voce.label }}</a>
-          } @else {
-          <span class="voce" aria-disabled="true" title="Presto disponibile">
-            {{ voce.label }}
-            @if (voce.tendina) {
-              <span class="freccia" aria-hidden="true">▾</span>
+        @if (voce.tendina; as elementi) {
+          <li class="con-tendina">
+            <button
+              type="button"
+              class="voce cliccabile"
+              [class.attiva]="attiva(voce)"
+              [attr.aria-expanded]="tendinaAperta() === voce.label"
+              aria-haspopup="true"
+              (click)="apriChiudiTendina(voce, $event)"
+            >
+              {{ voce.label }} <span class="freccia" aria-hidden="true">▾</span>
+            </button>
+
+            @if (tendinaAperta() === voce.label) {
+              <ul class="tendina" role="menu">
+                @for (el of elementi; track el.link) {
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      [routerLink]="el.link"
+                      routerLinkActive="corrente"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="chiudiTendina()"
+                      >{{ el.label }}</a
+                    >
+                  </li>
+                }
+              </ul>
             }
-          </span>
-          }
-        </li>
+          </li>
+        } @else if (voce.link) {
+          <li>
+            <a class="voce cliccabile" [routerLink]="voce.link" routerLinkActive="attiva">{{
+              voce.label
+            }}</a>
+          </li>
+        } @else {
+          <li>
+            <span class="voce" aria-disabled="true" title="Presto disponibile">{{ voce.label }}</span>
+          </li>
+        }
       }
     </ul>
   </nav>

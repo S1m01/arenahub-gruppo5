@@ -121,7 +121,7 @@
   top: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
-  min-width: 200px;
+  min-width: 240px;
   margin: 0;
   padding: 6px;
   list-style: none;
