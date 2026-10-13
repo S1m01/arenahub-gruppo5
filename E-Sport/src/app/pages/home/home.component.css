@@ -79,6 +79,10 @@
   background: #6b6b6b;
 }
 
+.badge.concluso {
+  background: var(--blu);
+}
+
 .badge.in-corso {
   background: var(--rosso);
 }

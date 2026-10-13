@@ -1,0 +1,104 @@
+.centrata {
+  display: flex;
+  justify-content: center;
+  padding-top: 48px;
+}
+
+.scheda {
+  width: 100%;
+  max-width: 620px;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Intestazione scura come nella bozza */
+.intestazione {
+  margin: 0;
+  padding: 16px 24px;
+  background: var(--testo);
+  color: #fff;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.corpo {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.griglia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+}
+
+.campo-gruppo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.campo-gruppo .campo {
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.non-valido {
+  border-color: var(--rosso);
+}
+
+.errore-campo {
+  color: var(--rosso);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+
+.invia {
+  align-self: center;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 4px;
+}
+
+.gia-registrato {
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.gia-registrato a {
+  color: var(--testo);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.errore-server {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgb(230 50 55 / 0.1);
+  color: var(--rosso);
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .centrata {
+    padding-top: 24px;
+  }
+  .griglia {
+    grid-template-columns: 1fr;
+  }
+}

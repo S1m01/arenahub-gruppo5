@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Categoria, Torneo } from '../../models/torneo.model';
 import { TorneiService } from '../../services/tornei.service';
 
@@ -14,6 +15,9 @@ type Ordinamento = 'DATA' | 'NOME' | 'ISCRITTI';
 })
 export class HomeComponent implements OnInit {
   private torneiService = inject(TorneiService);
+
+  /** true sulla pagina "Tornei chiusi" (archivio dei conclusi), false sulla home "Tornei aperti" */
+  readonly chiusi = inject(ActivatedRoute).snapshot.data['tipo'] === 'chiusi';
 
   // Stato (signal: la vista si aggiorna anche se la risposta HTTP arriva fuori da Zone.js)
   tornei = signal<Torneo[]>([]);
@@ -48,13 +52,17 @@ export class HomeComponent implements OnInit {
         return [...lista].sort((a, b) => b.iscritti - a.iscritti);
       default:
         return [...lista].sort(
-          (a, b) => new Date(a.dataInizio).getTime() - new Date(b.dataInizio).getTime()
+          (a, b) => new Date(a.dataInizio).getTime() - new Date(b.dataInizio).getTime(),
         );
     }
   });
 
   ngOnInit(): void {
-    this.torneiService.getTorneiNonConclusi().subscribe({
+    const richiesta = this.chiusi
+      ? this.torneiService.getTorneiConclusi()
+      : this.torneiService.getTorneiNonConclusi();
+
+    richiesta.subscribe({
       next: (lista) => {
         this.tornei.set(lista);
         this.caricamento.set(false);
@@ -87,13 +95,20 @@ export class HomeComponent implements OnInit {
   }
 
   etichettaStato(t: Torneo): string {
+    if (t.stato === 'CONCLUSO') return 'Concluso';
     if (t.inCorso) return 'In corso';
     return t.stato === 'APERTO' ? 'Aperto' : 'Chiuso';
   }
 
   classeStato(t: Torneo): string {
+    if (t.stato === 'CONCLUSO') return 'badge concluso';
     if (t.inCorso) return 'badge in-corso';
     return t.stato === 'APERTO' ? 'badge aperto' : 'badge chiuso';
+  }
+
+  etichettaPulsante(t: Torneo): string {
+    if (t.stato === 'CONCLUSO') return 'Vedi risultati';
+    return t.inCorso ? 'Vedi partite' : 'Dettaglio torneo';
   }
 
   /** null = nessuno stile inline, così resta lo sfondo scuro di riserva definito nel CSS */

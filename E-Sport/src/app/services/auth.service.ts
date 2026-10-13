@@ -7,6 +7,13 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegistrazioneRequest {
+  nome: string;
+  cognome: string;
+  email: string;
+  password: string;
+}
+
 export interface Utente {
   id: number;
   nome: string;
@@ -38,16 +45,28 @@ export class AuthService {
 
   /** POST /api/auth/login — errori: 400 dati non validi, 401 credenziali errate */
   login(dati: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/auth/login', dati).pipe(
-      tap((risposta) => {
-        this.sessione.set(risposta);
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(risposta));
-        } catch {
-          /* storage non disponibile: la sessione resta solo in memoria */
-        }
-      })
-    );
+    return this.http
+      .post<LoginResponse>('/api/auth/login', dati)
+      .pipe(tap((risposta) => this.salvaSessione(risposta)));
+  }
+
+  /**
+   * POST /api/auth/registrazione — errori: 400 dati non validi, 409 email già in uso.
+   * Il backend apre già la sessione: dopo la registrazione l'utente risulta loggato.
+   */
+  registrazione(dati: RegistrazioneRequest): Observable<Utente> {
+    return this.http
+      .post<Utente>('/api/auth/registrazione', dati)
+      .pipe(tap((utente) => this.salvaSessione({ utente })));
+  }
+
+  private salvaSessione(sessione: LoginResponse): void {
+    this.sessione.set(sessione);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessione));
+    } catch {
+      /* storage non disponibile: la sessione resta solo in memoria */
+    }
   }
 
   logout(): void {

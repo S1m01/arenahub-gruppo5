@@ -13,6 +13,12 @@ export class TorneiService {
     return this.http.get<Torneo[]>('/api/tornei', { params });
   }
 
+  /** GET /api/tornei?stato=concluso — archivio dei tornei finiti (pagina "Tornei chiusi") */
+  getTorneiConclusi(): Observable<Torneo[]> {
+    const params = new HttpParams().set('stato', 'concluso');
+    return this.http.get<Torneo[]>('/api/tornei', { params });
+  }
+
   /** GET /api/categorie */
   getCategorie(): Observable<Categoria[]> {
     return this.http.get<Categoria[]>('/api/categorie');

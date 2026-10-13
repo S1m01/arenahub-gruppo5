@@ -15,8 +15,46 @@
   </div>
 
   <nav class="menu" aria-label="Menu principale">
-    <ul>
-      @for (voce of voci; track voce.label) {
+    <ul class="barra">
+      <li class="con-tendina">
+        <button
+          type="button"
+          class="voce attiva-possibile"
+          [class.attiva]="sezioneTornei()"
+          [attr.aria-expanded]="tendinaAperta()"
+          aria-haspopup="true"
+          (click)="apriChiudiTendina($event)"
+        >
+          Tornei <span class="freccia" aria-hidden="true">▾</span>
+        </button>
+
+        @if (tendinaAperta()) {
+          <ul class="tendina" role="menu">
+            <li role="none">
+              <a
+                role="menuitem"
+                routerLink="/"
+                routerLinkActive="corrente"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="chiudiTendina()"
+                >Tornei aperti</a
+              >
+            </li>
+            <li role="none">
+              <a
+                role="menuitem"
+                routerLink="/tornei-chiusi"
+                routerLinkActive="corrente"
+                (click)="chiudiTendina()"
+                >Tornei chiusi</a
+              >
+            </li>
+          </ul>
+        }
+      </li>
+
+      <!-- Pagine non ancora sviluppate: voci visibili ma non cliccabili -->
+      @for (voce of vociFuture; track voce.label) {
         <li>
           <span class="voce" aria-disabled="true" title="Presto disponibile">
             {{ voce.label }}

@@ -1,5 +1,5 @@
 <section class="pagina">
-  <h1 class="titolo">Tornei aperti</h1>
+  <h1 class="titolo">{{ chiusi ? 'Tornei chiusi' : 'Tornei aperti' }}</h1>
 
   <div class="filtri">
     <input
@@ -21,15 +21,18 @@
       </select>
     </label>
 
-    <label class="filtro">
-      <span>Stato</span>
-      <select class="campo" [value]="stato()" (change)="stato.set($any(valore($event)))">
-        <option value="TUTTI">Tutti</option>
-        <option value="APERTO">Aperto</option>
-        <option value="CHIUSO">Chiuso</option>
-        <option value="IN_CORSO">In corso</option>
-      </select>
-    </label>
+    <!-- Nei tornei chiusi sono tutti conclusi: il filtro stato non serve -->
+    @if (!chiusi) {
+      <label class="filtro">
+        <span>Stato</span>
+        <select class="campo" [value]="stato()" (change)="stato.set($any(valore($event)))">
+          <option value="TUTTI">Tutti</option>
+          <option value="APERTO">Aperto</option>
+          <option value="CHIUSO">Chiuso</option>
+          <option value="IN_CORSO">In corso</option>
+        </select>
+      </label>
+    }
 
     <label class="filtro">
       <span>Ordina per</span>
@@ -85,7 +88,7 @@
 
             <!-- Le pagine di dettaglio/partite non sono ancora sviluppate: pulsante disabilitato -->
             <button type="button" class="btn-pieno largo" disabled title="Presto disponibile">
-              {{ t.inCorso ? 'Vedi partite' : 'Dettaglio torneo' }}
+              {{ etichettaPulsante(t) }}
             </button>
           </div>
         </article>
@@ -93,8 +96,10 @@
     </div>
   }
 
-  <p class="legenda">
-    <strong>Aperto</strong> = iscrizioni aperte · <strong>Chiuso</strong> = iscrizioni chiuse, il torneo
-    non è ancora iniziato · <strong>In corso</strong> = in svolgimento adesso
-  </p>
+  @if (!chiusi) {
+    <p class="legenda">
+      <strong>Aperto</strong> = iscrizioni aperte · <strong>Chiuso</strong> = iscrizioni chiuse, il
+      torneo non è ancora iniziato · <strong>In corso</strong> = in svolgimento adesso
+    </p>
+  }
 </section>
