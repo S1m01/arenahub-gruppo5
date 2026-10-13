@@ -18,7 +18,7 @@ export function daTorneoApi(t: TorneoApi, adesso = Date.now()): TorneoDettaglio 
     iscritti: t.iscritti,
     postiMassimi: t.postiMax,
     stato,
-    inCorso: stato === 'CHIUSO' && adesso >= inizio && adesso <= fine,
+    inCorso: t.inCorso ?? (stato === 'CHIUSO' && adesso >= inizio && adesso <= fine),
     foto: t.foto ?? null,
   };
 }
