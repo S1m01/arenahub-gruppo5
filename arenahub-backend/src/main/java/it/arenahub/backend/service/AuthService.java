@@ -37,4 +37,10 @@ public class AuthService {
 				.filter(u -> passwordEncoder.matches(req.password(), u.getPasswordHash()))
 				.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Email o password errate"));
 	}
+
+	public UtenteResponse me(Integer idUtente) {
+		return utenteRepository.findById(idUtente)
+				.map(UtenteResponse::da)
+				.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Utente non autenticato"));
+	}
 }
