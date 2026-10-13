@@ -5,6 +5,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import it.arenahub.backend.dto.ErroreResponse;
 
@@ -19,6 +20,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErroreResponse> gestisciValidazione(MethodArgumentNotValidException e) {
 		return ResponseEntity.badRequest().body(new ErroreResponse("Dati non validi"));
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<ErroreResponse> gestisciParametro(MethodArgumentTypeMismatchException e) {
+		return ResponseEntity.badRequest().body(new ErroreResponse("Parametro non valido: " + e.getName()));
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)

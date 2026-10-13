@@ -9,10 +9,15 @@ import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import it.arenahub.backend.dto.MiaSquadraResponse;
+import it.arenahub.backend.dto.TorneoDettaglioResponse;
 import it.arenahub.backend.dto.TorneoResponse;
 import it.arenahub.backend.exception.ApiException;
 import it.arenahub.backend.model.StatoTorneo;
+import it.arenahub.backend.model.Torneo;
 import it.arenahub.backend.repository.CategoriaRepository;
+import it.arenahub.backend.repository.IscrizioneRepository;
+import it.arenahub.backend.repository.SquadraRepository;
 import it.arenahub.backend.repository.TorneoRepository;
 
 @Service
@@ -20,10 +25,25 @@ public class TorneoService {
 
 	private final TorneoRepository torneoRepository;
 	private final CategoriaRepository categoriaRepository;
+	private final SquadraRepository squadraRepository;
+	private final IscrizioneRepository iscrizioneRepository;
 
-	public TorneoService(TorneoRepository torneoRepository, CategoriaRepository categoriaRepository) {
+	public TorneoService(TorneoRepository torneoRepository, CategoriaRepository categoriaRepository,
+			SquadraRepository squadraRepository, IscrizioneRepository iscrizioneRepository) {
 		this.torneoRepository = torneoRepository;
 		this.categoriaRepository = categoriaRepository;
+		this.squadraRepository = squadraRepository;
+		this.iscrizioneRepository = iscrizioneRepository;
+	}
+
+	public TorneoDettaglioResponse dettaglio(Integer id, Integer idUtente) {
+		Torneo torneo = torneoRepository.findById(id)
+				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato"));
+		MiaSquadraResponse miaSquadra = idUtente == null ? null
+				: iscrizioneRepository.findByTorneoIdAndUtenteId(id, idUtente)
+						.map(i -> MiaSquadraResponse.da(i.getSquadra(), idUtente))
+						.orElse(null);
+		return new TorneoDettaglioResponse(TorneoResponse.da(torneo, squadraRepository.countByTorneoId(id)), miaSquadra);
 	}
 
 	public List<TorneoResponse> elenco(String stato, String inCorso, String gioco, String categoria,
@@ -94,7 +114,7 @@ public class TorneoService {
 
 	private List<TorneoResponse> tutti() {
 		return torneoRepository.findAll().stream()
-				.map(t -> TorneoResponse.da(t, torneoRepository.contaIscritti(t.getId())))
+				.map(t -> TorneoResponse.da(t, squadraRepository.countByTorneoId(t.getId())))
 				.toList();
 	}
 }
