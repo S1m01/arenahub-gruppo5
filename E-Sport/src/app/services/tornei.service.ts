@@ -37,6 +37,12 @@ export class TorneiService {
     );
   }
 
+  getTopTornei(): Observable<Torneo[]> {
+    return this.conRiserva(this.http.get<Torneo[]>('/api/tornei/top'), () =>
+      [...TORNEI_DEMO].sort((a, b) => b.iscritti - a.iscritti).slice(0, 3)
+    );
+  }
+
   getCategorie(): Observable<Categoria[]> {
     return this.conRiserva(this.http.get<Categoria[]>('/api/categorie'), categorieDemo);
   }

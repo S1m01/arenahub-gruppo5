@@ -1,0 +1,40 @@
+<article class="card">
+  <div class="foto" [style.background-image]="sfondo()">
+    @if (posizione(); as pos) {
+      <span class="badge classifica">#{{ pos }} · {{ torneo().iscritti }} iscritti</span>
+    } @else {
+      <span [class]="classeStato()">
+        @if (torneo().inCorso && torneo().stato !== 'CONCLUSO') {
+          <span class="pallino" aria-hidden="true"></span>
+        }
+        {{ etichettaStato() }}
+      </span>
+    }
+  </div>
+
+  <div class="corpo">
+    <h2 class="nome">{{ torneo().nome }}</h2>
+    <p class="gioco">{{ torneo().gioco }} · {{ torneo().categoria }}</p>
+
+    <dl class="dati">
+      <div>
+        <dt>Inizio</dt>
+        <dd>{{ torneo().dataInizio | date: 'dd/MM/yyyy HH:mm' }}</dd>
+      </div>
+      <div>
+        <dt>Fine</dt>
+        <dd>{{ torneo().dataFine | date: 'dd/MM/yyyy HH:mm' }}</dd>
+      </div>
+      <div>
+        <dt>Modalità</dt>
+        <dd>{{ etichettaModalita() }}</dd>
+      </div>
+      <div>
+        <dt>Partecipanti</dt>
+        <dd>{{ torneo().iscritti }}/{{ torneo().postiMassimi }}</dd>
+      </div>
+    </dl>
+
+    <a [routerLink]="['/tornei', torneo().id]" class="btn-pieno largo">{{ etichettaPulsante() }}</a>
+  </div>
+</article>

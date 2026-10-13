@@ -1,0 +1,124 @@
+:host {
+  display: block;
+}
+
+.card {
+  height: 100%;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+  transform: translateY(-2px);
+}
+
+.foto {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background-color: var(--testo);
+  background-image: linear-gradient(135deg, #3a3a3a, #1f1f1f);
+  background-size: cover;
+  background-position: center;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.badge.aperto {
+  background: var(--verde);
+}
+
+.badge.chiuso {
+  background: #6b6b6b;
+}
+
+.badge.concluso {
+  background: var(--blu);
+}
+
+.badge.classifica {
+  background: var(--giallo);
+  color: var(--testo);
+}
+
+.badge.in-corso {
+  background: var(--rosso);
+}
+
+.pallino {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: lampeggio 1.2s infinite;
+}
+
+@keyframes lampeggio {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.corpo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.nome {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.gioco {
+  margin: -8px 0 0;
+  color: var(--testo-tenue);
+  font-size: 0.9rem;
+}
+
+.dati {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+}
+
+.dati dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.dati dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.largo {
+  width: 100%;
+  margin-top: auto;
+}

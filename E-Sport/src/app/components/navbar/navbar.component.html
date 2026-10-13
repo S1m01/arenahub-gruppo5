@@ -9,7 +9,7 @@
         <span class="saluto">Ciao, {{ auth.utente()?.nome ?? 'utente' }}</span>
         <button type="button" class="btn-outline" (click)="esci()">Esci</button>
       } @else {
-        <a routerLink="/login" class="btn-pieno">Login</a>
+        <a routerLink="/login" class="btn-pieno">Accedi</a>
       }
     </div>
   </div>
@@ -19,7 +19,7 @@
       <li class="con-tendina">
         <button
           type="button"
-          class="voce attiva-possibile"
+          class="voce cliccabile"
           [class.attiva]="sezioneTornei()"
           [attr.aria-expanded]="tendinaAperta()"
           aria-haspopup="true"
@@ -53,14 +53,18 @@
         }
       </li>
 
-      @for (voce of vociFuture; track voce.label) {
+      @for (voce of voci; track voce.label) {
         <li>
+          @if (voce.link) {
+            <a class="voce cliccabile" [routerLink]="voce.link" routerLinkActive="attiva">{{ voce.label }}</a>
+          } @else {
           <span class="voce" aria-disabled="true" title="Presto disponibile">
             {{ voce.label }}
             @if (voce.tendina) {
               <span class="freccia" aria-hidden="true">▾</span>
             }
           </span>
+          }
         </li>
       }
     </ul>

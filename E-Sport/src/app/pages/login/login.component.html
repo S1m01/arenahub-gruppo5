@@ -1,6 +1,6 @@
 <section class="pagina centrata">
   <form class="scheda" [formGroup]="form" (ngSubmit)="accedi()" novalidate>
-    <h1 class="titolo">Login</h1>
+    <h1 class="titolo">Accedi</h1>
 
     @if (erroreServer()) {
       <p class="errore-server" role="alert">{{ erroreServer() }}</p>
@@ -37,7 +37,7 @@
     </label>
 
     <button type="submit" class="btn-pieno largo" [disabled]="invio()">
-      {{ invio() ? 'Accesso in corso...' : 'Login' }}
+      {{ invio() ? 'Accesso in corso...' : 'Accedi' }}
     </button>
 
     <a routerLink="/registrazione" class="btn-outline largo">Registrati</a>

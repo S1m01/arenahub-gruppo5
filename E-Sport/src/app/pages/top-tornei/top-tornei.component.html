@@ -1,0 +1,17 @@
+<section class="pagina">
+  <h1 class="titolo">Top tornei - I più partecipati</h1>
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento tornei...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (tornei().length === 0) {
+    <p class="messaggio">Nessun torneo disponibile.</p>
+  } @else {
+    <div class="griglia">
+      @for (t of tornei(); track t.id; let i = $index) {
+        <app-card-torneo [torneo]="t" [posizione]="i + 1" />
+      }
+    </div>
+  }
+</section>

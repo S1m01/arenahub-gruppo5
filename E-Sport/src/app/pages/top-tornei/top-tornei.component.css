@@ -1,0 +1,22 @@
+.titolo {
+  margin: 0 0 20px;
+}
+
+.griglia {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.messaggio {
+  padding: 32px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}

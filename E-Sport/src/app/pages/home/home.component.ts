@@ -1,6 +1,6 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { CardTorneoComponent } from '../../components/card-torneo/card-torneo.component';
 import { Categoria, Torneo } from '../../models/torneo.model';
 import { TorneiService } from '../../services/tornei.service';
 
@@ -9,7 +9,7 @@ type Ordinamento = 'DATA' | 'NOME' | 'ISCRITTI';
 
 @Component({
   selector: 'app-home',
-  imports: [DatePipe, RouterLink],
+  imports: [CardTorneoComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -78,37 +78,5 @@ export class HomeComponent implements OnInit {
 
   valore(evento: Event): string {
     return (evento.target as HTMLInputElement | HTMLSelectElement).value;
-  }
-
-  etichettaModalita(t: Torneo): string {
-    switch (t.modalita) {
-      case 'SINGOLO':
-        return 'Singolo';
-      case 'DUO':
-        return 'Duo';
-      default:
-        return `Squadra (${t.giocatoriPerSquadra})`;
-    }
-  }
-
-  etichettaStato(t: Torneo): string {
-    if (t.stato === 'CONCLUSO') return 'Concluso';
-    if (t.inCorso) return 'In corso';
-    return t.stato === 'APERTO' ? 'Aperto' : 'Chiuso';
-  }
-
-  classeStato(t: Torneo): string {
-    if (t.stato === 'CONCLUSO') return 'badge concluso';
-    if (t.inCorso) return 'badge in-corso';
-    return t.stato === 'APERTO' ? 'badge aperto' : 'badge chiuso';
-  }
-
-  etichettaPulsante(t: Torneo): string {
-    if (t.stato === 'CONCLUSO') return 'Vedi risultati';
-    return t.inCorso ? 'Vedi partite' : 'Dettaglio torneo';
-  }
-
-  sfondo(t: Torneo): string | null {
-    return t.foto ? `url('${t.foto}')` : null;
   }
 }

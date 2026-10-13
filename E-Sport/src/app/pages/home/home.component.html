@@ -52,42 +52,7 @@
   } @else {
     <div class="griglia">
       @for (t of torneiFiltrati(); track t.id) {
-        <article class="card">
-          <div class="foto" [style.background-image]="sfondo(t)">
-            <span [class]="classeStato(t)">
-              @if (t.inCorso) {
-                <span class="pallino" aria-hidden="true"></span>
-              }
-              {{ etichettaStato(t) }}
-            </span>
-          </div>
-
-          <div class="corpo">
-            <h2 class="nome">{{ t.nome }}</h2>
-            <p class="gioco">{{ t.gioco }} · {{ t.categoria }}</p>
-
-            <dl class="dati">
-              <div>
-                <dt>Inizio</dt>
-                <dd>{{ t.dataInizio | date: 'dd/MM/yyyy HH:mm' }}</dd>
-              </div>
-              <div>
-                <dt>Fine</dt>
-                <dd>{{ t.dataFine | date: 'dd/MM/yyyy HH:mm' }}</dd>
-              </div>
-              <div>
-                <dt>Modalità</dt>
-                <dd>{{ etichettaModalita(t) }}</dd>
-              </div>
-              <div>
-                <dt>Partecipanti</dt>
-                <dd>{{ t.iscritti }}/{{ t.postiMassimi }}</dd>
-              </div>
-            </dl>
-
-            <a [routerLink]="['/tornei', t.id]" class="btn-pieno largo">{{ etichettaPulsante(t) }}</a>
-          </div>
-        </article>
+        <app-card-torneo [torneo]="t" />
       }
     </div>
   }

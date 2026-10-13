@@ -24,10 +24,10 @@ export class NavbarComponent {
     { initialValue: this.eSezioneTornei(this.router.url) }
   );
 
-  readonly vociFuture = [
+  readonly voci: { label: string; tendina: boolean; link?: string }[] = [
     { label: 'Top giocate', tendina: false },
     { label: 'Classifica', tendina: true },
-    { label: 'Top tornei', tendina: false },
+    { label: 'Top tornei', tendina: false, link: '/top-tornei' },
     { label: 'Live', tendina: false },
   ];
 
