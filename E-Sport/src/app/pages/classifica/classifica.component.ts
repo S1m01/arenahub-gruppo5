@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Categoria, PosizioneClassifica } from '../../models/torneo.model';
+import { PosizioneClassifica } from '../../models/torneo.model';
 import { ClassificaService } from '../../services/classifica.service';
 import { TorneiService } from '../../services/tornei.service';
 
@@ -26,7 +26,7 @@ export class ClassificaComponent implements OnInit {
   }[this.tipo];
 
   righe = signal<PosizioneClassifica[]>([]);
-  categorie = signal<Categoria[]>([]);
+  categorie = signal<string[]>([]);
   categoria = signal('');
   caricamento = signal(true);
   errore = signal<string | null>(null);
@@ -55,7 +55,7 @@ export class ClassificaComponent implements OnInit {
           this.caricamento.set(false);
           return;
         }
-        this.scegliCategoria(lista[0].nome);
+        this.scegliCategoria(lista[0]);
       },
       error: () => {
         this.errore.set('Impossibile caricare le categorie. Riprova più tardi.');

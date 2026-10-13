@@ -15,8 +15,8 @@
       <span>Categoria</span>
       <select class="campo" [value]="categoria()" (change)="categoria.set(valore($event))">
         <option value="TUTTE">Tutte</option>
-        @for (c of categorie(); track c.id) {
-          <option [value]="c.nome">{{ c.nome }}</option>
+        @for (c of categorie(); track c) {
+          <option [value]="c">{{ c }}</option>
         }
       </select>
     </label>
@@ -55,12 +55,5 @@
         <app-card-torneo [torneo]="t" />
       }
     </div>
-  }
-
-  @if (!chiusi) {
-    <p class="legenda">
-      <strong>Aperto</strong> = iscrizioni aperte · <strong>Chiuso</strong> = iscrizioni chiuse, il
-      torneo non è ancora iniziato · <strong>In corso</strong> = in svolgimento adesso
-    </p>
   }
 </section>

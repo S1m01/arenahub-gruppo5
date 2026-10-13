@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { giocateDemo } from '../data/tornei-demo';
+import { Observable, map } from 'rxjs';
+import { GiocataApi } from '../models/api.model';
 import { Giocata } from '../models/torneo.model';
-import { conRiserva } from './con-riserva';
+import { daGiocataApi } from './mappa-api';
 
 @Injectable({ providedIn: 'root' })
 export class GiocateService {
@@ -11,8 +11,8 @@ export class GiocateService {
 
   getGiocate(torneoId?: number): Observable<Giocata[]> {
     const params = torneoId === undefined ? undefined : new HttpParams().set('torneoId', torneoId);
-    return conRiserva(this.http.get<Giocata[]>('/api/giocate', { params }), () =>
-      giocateDemo(torneoId)
-    );
+    return this.http
+      .get<GiocataApi[]>('/api/giocate', { params })
+      .pipe(map((lista) => lista.map(daGiocataApi)));
   }
 }

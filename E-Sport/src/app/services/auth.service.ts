@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, finalize, tap } from 'rxjs';
 
 export interface LoginRequest {
   email: string;
@@ -18,57 +18,63 @@ export interface Utente {
   id: number;
   nome: string;
   cognome: string;
-  email: string;
-  ruolo: 'UTENTE' | 'ADMIN';
+  email?: string;
+  ruolo: 'utente' | 'admin';
 }
 
-export interface LoginResponse {
-  token?: string;
-  utente?: Utente;
-}
-
-const STORAGE_KEY = 'arenahub_sessione';
+const STORAGE_KEY = 'arenahub_utente';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
 
-  private sessione = signal<LoginResponse | null>(this.leggiSessione());
+  private utenteCorrente = signal<Utente | null>(this.leggiUtente());
 
-  readonly utente = computed(() => this.sessione()?.utente ?? null);
-  readonly loggato = computed(() => this.sessione() !== null);
-  readonly token = computed(() => this.sessione()?.token ?? null);
+  readonly utente = this.utenteCorrente.asReadonly();
+  readonly loggato = computed(() => this.utenteCorrente() !== null);
+  readonly admin = computed(() => this.utenteCorrente()?.ruolo === 'admin');
 
-  login(dati: LoginRequest): Observable<LoginResponse> {
+  constructor() {
+    if (this.utenteCorrente()) this.verificaSessione();
+  }
+
+  login(dati: LoginRequest): Observable<Utente> {
     return this.http
-      .post<LoginResponse>('/api/auth/login', dati)
-      .pipe(tap((risposta) => this.salvaSessione(risposta)));
+      .post<Utente>('/api/auth/login', dati)
+      .pipe(tap((utente) => this.salvaUtente(utente)));
   }
 
   registrazione(dati: RegistrazioneRequest): Observable<Utente> {
     return this.http
       .post<Utente>('/api/auth/registrazione', dati)
-      .pipe(tap((utente) => this.salvaSessione({ utente })));
+      .pipe(tap((utente) => this.salvaUtente(utente)));
   }
 
-  private salvaSessione(sessione: LoginResponse): void {
-    this.sessione.set(sessione);
+  logout(): Observable<void> {
+    return this.http.post<void>('/api/auth/logout', {}).pipe(finalize(() => this.salvaUtente(null)));
+  }
+
+  private verificaSessione(): void {
+    this.http.get<Utente>('/api/auth/me').subscribe({
+      next: (utente) => this.salvaUtente(utente),
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401) this.salvaUtente(null);
+      },
+    });
+  }
+
+  private salvaUtente(utente: Utente | null): void {
+    this.utenteCorrente.set(utente);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessione));
+      if (utente) localStorage.setItem(STORAGE_KEY, JSON.stringify(utente));
+      else localStorage.removeItem(STORAGE_KEY);
     } catch {}
   }
 
-  logout(): void {
-    this.sessione.set(null);
+  private leggiUtente(): Utente | null {
     try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {}
-  }
-
-  private leggiSessione(): LoginResponse | null {
-    try {
-      const salvata = localStorage.getItem(STORAGE_KEY);
-      return salvata ? (JSON.parse(salvata) as LoginResponse) : null;
+      const salvato = localStorage.getItem(STORAGE_KEY);
+      return salvato ? (JSON.parse(salvato) as Utente) : null;
     } catch {
       return null;
     }

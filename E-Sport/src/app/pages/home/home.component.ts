@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CardTorneoComponent } from '../../components/card-torneo/card-torneo.component';
-import { Categoria, Torneo } from '../../models/torneo.model';
+import { Torneo } from '../../models/torneo.model';
 import { TorneiService } from '../../services/tornei.service';
 
 type FiltroStato = 'TUTTI' | 'APERTO' | 'CHIUSO' | 'IN_CORSO';
@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   readonly chiusi = inject(ActivatedRoute).snapshot.data['tipo'] === 'chiusi';
 
   tornei = signal<Torneo[]>([]);
-  categorie = signal<Categoria[]>([]);
+  categorie = signal<string[]>([]);
   caricamento = signal(true);
   errore = signal<string | null>(null);
 

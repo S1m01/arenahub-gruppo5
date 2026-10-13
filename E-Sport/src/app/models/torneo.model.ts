@@ -22,11 +22,6 @@ export interface TorneoDettaglio extends Torneo {
   descrizione: string | null;
 }
 
-export interface Categoria {
-  id: number;
-  nome: string;
-}
-
 export interface Componente {
   utenteId: number;
   nome: string;

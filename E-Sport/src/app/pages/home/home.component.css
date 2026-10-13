@@ -43,9 +43,3 @@
 .messaggio.errore {
   color: var(--rosso);
 }
-
-.legenda {
-  margin-top: 28px;
-  font-size: 0.85rem;
-  color: var(--testo-tenue);
-}

@@ -79,8 +79,10 @@ export class NavbarComponent {
   }
 
   esci(): void {
-    this.auth.logout();
-    this.router.navigate(['/']);
+    this.auth.logout().subscribe({
+      complete: () => this.router.navigate(['/']),
+      error: () => this.router.navigate(['/']),
+    });
   }
 
   private soloPercorso(url: string): string {

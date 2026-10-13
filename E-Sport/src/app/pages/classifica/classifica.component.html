@@ -5,8 +5,8 @@
     <label class="filtro">
       <span>Categoria</span>
       <select class="campo" [value]="categoria()" (change)="scegliCategoria(valore($event))">
-        @for (c of categorie(); track c.id) {
-          <option [value]="c.nome">{{ c.nome }}</option>
+        @for (c of categorie(); track c) {
+          <option [value]="c">{{ c }}</option>
         }
       </select>
     </label>

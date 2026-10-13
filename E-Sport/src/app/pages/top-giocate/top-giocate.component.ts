@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CardGiocataComponent } from '../../components/card-giocata/card-giocata.component';
-import { Categoria, Giocata } from '../../models/torneo.model';
+import { Giocata } from '../../models/torneo.model';
 import { GiocateService } from '../../services/giocate.service';
 import { TorneiService } from '../../services/tornei.service';
 
@@ -15,7 +15,7 @@ export class TopGiocateComponent implements OnInit {
   private torneiService = inject(TorneiService);
 
   giocate = signal<Giocata[]>([]);
-  categorie = signal<Categoria[]>([]);
+  categorie = signal<string[]>([]);
   caricamento = signal(true);
   errore = signal<string | null>(null);
 
