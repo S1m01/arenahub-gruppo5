@@ -4,15 +4,21 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import it.arenahub.backend.dto.CambioPasswordRequest;
 import it.arenahub.backend.dto.ComponenteResponse;
 import it.arenahub.backend.dto.MiaSquadraResponse;
 import it.arenahub.backend.dto.MioTorneoResponse;
+import it.arenahub.backend.dto.ProfiloRequest;
 import it.arenahub.backend.dto.TorneoResponse;
+import it.arenahub.backend.dto.UtenteResponse;
 import it.arenahub.backend.exception.ApiException;
 import it.arenahub.backend.model.Iscrizione;
 import it.arenahub.backend.model.Torneo;
+import it.arenahub.backend.model.Utente;
 import it.arenahub.backend.repository.IscrizioneRepository;
 import it.arenahub.backend.repository.SquadraRepository;
 import it.arenahub.backend.repository.TorneoRepository;
@@ -25,13 +31,42 @@ public class UtenteService {
 	private final IscrizioneRepository iscrizioneRepository;
 	private final SquadraRepository squadraRepository;
 	private final TorneoRepository torneoRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	public UtenteService(UtenteRepository utenteRepository, IscrizioneRepository iscrizioneRepository,
-			SquadraRepository squadraRepository, TorneoRepository torneoRepository) {
+			SquadraRepository squadraRepository, TorneoRepository torneoRepository, PasswordEncoder passwordEncoder) {
 		this.utenteRepository = utenteRepository;
 		this.iscrizioneRepository = iscrizioneRepository;
 		this.squadraRepository = squadraRepository;
 		this.torneoRepository = torneoRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
+
+	@Transactional
+	public UtenteResponse modificaProfilo(Integer idUtente, ProfiloRequest req) {
+		Utente utente = trovaUtente(idUtente);
+		if (utenteRepository.existsByEmailIgnoreCaseAndIdNot(req.email(), idUtente)) {
+			throw new ApiException(HttpStatus.CONFLICT, "Email già in uso");
+		}
+		utente.setNome(req.nome());
+		utente.setCognome(req.cognome());
+		utente.setEmail(req.email());
+		return UtenteResponse.da(utenteRepository.save(utente));
+	}
+
+	@Transactional
+	public void cambiaPassword(Integer idUtente, CambioPasswordRequest req) {
+		Utente utente = trovaUtente(idUtente);
+		if (!passwordEncoder.matches(req.passwordAttuale(), utente.getPasswordHash())) {
+			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Password attuale errata");
+		}
+		utente.setPasswordHash(passwordEncoder.encode(req.passwordNuova()));
+		utenteRepository.save(utente);
+	}
+
+	private Utente trovaUtente(Integer idUtente) {
+		return utenteRepository.findById(idUtente)
+				.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Utente non autenticato"));
 	}
 
 	public ComponenteResponse cerca(String email) {
