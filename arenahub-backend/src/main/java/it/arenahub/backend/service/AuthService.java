@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import it.arenahub.backend.dto.LoginRequest;
 import it.arenahub.backend.dto.RegistrazioneRequest;
 import it.arenahub.backend.dto.UtenteResponse;
 import it.arenahub.backend.exception.ApiException;
@@ -29,5 +30,11 @@ public class AuthService {
 		Utente utente = new Utente(req.nome(), req.cognome(), req.email(),
 				passwordEncoder.encode(req.password()), Ruolo.UTENTE);
 		return UtenteResponse.da(utenteRepository.save(utente));
+	}
+
+	public Utente login(LoginRequest req) {
+		return utenteRepository.findByEmailIgnoreCase(req.email())
+				.filter(u -> passwordEncoder.matches(req.password(), u.getPasswordHash()))
+				.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Email o password errate"));
 	}
 }
