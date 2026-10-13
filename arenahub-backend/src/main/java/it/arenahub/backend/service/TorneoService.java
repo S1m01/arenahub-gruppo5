@@ -9,7 +9,9 @@ import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import it.arenahub.backend.dto.ComponenteResponse;
 import it.arenahub.backend.dto.MiaSquadraResponse;
+import it.arenahub.backend.dto.SquadraResponse;
 import it.arenahub.backend.dto.TorneoDettaglioResponse;
 import it.arenahub.backend.dto.TorneoResponse;
 import it.arenahub.backend.exception.ApiException;
@@ -44,6 +46,17 @@ public class TorneoService {
 						.map(i -> MiaSquadraResponse.da(i.getSquadra(), idUtente))
 						.orElse(null);
 		return new TorneoDettaglioResponse(TorneoResponse.da(torneo, squadraRepository.countByTorneoId(id)), miaSquadra);
+	}
+
+	public List<SquadraResponse> squadre(Integer idTorneo) {
+		if (!torneoRepository.existsById(idTorneo)) {
+			throw new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato");
+		}
+		return squadraRepository.findByTorneoIdOrderById(idTorneo).stream()
+				.map(s -> SquadraResponse.da(s, iscrizioneRepository.findBySquadraIdOrderById(s.getId()).stream()
+						.map(i -> ComponenteResponse.da(i.getUtente()))
+						.toList()))
+				.toList();
 	}
 
 	public List<TorneoResponse> elenco(String stato, String inCorso, String gioco, String categoria,

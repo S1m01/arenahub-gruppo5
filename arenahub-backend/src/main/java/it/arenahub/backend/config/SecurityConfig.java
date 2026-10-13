@@ -29,7 +29,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST, "/api/auth/registrazione", "/api/auth/login").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/categorie", "/api/tornei", "/api/tornei/top", "/api/tornei/live",
-								"/api/tornei/*").permitAll()
+								"/api/tornei/*", "/api/tornei/*/squadre").permitAll()
 						.requestMatchers("/error").permitAll()
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex

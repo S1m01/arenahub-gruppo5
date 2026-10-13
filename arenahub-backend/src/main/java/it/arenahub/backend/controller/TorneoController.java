@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.arenahub.backend.dto.SquadraResponse;
 import it.arenahub.backend.dto.TorneoDettaglioResponse;
 import it.arenahub.backend.dto.TorneoResponse;
 import it.arenahub.backend.service.TorneoService;
@@ -49,5 +50,10 @@ public class TorneoController {
 	public TorneoDettaglioResponse dettaglio(@PathVariable Integer id,
 			@AuthenticationPrincipal Integer idUtente) {
 		return torneoService.dettaglio(id, idUtente);
+	}
+
+	@GetMapping("/{id}/squadre")
+	public List<SquadraResponse> squadre(@PathVariable Integer id) {
+		return torneoService.squadre(id);
 	}
 }
