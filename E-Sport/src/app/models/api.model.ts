@@ -7,6 +7,7 @@ export interface TorneoApi {
   modalita: 'singolo' | 'duo' | 'squadra';
   giocatoriPerSquadra: number;
   stato: 'aperto' | 'chiuso' | 'concluso';
+  inCorso?: boolean;
   dataOra: string;
   dataFine: string;
   postiMax: number;
