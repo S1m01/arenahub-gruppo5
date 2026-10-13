@@ -1,5 +1,6 @@
 import {
   Categoria,
+  Giocata,
   Partita,
   PosizioneClassifica,
   PosizioneGiocatore,
@@ -219,4 +220,47 @@ export function classificaGeneraleDemo(categoria?: string): PosizioneClassifica[
     }
   }
   return conPosizioni([...totali.values()].filter((r) => r.punti > 0));
+}
+
+function giocata(
+  id: number,
+  partitaId: number,
+  titolo: string,
+  videoId: string,
+  inizio: number,
+  fine: number,
+  giocatore: string | null,
+  squadra: string
+): Giocata {
+  const partita = Object.values(PARTITE_DEMO)
+    .flat()
+    .find((p) => p.id === partitaId)!;
+  const torneo = TORNEI_DEMO.find((t) => t.id === partita.torneoId)!;
+  return {
+    id,
+    torneoId: torneo.id,
+    torneo: torneo.nome,
+    categoria: torneo.categoria,
+    partitaId,
+    turno: partita.turno,
+    titolo,
+    videoId,
+    inizio,
+    fine,
+    giocatore,
+    squadra,
+  };
+}
+
+const GIOCATE_DEMO: Giocata[] = [
+  giocata(1, 303, 'Carico calato al momento giusto', 'IHQ3EzR2WAY', 90, 135, 'Mario Rossi', 'I Carichi'),
+  giocata(2, 302, 'Briscola da maestro', 'UTol-og6JVk', 5, 40, 'Giulia Bianchi', 'Settebello'),
+  giocata(3, 303, 'Rimonta finale', 'IHQ3EzR2WAY', 300, 345, null, 'Settebello'),
+  giocata(4, 401, 'Muro decisivo', 'gg-ciHf1YXU', 42, 65, 'Luca Verdi', 'Muro Alto'),
+  giocata(5, 404, 'Difesa impossibile', 'hK5ljlhoADs', 190, 230, 'Giulia Bianchi', 'Set Point'),
+  giocata(6, 403, 'Azione di squadra', 'G7BPunIQgD4', 10, 50, null, 'Schiacciasassi'),
+];
+
+export function giocateDemo(torneoId?: number): Giocata[] {
+  return GIOCATE_DEMO.filter((g) => torneoId === undefined || g.torneoId === torneoId);
 }

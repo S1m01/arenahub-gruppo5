@@ -77,3 +77,18 @@ export interface PosizioneGiocatore {
   squadra: string;
   punti: number;
 }
+
+export interface Giocata {
+  id: number;
+  torneoId: number;
+  torneo: string;
+  categoria: string;
+  partitaId: number | null;
+  turno: string | null;
+  titolo: string;
+  videoId: string;
+  inizio: number;
+  fine: number;
+  giocatore: string | null;
+  squadra: string | null;
+}
