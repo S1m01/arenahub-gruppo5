@@ -29,12 +29,14 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST, "/api/auth/registrazione", "/api/auth/login").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/categorie", "/api/tornei", "/api/tornei/top", "/api/tornei/live",
-								"/api/tornei/*", "/api/tornei/*/squadre").permitAll()
+								"/api/tornei/*", "/api/tornei/*/squadre", "/api/tornei/*/partite", "/api/partite/*").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/tornei").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/api/tornei/*").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PATCH, "/api/tornei/*/stato").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.GET, "/api/tornei/*/iscritti").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/tornei/*/partite").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/api/partite/*/punti").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((req, res, e) -> scriviErrore(res, 401, "Utente non autenticato"))
