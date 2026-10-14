@@ -78,17 +78,11 @@ public class PartitaService {
 		Torneo torneo = torneoRepository.findById(idTorneo)
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato"));
 		List<Integer> idSquadre = req.squadre();
-		if (idSquadre == null || idSquadre.size() < 2) {
+		if (idSquadre == null || idSquadre.size() < 2 || new HashSet<>(idSquadre).size() != idSquadre.size()) {
 			throw new ApiException(HttpStatus.BAD_REQUEST, "Una partita richiede almeno 2 squadre");
 		}
 		if (idSquadre.contains(null)) {
 			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi");
-		}
-		if (new HashSet<>(idSquadre).size() != idSquadre.size()) {
-			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: squadra ripetuta");
-		}
-		if (torneo.getStato() == StatoTorneo.concluso) {
-			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Il torneo è concluso");
 		}
 		if (torneo.getStato() != StatoTorneo.chiuso) {
 			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Le partite si creano a torneo chiuso");
@@ -151,7 +145,7 @@ public class PartitaService {
 				throw new ApiException(HttpStatus.BAD_REQUEST, PUNTI_NEGATIVI);
 			}
 			if (!squadreViste.add(sp.squadraId())) {
-				throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: squadra ripetuta");
+				throw new ApiException(HttpStatus.BAD_REQUEST, "Indicare i punti di tutte le squadre della partita");
 			}
 			if (sp.giocatori() != null) {
 				controllaGiocatori(sp);
@@ -196,7 +190,8 @@ public class PartitaService {
 						"Il giocatore " + g.utenteId() + " non fa parte della squadra " + sp.squadraId());
 			}
 			if (!giocatoriVisti.add(g.utenteId())) {
-				throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: giocatore ripetuto");
+				throw new ApiException(HttpStatus.BAD_REQUEST,
+						"Indicare i punti di tutti i componenti della squadra o di nessuno");
 			}
 		}
 		if (giocatoriVisti.size() != componenti.size()) {

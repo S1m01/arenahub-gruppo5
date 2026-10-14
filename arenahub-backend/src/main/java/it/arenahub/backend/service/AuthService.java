@@ -23,13 +23,13 @@ public class AuthService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public UtenteResponse registra(RegistrazioneRequest req) {
+	public Utente registra(RegistrazioneRequest req) {
 		if (utenteRepository.existsByEmailIgnoreCase(req.email())) {
 			throw new ApiException(HttpStatus.CONFLICT, "Email già in uso");
 		}
 		Utente utente = new Utente(req.nome(), req.cognome(), req.email(),
 				passwordEncoder.encode(req.password()), Ruolo.UTENTE);
-		return UtenteResponse.da(utenteRepository.save(utente));
+		return utenteRepository.save(utente);
 	}
 
 	public Utente login(LoginRequest req) {

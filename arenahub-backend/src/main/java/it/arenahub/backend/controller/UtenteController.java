@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.arenahub.backend.dto.CambioPasswordRequest;
-import it.arenahub.backend.dto.ComponenteResponse;
+import it.arenahub.backend.dto.CercaUtenteResponse;
 import it.arenahub.backend.dto.MiaPartitaResponse;
 import it.arenahub.backend.dto.MioTorneoResponse;
 import it.arenahub.backend.dto.ProfiloRequest;
@@ -48,7 +48,7 @@ public class UtenteController {
 	}
 
 	@GetMapping("/cerca")
-	public ComponenteResponse cerca(@RequestParam(required = false) String email) {
+	public CercaUtenteResponse cerca(@RequestParam(required = false) String email) {
 		return utenteService.cerca(email);
 	}
 

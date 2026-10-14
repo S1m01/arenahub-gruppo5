@@ -6,6 +6,8 @@ public record StatisticheResponse(
 		Long punti,
 		Long posizione,
 		Long tornei,
+		Long torniAttivi,
+		Integer maxTorneiAttivi,
 		Long partiteGiocate,
 		Long partiteDaGiocare,
 		List<PuntiCategoriaResponse> perCategoria) {

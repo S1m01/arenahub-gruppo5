@@ -4,13 +4,12 @@ public record GiocataResponse(
 		Integer id,
 		Integer torneoId,
 		String torneo,
-		String categoria,
-		Integer partitaId,
-		String turno,
 		String titolo,
-		String idYoutube,
+		String youtubeId,
 		Integer inizioSec,
 		Integer fineSec,
-		String giocatore,
-		String squadra) {
+		Integer partitaId,
+		String turno,
+		Integer utenteId,
+		String giocatore) {
 }

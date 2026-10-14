@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public record GiocataRequest(
 		@NotBlank @Size(max = 100) String titolo,
-		@NotBlank @Size(max = 50) String idYoutube,
+		@NotBlank @Size(max = 20) String youtubeId,
 		@NotNull @Min(0) Integer inizioSec,
 		@NotNull Integer fineSec,
 		Integer partitaId,

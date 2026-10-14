@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ErroreResponse> gestisciParametro(MethodArgumentTypeMismatchException e) {
-		return ResponseEntity.badRequest().body(new ErroreResponse("Parametro non valido: " + e.getName()));
+		return ResponseEntity.badRequest().body(new ErroreResponse("Parametro non valido"));
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)

@@ -27,8 +27,9 @@ public class GiocataController {
 	}
 
 	@GetMapping("/api/giocate")
-	public List<GiocataResponse> elenco(@RequestParam(required = false) Integer torneoId) {
-		return giocataService.elenco(torneoId);
+	public List<GiocataResponse> elenco(@RequestParam(required = false) Integer torneoId,
+			@RequestParam(required = false) String categoria) {
+		return giocataService.elenco(torneoId, categoria);
 	}
 
 	@PostMapping("/api/tornei/{id}/giocate")

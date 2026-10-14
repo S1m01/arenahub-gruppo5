@@ -31,7 +31,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.GET, "/api/categorie", "/api/tornei", "/api/tornei/top", "/api/tornei/live",
 								"/api/tornei/*", "/api/tornei/*/squadre", "/api/tornei/*/partite", "/api/partite/*",
 								"/api/tornei/*/classifica", "/api/tornei/*/classifica-giocatori", "/api/classifica",
-								"/api/classifica/top", "/api/classifica/categorie/*", "/api/giocate").permitAll()
+								"/api/classifica/top", "/api/classifica/categorie/*", "/api/giocate", "/api/impostazioni").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/tornei").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/api/tornei/*").hasRole("ADMIN")
@@ -41,6 +41,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.PUT, "/api/partite/*/punti").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.POST, "/api/tornei/*/giocate").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/api/giocate/*").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/api/impostazioni").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((req, res, e) -> scriviErrore(res, 401, "Utente non autenticato"))

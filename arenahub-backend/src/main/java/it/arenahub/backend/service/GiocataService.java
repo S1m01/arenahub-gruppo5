@@ -1,5 +1,6 @@
 package it.arenahub.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -8,63 +9,81 @@ import org.springframework.stereotype.Service;
 import it.arenahub.backend.dto.GiocataRequest;
 import it.arenahub.backend.dto.GiocataResponse;
 import it.arenahub.backend.exception.ApiException;
+import it.arenahub.backend.model.Categoria;
 import it.arenahub.backend.model.Giocata;
 import it.arenahub.backend.model.Partita;
 import it.arenahub.backend.model.Torneo;
 import it.arenahub.backend.model.Utente;
+import it.arenahub.backend.repository.CategoriaRepository;
 import it.arenahub.backend.repository.GiocataRepository;
-import it.arenahub.backend.repository.IscrizioneRepository;
 import it.arenahub.backend.repository.PartitaRepository;
 import it.arenahub.backend.repository.TorneoRepository;
+import it.arenahub.backend.repository.UtenteRepository;
 
 @Service
 public class GiocataService {
 
 	private final GiocataRepository giocataRepository;
 	private final TorneoRepository torneoRepository;
+	private final CategoriaRepository categoriaRepository;
 	private final PartitaRepository partitaRepository;
-	private final IscrizioneRepository iscrizioneRepository;
+	private final UtenteRepository utenteRepository;
 
 	public GiocataService(GiocataRepository giocataRepository, TorneoRepository torneoRepository,
-			PartitaRepository partitaRepository, IscrizioneRepository iscrizioneRepository) {
+			CategoriaRepository categoriaRepository, PartitaRepository partitaRepository,
+			UtenteRepository utenteRepository) {
 		this.giocataRepository = giocataRepository;
 		this.torneoRepository = torneoRepository;
+		this.categoriaRepository = categoriaRepository;
 		this.partitaRepository = partitaRepository;
-		this.iscrizioneRepository = iscrizioneRepository;
+		this.utenteRepository = utenteRepository;
 	}
 
-	public List<GiocataResponse> elenco(Integer torneoId) {
-		List<Giocata> giocate;
-		if (torneoId == null) {
-			giocate = giocataRepository.findAllByOrderByIdDesc();
-		} else {
-			giocate = giocataRepository.findByTorneoIdOrderByIdDesc(torneoId);
+	public List<GiocataResponse> elenco(Integer torneoId, String categoria) {
+		if (torneoId != null && !torneoRepository.existsById(torneoId)) {
+			throw new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato");
 		}
-		return giocate.stream().map(this::risposta).toList();
+		Categoria categoriaScelta = null;
+		if (categoria != null) {
+			categoriaScelta = categoriaRepository.findByNomeIgnoreCase(categoria)
+					.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Categoria non trovata"));
+		}
+
+		List<GiocataResponse> giocate = new ArrayList<>();
+		for (Giocata g : giocataRepository.findAllByOrderByIdDesc()) {
+			Torneo torneo = g.getTorneo();
+			boolean torneoOk = torneoId == null || torneo.getId().equals(torneoId);
+			boolean categoriaOk = categoriaScelta == null || torneo.getCategoria().getId().equals(categoriaScelta.getId());
+			if (torneoOk && categoriaOk) {
+				giocate.add(risposta(g));
+			}
+		}
+		return giocate;
 	}
 
 	public GiocataResponse crea(Integer idTorneo, GiocataRequest req) {
 		Torneo torneo = torneoRepository.findById(idTorneo)
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato"));
 		if (req.fineSec() <= req.inizioSec()) {
-			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: la fine deve essere dopo l'inizio");
+			throw new ApiException(HttpStatus.BAD_REQUEST, "La fine deve essere dopo l'inizio");
 		}
 
 		Partita partita = null;
 		if (req.partitaId() != null) {
 			partita = partitaRepository.findById(req.partitaId())
 					.filter(p -> p.getTorneo().getId().equals(idTorneo))
-					.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "La partita non è di questo torneo"));
+					.orElseThrow(() -> new ApiException(HttpStatus.UNPROCESSABLE_CONTENT,
+							"La partita " + req.partitaId() + " non appartiene a questo torneo"));
 		}
 
 		Utente utente = null;
 		if (req.utenteId() != null) {
-			utente = iscrizioneRepository.findByTorneoIdAndUtenteId(idTorneo, req.utenteId())
-					.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Il giocatore non è iscritto a questo torneo"))
-					.getUtente();
+			utente = utenteRepository.findById(req.utenteId())
+					.orElseThrow(() -> new ApiException(HttpStatus.UNPROCESSABLE_CONTENT,
+							"Il giocatore " + req.utenteId() + " non esiste"));
 		}
 
-		Giocata giocata = new Giocata(torneo, partita, utente, req.titolo().trim(), req.idYoutube().trim(),
+		Giocata giocata = new Giocata(torneo, partita, utente, req.titolo().trim(), req.youtubeId().trim(),
 				req.inizioSec(), req.fineSec());
 		return risposta(giocataRepository.save(giocata));
 	}
@@ -77,8 +96,6 @@ public class GiocataService {
 	}
 
 	private GiocataResponse risposta(Giocata g) {
-		Torneo torneo = g.getTorneo();
-
 		Integer partitaId = null;
 		String turno = null;
 		if (g.getPartita() != null) {
@@ -86,16 +103,14 @@ public class GiocataService {
 			turno = g.getPartita().getTurno();
 		}
 
+		Integer utenteId = null;
 		String giocatore = null;
-		String squadra = null;
 		if (g.getUtente() != null) {
+			utenteId = g.getUtente().getId();
 			giocatore = g.getUtente().getNome() + " " + g.getUtente().getCognome();
-			squadra = iscrizioneRepository.findByTorneoIdAndUtenteId(torneo.getId(), g.getUtente().getId())
-					.map(i -> i.getSquadra().getNome())
-					.orElse(null);
 		}
 
-		return new GiocataResponse(g.getId(), torneo.getId(), torneo.getNome(), torneo.getCategoria().getNome(),
-				partitaId, turno, g.getTitolo(), g.getIdYoutube(), g.getInizioSec(), g.getFineSec(), giocatore, squadra);
+		return new GiocataResponse(g.getId(), g.getTorneo().getId(), g.getTorneo().getNome(), g.getTitolo(),
+				g.getYoutubeId(), g.getInizioSec(), g.getFineSec(), partitaId, turno, utenteId, giocatore);
 	}
 }

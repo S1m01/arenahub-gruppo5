@@ -16,6 +16,7 @@ import it.arenahub.backend.dto.TorneoResponse;
 import it.arenahub.backend.exception.ApiException;
 import it.arenahub.backend.model.Categoria;
 import it.arenahub.backend.model.Iscrizione;
+import it.arenahub.backend.model.Modalita;
 import it.arenahub.backend.model.StatoTorneo;
 import it.arenahub.backend.model.Torneo;
 import it.arenahub.backend.repository.CategoriaRepository;
@@ -58,13 +59,12 @@ public class TorneoAdminService {
 		}
 		int iscritti = squadraRepository.countByTorneoId(id);
 		if (req.postiMax() < iscritti) {
-			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Posti inferiori alle squadre già iscritte");
+			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Posti inferiori alle squadre iscritte");
 		}
 		boolean formatoCambiato = req.modalita() != torneo.getModalita()
 				|| req.giocatoriPerSquadra() != torneo.getGiocatoriPerSquadra().intValue();
 		if (iscritti > 0 && formatoCambiato) {
-			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT,
-					"Modalità e giocatori per squadra non si modificano con iscrizioni presenti");
+			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Modalità non modificabile con iscrizioni presenti");
 		}
 		applica(torneo, req, categoria);
 		torneo = torneoRepository.save(torneo);
@@ -80,7 +80,7 @@ public class TorneoAdminService {
 		} else if (req != null && "concluso".equals(req.stato())) {
 			nuovo = StatoTorneo.concluso;
 		} else {
-			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: stato non ammesso");
+			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi");
 		}
 
 		if (nuovo == StatoTorneo.chiuso && torneo.getStato() == StatoTorneo.aperto) {
@@ -122,32 +122,15 @@ public class TorneoAdminService {
 	}
 
 	private Categoria controlla(TorneoRequest req) {
-		if (req.dataFine().isBefore(req.dataOra())) {
-			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: la data di fine precede l'inizio");
-		}
 		int giocatori = req.giocatoriPerSquadra();
-		switch (req.modalita()) {
-			case singolo -> {
-				if (giocatori != 1) {
-					throw new ApiException(HttpStatus.BAD_REQUEST,
-							"Dati non validi: un torneo singolo ha 1 giocatore per squadra");
-				}
-			}
-			case duo -> {
-				if (giocatori != 2) {
-					throw new ApiException(HttpStatus.BAD_REQUEST,
-							"Dati non validi: un torneo duo ha 2 giocatori per squadra");
-				}
-			}
-			case squadra -> {
-				if (giocatori < 3) {
-					throw new ApiException(HttpStatus.BAD_REQUEST,
-							"Dati non validi: un torneo a squadre ha almeno 3 giocatori per squadra");
-				}
-			}
+		boolean modalitaCoerente = (req.modalita() == Modalita.singolo && giocatori == 1)
+				|| (req.modalita() == Modalita.duo && giocatori == 2)
+				|| (req.modalita() == Modalita.squadra && giocatori >= 3);
+		if (req.dataFine().isBefore(req.dataOra()) || !modalitaCoerente) {
+			throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi");
 		}
 		return categoriaRepository.findByNomeIgnoreCase(req.categoria())
-				.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: categoria inesistente"));
+				.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi"));
 	}
 
 	private void applica(Torneo torneo, TorneoRequest req, Categoria categoria) {

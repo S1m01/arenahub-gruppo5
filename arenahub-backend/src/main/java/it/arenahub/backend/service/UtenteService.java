@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.arenahub.backend.dto.CambioPasswordRequest;
-import it.arenahub.backend.dto.ComponenteResponse;
+import it.arenahub.backend.dto.CercaUtenteResponse;
 import it.arenahub.backend.dto.MiaSquadraResponse;
 import it.arenahub.backend.dto.MioTorneoResponse;
 import it.arenahub.backend.dto.ProfiloRequest;
@@ -33,14 +33,17 @@ public class UtenteService {
 	private final SquadraRepository squadraRepository;
 	private final TorneoRepository torneoRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final ImpostazioneService impostazioneService;
 
 	public UtenteService(UtenteRepository utenteRepository, IscrizioneRepository iscrizioneRepository,
-			SquadraRepository squadraRepository, TorneoRepository torneoRepository, PasswordEncoder passwordEncoder) {
+			SquadraRepository squadraRepository, TorneoRepository torneoRepository, PasswordEncoder passwordEncoder,
+			ImpostazioneService impostazioneService) {
 		this.utenteRepository = utenteRepository;
 		this.iscrizioneRepository = iscrizioneRepository;
 		this.squadraRepository = squadraRepository;
 		this.torneoRepository = torneoRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.impostazioneService = impostazioneService;
 	}
 
 	@Transactional
@@ -70,13 +73,14 @@ public class UtenteService {
 				.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Utente non autenticato"));
 	}
 
-	public ComponenteResponse cerca(String email) {
+	public CercaUtenteResponse cerca(String email) {
 		if (email == null || email.isBlank()) {
 			throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido");
 		}
-		return utenteRepository.findByEmailIgnoreCase(email.trim())
-				.map(ComponenteResponse::da)
+		Utente utente = utenteRepository.findByEmailIgnoreCase(email.trim())
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Utente non registrato"));
+		return new CercaUtenteResponse(utente.getId(), utente.getNome(), utente.getCognome(),
+				impostazioneService.puoIscriversi(utente.getId()));
 	}
 
 	public List<MioTorneoResponse> mieiTornei(Integer idUtente) {
@@ -95,6 +99,8 @@ public class UtenteService {
 				punti,
 				utenteRepository.posizioneGenerale(idUtente),
 				iscrizioneRepository.countByUtenteId(idUtente),
+				impostazioneService.torneiAttivi(idUtente),
+				impostazioneService.maxTorneiAttivi(),
 				utenteRepository.contaPartite(idUtente, "conclusa"),
 				utenteRepository.contaPartite(idUtente, "programmata"),
 				utenteRepository.puntiPerCategoria(idUtente));

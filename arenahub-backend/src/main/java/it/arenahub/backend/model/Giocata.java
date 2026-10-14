@@ -33,8 +33,8 @@ public class Giocata {
 	@Column(nullable = false, length = 100)
 	private String titolo;
 
-	@Column(name = "id_youtube", nullable = false, length = 50)
-	private String idYoutube;
+	@Column(name = "id_youtube", nullable = false, length = 20)
+	private String youtubeId;
 
 	@Column(name = "inizio_sec", nullable = false)
 	private Integer inizioSec;
@@ -45,13 +45,13 @@ public class Giocata {
 	public Giocata() {
 	}
 
-	public Giocata(Torneo torneo, Partita partita, Utente utente, String titolo, String idYoutube, Integer inizioSec,
+	public Giocata(Torneo torneo, Partita partita, Utente utente, String titolo, String youtubeId, Integer inizioSec,
 			Integer fineSec) {
 		this.torneo = torneo;
 		this.partita = partita;
 		this.utente = utente;
 		this.titolo = titolo;
-		this.idYoutube = idYoutube;
+		this.youtubeId = youtubeId;
 		this.inizioSec = inizioSec;
 		this.fineSec = fineSec;
 	}
@@ -76,8 +76,8 @@ public class Giocata {
 		return titolo;
 	}
 
-	public String getIdYoutube() {
-		return idYoutube;
+	public String getYoutubeId() {
+		return youtubeId;
 	}
 
 	public Integer getInizioSec() {

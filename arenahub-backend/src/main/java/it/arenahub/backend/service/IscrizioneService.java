@@ -32,13 +32,16 @@ public class IscrizioneService {
 	private final UtenteRepository utenteRepository;
 	private final SquadraRepository squadraRepository;
 	private final IscrizioneRepository iscrizioneRepository;
+	private final ImpostazioneService impostazioneService;
 
 	public IscrizioneService(TorneoRepository torneoRepository, UtenteRepository utenteRepository,
-			SquadraRepository squadraRepository, IscrizioneRepository iscrizioneRepository) {
+			SquadraRepository squadraRepository, IscrizioneRepository iscrizioneRepository,
+			ImpostazioneService impostazioneService) {
 		this.torneoRepository = torneoRepository;
 		this.utenteRepository = utenteRepository;
 		this.squadraRepository = squadraRepository;
 		this.iscrizioneRepository = iscrizioneRepository;
+		this.impostazioneService = impostazioneService;
 	}
 
 	@Transactional
@@ -54,6 +57,11 @@ public class IscrizioneService {
 				|| squadraRepository.countByTorneoId(idTorneo) >= torneo.getPostiMax()) {
 			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "Torneo chiuso o senza posti liberi");
 		}
+		int limite = impostazioneService.maxTorneiAttivi();
+		if (!impostazioneService.puoIscriversi(idUtente)) {
+			throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT,
+					"Hai già raggiunto il limite di " + limite + " tornei attivi");
+		}
 
 		String nomeSquadra;
 		List<Utente> membri = new ArrayList<>();
@@ -62,24 +70,19 @@ public class IscrizioneService {
 		if (torneo.getModalita() == Modalita.singolo) {
 			nomeSquadra = capitano.getNome() + " " + capitano.getCognome();
 		} else {
+			String erroreSquadra = "La squadra deve avere " + torneo.getGiocatoriPerSquadra() + " componenti";
 			nomeSquadra = req == null || req.squadraNome() == null ? "" : req.squadraNome().trim();
-			if (nomeSquadra.isEmpty() || nomeSquadra.length() > 60) {
-				throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: il nome della squadra è obbligatorio");
-			}
-			List<String> email = req.componenti() == null ? List.of() : req.componenti();
-			if (email.size() != torneo.getGiocatoriPerSquadra() - 1) {
-				throw new ApiException(HttpStatus.BAD_REQUEST,
-						"La squadra deve avere " + torneo.getGiocatoriPerSquadra() + " componenti");
+			List<String> email = req == null || req.componenti() == null ? List.of() : req.componenti();
+			if (nomeSquadra.isEmpty() || nomeSquadra.length() > 60
+					|| email.size() != torneo.getGiocatoriPerSquadra() - 1) {
+				throw new ApiException(HttpStatus.BAD_REQUEST, erroreSquadra);
 			}
 			Set<String> emailViste = new HashSet<>();
+			emailViste.add(capitano.getEmail().toLowerCase());
 			for (String e : email) {
 				String normalizzata = e == null ? "" : e.trim().toLowerCase();
-				if (normalizzata.equals(capitano.getEmail().toLowerCase())) {
-					throw new ApiException(HttpStatus.BAD_REQUEST,
-							"Dati non validi: il capitano non va indicato tra i componenti");
-				}
 				if (!emailViste.add(normalizzata)) {
-					throw new ApiException(HttpStatus.BAD_REQUEST, "Dati non validi: componente ripetuto");
+					throw new ApiException(HttpStatus.BAD_REQUEST, erroreSquadra);
 				}
 			}
 			if (squadraRepository.existsByTorneoIdAndNomeIgnoreCase(idTorneo, nomeSquadra)) {
@@ -92,6 +95,10 @@ public class IscrizioneService {
 				if (iscrizioneRepository.existsByTorneoIdAndUtenteId(idTorneo, componente.getId())) {
 					throw new ApiException(HttpStatus.CONFLICT,
 							componente.getNome() + " " + componente.getCognome() + " è già iscritto a questo torneo");
+				}
+				if (!impostazioneService.puoIscriversi(componente.getId())) {
+					throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, componente.getNome() + " "
+							+ componente.getCognome() + " ha già raggiunto il limite di " + limite + " tornei attivi");
 				}
 				membri.add(componente);
 			}

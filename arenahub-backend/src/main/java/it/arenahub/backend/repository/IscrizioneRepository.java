@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import it.arenahub.backend.model.Iscrizione;
+import it.arenahub.backend.model.StatoTorneo;
 
 public interface IscrizioneRepository extends JpaRepository<Iscrizione, Integer> {
 
@@ -18,4 +19,6 @@ public interface IscrizioneRepository extends JpaRepository<Iscrizione, Integer>
 	List<Iscrizione> findByUtenteId(Integer idUtente);
 
 	long countByUtenteId(Integer idUtente);
+
+	long countByUtenteIdAndTorneoStatoNot(Integer idUtente, StatoTorneo stato);
 }

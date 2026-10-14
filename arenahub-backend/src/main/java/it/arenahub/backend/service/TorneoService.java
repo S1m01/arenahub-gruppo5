@@ -69,14 +69,14 @@ public class TorneoService {
 				try {
 					stati.add(StatoTorneo.valueOf(s.trim()));
 				} catch (IllegalArgumentException e) {
-					throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido: stato");
+					throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido");
 				}
 			}
 			tornei = tornei.filter(t -> stati.contains(t.stato()));
 		}
 		if (inCorso != null) {
 			if (!inCorso.equals("true") && !inCorso.equals("false")) {
-				throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido: inCorso");
+				throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido");
 			}
 			boolean valore = Boolean.parseBoolean(inCorso);
 			tornei = tornei.filter(t -> t.inCorso() == valore);
@@ -99,10 +99,10 @@ public class TorneoService {
 			case "dataOra" -> Comparator.comparing(TorneoResponse::dataOra);
 			case "nome" -> Comparator.comparing(TorneoResponse::nome, String.CASE_INSENSITIVE_ORDER);
 			case "postiLiberi" -> Comparator.comparingInt(t -> t.postiMax() - t.iscritti());
-			default -> throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido: ordina");
+			default -> throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido");
 		};
 		if (direzione != null && !direzione.equals("asc") && !direzione.equals("desc")) {
-			throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido: direzione");
+			throw new ApiException(HttpStatus.BAD_REQUEST, "Parametro non valido");
 		}
 		if ("desc".equals(direzione)) {
 			ordine = ordine.reversed();
