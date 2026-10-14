@@ -43,7 +43,6 @@ export class GiocateAdminComponent implements OnInit {
 
   idVideo = computed(() => (this.link().trim() ? idDaLinkYoutube(this.link()) : null));
 
-  // I giocatori selezionabili sono i componenti delle squadre iscritte al torneo.
   giocatori = computed(() => {
     const visti = new Map<number, string>();
     for (const s of this.squadre()) {
@@ -148,7 +147,6 @@ export class GiocateAdminComponent implements OnInit {
   }
 }
 
-/** "1:30" -> 90; accetta anche i soli secondi ("90"). null se non valido. */
 function daMinSec(testo: string): number | null {
   const t = testo.trim();
   const m = /^(\d+):([0-5]\d)$/.exec(t);
@@ -156,7 +154,6 @@ function daMinSec(testo: string): number | null {
   return /^\d+$/.test(t) ? Number(t) : null;
 }
 
-/** Ricava l'ID del video da un link YouTube (watch, youtu.be, shorts, embed) o da un ID già pulito. */
 function idDaLinkYoutube(link: string): string | null {
   const testo = link.trim();
   if (ID_VIDEO.test(testo)) return testo;

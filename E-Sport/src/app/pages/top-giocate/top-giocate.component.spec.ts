@@ -4,7 +4,6 @@ import { http, providerAdmin, testo } from '../../testing/admin-test-utils';
 import { TopGiocateComponent } from './top-giocate.component';
 
 describe('TopGiocateComponent', () => {
-  // Formato del contratto (GET /api/giocate).
   const giocate: GiocataApi[] = [
     {
       id: 8,

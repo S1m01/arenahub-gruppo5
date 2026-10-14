@@ -74,7 +74,6 @@ export class PartiteComponent implements OnInit {
     this.admin
       .creaPartita(this.id, {
         turno: this.turno().trim() || null,
-        // L'input datetime-local dà "2026-10-16T15:00": si aggiungono i secondi.
         dataOra: data ? (data.length === 16 ? `${data}:00` : data) : null,
         squadre: [...this.scelte()],
       })

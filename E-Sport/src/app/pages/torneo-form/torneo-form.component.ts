@@ -119,7 +119,6 @@ export class TorneoFormComponent implements OnInit {
       return;
     }
 
-    // getRawValue include anche i campi disattivati (modalità bloccata con iscritti presenti).
     const v = this.form.getRawValue();
     const dati: TorneoRichiestaApi = {
       nome: v.nome.trim(),
@@ -169,7 +168,6 @@ export class TorneoFormComponent implements OnInit {
     return (this.torneo()?.iscritti ?? 0) > 0;
   }
 
-  // Singolo = 1 e duo = 2 giocatori fissi; squadra almeno 3 (come chiede il contratto).
   private adattaGiocatori(m: ModalitaForm): void {
     const g = this.form.controls.giocatoriPerSquadra;
     if (m === 'squadra') {
@@ -200,7 +198,6 @@ export class TorneoFormComponent implements OnInit {
     this.adattaGiocatori(modalita);
     this.form.controls.giocatoriPerSquadra.setValue(t.giocatoriPerSquadra);
 
-    // Con iscritti il backend rifiuta il cambio di modalità e posti sotto gli iscritti (422).
     if (t.iscritti > 0) {
       this.form.controls.modalita.disable({ emitEvent: false });
       this.form.controls.giocatoriPerSquadra.disable({ emitEvent: false });
@@ -211,7 +208,6 @@ export class TorneoFormComponent implements OnInit {
   }
 }
 
-// L'input datetime-local dà "2026-10-16T15:00": si aggiungono i secondi per l'ISO completo.
 function conSecondi(valore: string): string {
   return valore.length === 16 ? `${valore}:00` : valore;
 }

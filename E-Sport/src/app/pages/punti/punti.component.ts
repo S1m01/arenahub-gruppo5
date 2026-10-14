@@ -70,14 +70,12 @@ export class PuntiComponent implements OnInit {
     }
 
     const dati: PuntiRichiestaApi = {
-      // Una partita già conclusa resta conclusa anche quando si correggono i punti.
       concludi: concludi || p.stato === 'conclusa',
       squadre: this.righe().map((r) => {
         const conGiocatori = r.giocatori.length > 0 && r.giocatori.every((g) => g.punti.trim() !== '');
         return {
           squadraId: r.squadraId,
           punti: Number(r.punti),
-          // Senza "giocatori" il backend cancella i punti individuali già salvati della squadra.
           ...(conGiocatori
             ? { giocatori: r.giocatori.map((g) => ({ utenteId: g.utenteId, punti: Number(g.punti) })) }
             : {}),
@@ -94,7 +92,6 @@ export class PuntiComponent implements OnInit {
           this.router.navigate(['/admin/tornei', p.torneoId, 'partite']);
           return;
         }
-        // La risposta può non avere turno e data: si tengono quelli già caricati.
         this.imposta({ ...p, ...aggiornata, turno: aggiornata.turno ?? p.turno, dataOra: aggiornata.dataOra ?? p.dataOra });
         this.esito.set({ ok: true, testo: 'Punti salvati' });
       },
@@ -109,7 +106,6 @@ export class PuntiComponent implements OnInit {
     return (evento.target as HTMLInputElement).value;
   }
 
-  // Stesse regole del backend, per mostrare l'errore senza aspettare la risposta.
   private controlla(): string | null {
     for (const r of this.righe()) {
       const punti = r.punti.trim();

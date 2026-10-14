@@ -98,7 +98,7 @@ describe('GiocateAdminComponent', () => {
     compila(el, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', '1:30', '2:15');
     scrivi(el, 'select[name=partita]', '9');
     scrivi(el, 'select[name=giocatore]', '3');
-    f.detectChanges(); // nel browser la pagina si aggiorna dopo ogni tasto
+    f.detectChanges();
     invia(el);
 
     const req = http().expectOne('/api/tornei/4/giocate');

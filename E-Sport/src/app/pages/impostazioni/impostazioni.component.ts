@@ -13,7 +13,6 @@ import { AdminService, messaggioErrore } from '../../services/admin.service';
 export class ImpostazioniComponent implements OnInit {
   private admin = inject(AdminService);
 
-  // Stessi limiti del backend: intero da 1 a 3.
   limite = new FormControl<number | null>(null, [
     Validators.required,
     Validators.min(1),
