@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import {
+  GiocataRichiestaApi,
   IscrittiSquadraApi,
   PartitaDettaglioApi,
   PuntiRichiestaApi,
@@ -46,6 +47,14 @@ export class AdminService {
 
   salvaPunti(id: number, dati: PuntiRichiestaApi): Observable<PartitaDettaglioApi> {
     return this.http.put<PartitaDettaglioApi>(`/api/partite/${id}/punti`, dati);
+  }
+
+  aggiungiGiocata(torneoId: number, dati: GiocataRichiestaApi): Observable<unknown> {
+    return this.http.post(`/api/tornei/${torneoId}/giocate`, dati);
+  }
+
+  eliminaGiocata(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/giocate/${id}`);
   }
 
   cambiaStato(id: number, stato: 'chiuso' | 'concluso'): Observable<{ id: number; stato: string }> {

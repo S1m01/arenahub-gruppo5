@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { adminGuard } from './guards/admin.guard';
 import { ClassificaComponent } from './pages/classifica/classifica.component';
 import { GestioneTorneiComponent } from './pages/gestione-tornei/gestione-tornei.component';
+import { GiocateAdminComponent } from './pages/giocate-admin/giocate-admin.component';
 import { HomeComponent } from './pages/home/home.component';
 import { IscrittiComponent } from './pages/iscritti/iscritti.component';
 import { LiveComponent } from './pages/live/live.component';
@@ -81,6 +82,12 @@ export const routes: Routes = [
     component: PuntiComponent,
     canActivate: [adminGuard],
     title: 'Inserimento punti · ArenaHub',
+  },
+  {
+    path: 'admin/tornei/:id/giocate',
+    component: GiocateAdminComponent,
+    canActivate: [adminGuard],
+    title: 'Top giocate del torneo · ArenaHub',
   },
   { path: '**', redirectTo: '' },
 ];

@@ -48,7 +48,7 @@
                     <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'modifica']">Modifica</a>
                   } @else {
                     <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'partite']">Partite</a>
-                    <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Giocate</button>
+                    <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'giocate']">Giocate</a>
                   }
                   <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'iscritti']">Iscritti</a>
                   @if (t.stato === 'APERTO') {

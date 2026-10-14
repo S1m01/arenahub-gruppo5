@@ -83,3 +83,12 @@ export interface PuntiRichiestaApi {
     giocatori?: { utenteId: number; punti: number }[];
   }[];
 }
+
+export interface GiocataRichiestaApi {
+  titolo: string;
+  youtubeId: string;
+  inizioSec: number;
+  fineSec: number;
+  partitaId: number | null;
+  utenteId: number | null;
+}
