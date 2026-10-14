@@ -166,3 +166,8 @@
     font-size: 0.78rem;
   }
 }
+
+.gestione.corrente {
+  background: var(--testo);
+  color: #fff;
+}

@@ -1,0 +1,81 @@
+<section class="pagina">
+  <div class="testata">
+    <div>
+      <h1 class="titolo">Gestione tornei</h1>
+      @if (!caricamento() && !errore()) {
+        <p class="riepilogo">{{ riepilogo() }}</p>
+      }
+    </div>
+    <button type="button" class="btn-pieno" disabled title="Presto disponibile">+ Nuovo torneo</button>
+  </div>
+
+  @if (esito(); as e) {
+    <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+  }
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento tornei...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (tornei().length === 0) {
+    <p class="messaggio">Nessun torneo.</p>
+  } @else {
+    <div class="contenitore-tabella">
+      <table class="tabella">
+        <thead>
+          <tr>
+            <th>Torneo</th>
+            <th>Modalità</th>
+            <th>Stato</th>
+            <th>Posti</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of torneiOrdinati(); track t.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/tornei', t.id]">{{ t.nome }}</a>
+              </td>
+              <td>{{ modalita(t) }}</td>
+              <td>
+                <span [class]="classeStato(t)">{{ etichettaStato(t) }}</span>
+              </td>
+              <td class="numero">{{ t.iscritti }}/{{ t.postiMassimi }}</td>
+              <td>
+                <div class="azioni-riga">
+                  @if (t.stato === 'APERTO') {
+                    <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Modifica</button>
+                  } @else {
+                    <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Partite</button>
+                    <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Giocate</button>
+                  }
+                  <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Iscritti</button>
+                  @if (t.stato === 'APERTO') {
+                    <button
+                      type="button"
+                      class="btn-piccolo pericolo"
+                      [disabled]="inCorsoId() === t.id"
+                      (click)="chiudi(t)"
+                    >
+                      Chiudi
+                    </button>
+                  } @else if (t.stato === 'CHIUSO') {
+                    <button
+                      type="button"
+                      class="btn-piccolo pericolo"
+                      [disabled]="inCorsoId() === t.id"
+                      (click)="concludi(t)"
+                    >
+                      Concludi
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

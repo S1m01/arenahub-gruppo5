@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './guards/admin.guard';
 import { ClassificaComponent } from './pages/classifica/classifica.component';
+import { GestioneTorneiComponent } from './pages/gestione-tornei/gestione-tornei.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LiveComponent } from './pages/live/live.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -40,5 +42,11 @@ export const routes: Routes = [
   },
   { path: 'login', component: LoginComponent, title: 'Accedi · ArenaHub' },
   { path: 'registrazione', component: RegistrazioneComponent, title: 'Registrati · ArenaHub' },
+  {
+    path: 'admin',
+    component: GestioneTorneiComponent,
+    canActivate: [adminGuard],
+    title: 'Gestione tornei · ArenaHub',
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -7,6 +7,9 @@
     <div class="azioni">
       @if (auth.loggato()) {
         <span class="saluto">Ciao, {{ auth.utente()?.nome ?? 'utente' }}</span>
+        @if (auth.admin()) {
+          <a routerLink="/admin" routerLinkActive="corrente" class="btn-outline gestione">Gestione</a>
+        }
         <button type="button" class="btn-outline" (click)="esci()">Esci</button>
       } @else {
         <a routerLink="/login" class="btn-pieno">Accedi</a>

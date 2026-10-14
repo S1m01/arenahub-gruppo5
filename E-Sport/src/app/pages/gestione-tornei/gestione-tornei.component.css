@@ -1,0 +1,159 @@
+.testata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-bottom: 20px;
+}
+
+.titolo {
+  margin: 0;
+}
+
+.riepilogo {
+  margin: 6px 0 0;
+  color: var(--testo-tenue);
+}
+
+.contenitore-tabella {
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+.tabella {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabella th {
+  padding: 12px 14px;
+  background: var(--testo);
+  color: #fff;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tabella td {
+  padding: 10px 14px;
+  border-top: 1px solid var(--bordo);
+  vertical-align: middle;
+}
+
+.tabella tbody tr:first-child td {
+  border-top: 0;
+}
+
+.tabella td a {
+  color: var(--testo);
+  font-weight: 600;
+}
+
+.numero {
+  font-variant-numeric: tabular-nums;
+}
+
+.stato {
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stato.aperto {
+  color: var(--verde);
+}
+
+.stato.in-corso {
+  color: var(--rosso);
+}
+
+.stato.concluso {
+  color: var(--blu);
+}
+
+.azioni-riga {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn-piccolo {
+  padding: 6px 12px;
+  border: 1px solid var(--testo);
+  border-radius: 7px;
+  background: var(--superficie);
+  color: var(--testo);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.btn-piccolo:hover:not(:disabled) {
+  background: var(--testo);
+  color: #fff;
+}
+
+.btn-piccolo.pericolo {
+  border-color: var(--rosso);
+  color: var(--rosso);
+}
+
+.btn-piccolo.pericolo:hover:not(:disabled) {
+  background: var(--rosso);
+  color: #fff;
+}
+
+.btn-piccolo:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.esito {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgb(230 50 55 / 0.1);
+  color: var(--rosso);
+  font-weight: 600;
+  text-align: center;
+}
+
+.esito.ok {
+  background: rgb(46 139 110 / 0.12);
+  color: var(--verde);
+}
+
+.messaggio {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+@media (max-width: 640px) {
+  .tabella th,
+  .tabella td {
+    padding: 9px 10px;
+  }
+}
