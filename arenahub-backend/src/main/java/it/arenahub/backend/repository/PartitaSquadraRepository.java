@@ -10,4 +10,6 @@ import it.arenahub.backend.model.PartitaSquadraId;
 public interface PartitaSquadraRepository extends JpaRepository<PartitaSquadra, PartitaSquadraId> {
 
 	List<PartitaSquadra> findByPartitaIdOrderBySquadraId(Integer idPartita);
+
+	List<PartitaSquadra> findBySquadraId(Integer idSquadra);
 }

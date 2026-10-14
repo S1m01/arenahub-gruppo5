@@ -16,4 +16,6 @@ public interface IscrizioneRepository extends JpaRepository<Iscrizione, Integer>
 	List<Iscrizione> findBySquadraIdOrderById(Integer idSquadra);
 
 	List<Iscrizione> findByUtenteId(Integer idUtente);
+
+	long countByUtenteId(Integer idUtente);
 }

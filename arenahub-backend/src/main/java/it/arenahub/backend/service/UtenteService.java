@@ -13,6 +13,7 @@ import it.arenahub.backend.dto.ComponenteResponse;
 import it.arenahub.backend.dto.MiaSquadraResponse;
 import it.arenahub.backend.dto.MioTorneoResponse;
 import it.arenahub.backend.dto.ProfiloRequest;
+import it.arenahub.backend.dto.StatisticheResponse;
 import it.arenahub.backend.dto.TorneoResponse;
 import it.arenahub.backend.dto.UtenteResponse;
 import it.arenahub.backend.exception.ApiException;
@@ -83,6 +84,20 @@ public class UtenteService {
 				.sorted(Comparator.comparing((Iscrizione i) -> i.getTorneo().getDataInizio()).reversed())
 				.map(i -> mioTorneo(i, idUtente))
 				.toList();
+	}
+
+	public StatisticheResponse statistiche(Integer idUtente) {
+		Long punti = utenteRepository.puntiTotali(idUtente);
+		if (punti == null) {
+			punti = 0L;
+		}
+		return new StatisticheResponse(
+				punti,
+				utenteRepository.posizioneGenerale(idUtente),
+				iscrizioneRepository.countByUtenteId(idUtente),
+				utenteRepository.contaPartite(idUtente, "conclusa"),
+				utenteRepository.contaPartite(idUtente, "programmata"),
+				utenteRepository.puntiPerCategoria(idUtente));
 	}
 
 	private MioTorneoResponse mioTorneo(Iscrizione iscrizione, Integer idUtente) {

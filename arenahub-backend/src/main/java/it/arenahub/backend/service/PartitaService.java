@@ -1,5 +1,7 @@
 package it.arenahub.backend.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.arenahub.backend.dto.GiocatorePuntiResponse;
+import it.arenahub.backend.dto.MiaPartitaResponse;
 import it.arenahub.backend.dto.PartitaDettaglioResponse;
 import it.arenahub.backend.dto.PartitaRequest;
 import it.arenahub.backend.dto.PartitaResponse;
@@ -19,6 +22,7 @@ import it.arenahub.backend.dto.PunteggioSquadraResponse;
 import it.arenahub.backend.dto.PuntiRequest;
 import it.arenahub.backend.dto.SquadraPartitaResponse;
 import it.arenahub.backend.exception.ApiException;
+import it.arenahub.backend.model.Iscrizione;
 import it.arenahub.backend.model.Partita;
 import it.arenahub.backend.model.PartitaSquadra;
 import it.arenahub.backend.model.PuntiGiocatore;
@@ -199,6 +203,30 @@ public class PartitaService {
 			throw new ApiException(HttpStatus.BAD_REQUEST,
 					"Indicare i punti di tutti i componenti della squadra o di nessuno");
 		}
+	}
+
+	public List<MiaPartitaResponse> miePartite(Integer idUtente, Integer torneoId, StatoPartita stato) {
+		if (torneoId != null && !torneoRepository.existsById(torneoId)) {
+			throw new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato");
+		}
+		List<MiaPartitaResponse> partite = new ArrayList<>();
+		for (Iscrizione iscrizione : iscrizioneRepository.findByUtenteId(idUtente)) {
+			for (PartitaSquadra ps : partitaSquadraRepository.findBySquadraId(iscrizione.getSquadra().getId())) {
+				Partita p = ps.getPartita();
+				boolean torneoOk = torneoId == null || p.getTorneo().getId().equals(torneoId);
+				boolean statoOk = stato == null || p.getStato() == stato;
+				if (torneoOk && statoOk) {
+					Integer mieiPunti = puntiGiocatoreRepository.findByPartitaIdAndUtenteId(p.getId(), idUtente)
+							.map(PuntiGiocatore::getPunti)
+							.orElse(ps.getPunti());
+					partite.add(new MiaPartitaResponse(p.getId(), p.getTorneo().getId(), p.getTorneo().getNome(),
+							p.getTurno(), p.getDataOra(), p.getStato(), ps.getSquadra().getId(), mieiPunti,
+							riepilogo(p).squadre()));
+				}
+			}
+		}
+		partite.sort(Comparator.comparing(MiaPartitaResponse::dataOra, Comparator.nullsLast(Comparator.reverseOrder())));
+		return partite;
 	}
 
 	private PartitaResponse riepilogo(Partita p) {
