@@ -2,12 +2,16 @@
 
 Convenzioni comuni:
 - Nomi dei campi in camelCase
+- Date in formato ISO 8601
 - Elenchi restituiti come array JSON
 - Errori sempre nella forma {"errore": "..."}
 - Autenticazione: sessione aperta dal login (cookie di sessione)
 - Mappatura tra colonne del DB e campi JSON concordata con il DB admin
 - Il partecipante di un torneo è sempre una squadra (nei tornei singoli è una squadra da 1 giocatore)
 - Nelle classifiche contano solo le partite concluse
+- `stato` del torneo: aperto, chiuso o concluso. `inCorso` (true/false) è derivato, non è una colonna del DB: vale true solo se `stato` è chiuso e l'ora attuale è tra `dataOra` e `dataFine`. Il frontend mostra l'etichetta APERTO / CHIUSO / IN CORSO (se `inCorso` è true) / CONCLUSO
+- Limite di tornei attivi: un utente può essere iscritto, come capitano o come componente di una squadra, al massimo a `maxTorneiAttivi` tornei attivi (aperti o chiusi, cioè non conclusi). Il valore (da 1 a 3, default 3) lo decide l'admin, vale per tutti i tornei e si legge con `GET /api/impostazioni`. Il limite riguarda solo le nuove iscrizioni: chi è già iscritto non viene tolto se il limite si abbassa. Un torneo concluso o un'iscrizione annullata libera un posto
+- Le top giocate sono clip di un video YouTube: si salvano solo l'ID del video e i secondi di inizio e fine, il video non viene scaricato
 
 ## Indice degli endpoint
 
@@ -20,7 +24,7 @@ Convenzioni comuni:
 | GET | /api/categorie | Elenco categorie | pubblico |
 | GET | /api/tornei | Elenco dei tornei, filtri opzionali | pubblico |
 | GET | /api/tornei/top | I 3 tornei con più iscritti | pubblico |
-| GET | /api/tornei/live | Tornei in corso adesso | pubblico |
+| GET | /api/tornei/live | Tornei in corso adesso (inCorso = true) | pubblico |
 | GET | /api/tornei/{id} | Dettaglio di un torneo | pubblico |
 | POST | /api/tornei | Creazione di un torneo | admin |
 | PUT | /api/tornei/{id} | Modifica di un torneo | admin |
@@ -29,8 +33,8 @@ Convenzioni comuni:
 | POST | /api/tornei/{id}/iscrizioni | Iscrizione dell'utente loggato (crea la squadra) | utente |
 | DELETE | /api/tornei/{id}/iscrizioni | Annullamento dell'iscrizione | utente |
 | GET | /api/utenti/me/tornei | "I miei tornei" | utente |
-| GET | /api/utenti/cerca | Cerca un utente per email (controllo componenti squadra) | utente |
-| GET | /api/utenti/me/statistiche | Profilo: punti, posizioni, tornei e partite dell'utente | utente |
+| GET | /api/utenti/cerca | Cerca un utente per email (controllo componenti squadra, anche limite tornei attivi) | utente |
+| GET | /api/utenti/me/statistiche | Profilo: punti, posizioni, tornei e partite, tornei attivi e limite | utente |
 | GET | /api/utenti/me/partite | Profilo: le mie partite con i miei punti | utente |
 | PUT | /api/utenti/me | Profilo: modifica nome, cognome, email | utente |
 | PUT | /api/utenti/me/password | Profilo: cambio password | utente |
@@ -39,11 +43,16 @@ Convenzioni comuni:
 | POST | /api/tornei/{id}/partite | Creazione di una partita | admin |
 | GET | /api/partite/{id} | Dettaglio di una partita | pubblico |
 | PUT | /api/partite/{id}/punti | Inserimento punti, conclusione della partita | admin |
+| GET | /api/giocate | Top giocate (clip video), filtro per torneo o categoria | pubblico |
+| POST | /api/tornei/{id}/giocate | Aggiunta di una top giocata a un torneo | admin |
+| DELETE | /api/giocate/{id} | Eliminazione di una top giocata | admin |
 | GET | /api/tornei/{id}/classifica | Classifica delle squadre di un torneo | pubblico |
 | GET | /api/tornei/{id}/classifica-giocatori | Classifica dei giocatori di un torneo | pubblico |
 | GET | /api/classifica | Classifica generale | pubblico |
 | GET | /api/classifica/top | Primi 3 della classifica generale | pubblico |
 | GET | /api/classifica/categorie/{categoria} | Classifica di una categoria | pubblico |
+| GET | /api/impostazioni | Impostazioni del sito (limite di tornei attivi per utente) | pubblico |
+| PUT | /api/impostazioni | Modifica delle impostazioni (limite di tornei attivi) | admin |
 
 ---
 
@@ -114,11 +123,12 @@ Elenco delle categorie (filtro e classifica per categoria). Accesso: pubblico.
 
 ## GET /api/tornei
 Elenco dei tornei con i posti occupati. Accesso: pubblico.
-Pagina "Tornei": stato=aperto. Pagina "Tornei chiusi": stato=chiuso,concluso.
+Pagina "Tornei aperti": stato=aperto,chiuso (tornei non conclusi, ognuno con la sua etichetta APERTO / CHIUSO / IN CORSO). Pagina "Tornei chiusi": stato=concluso.
 
 | Parametro | Dove | Tipo | Obbligatorio |
 |-----------|------|------|--------------|
 | stato | query | uno o più valori separati da virgola (aperto, chiuso, concluso) | no |
+| inCorso | query | true / false: solo i tornei in corso (o solo quelli non in corso) | no |
 | gioco | query | stringa (bonus) | no |
 | categoria | query | stringa (bonus) | no |
 | cerca | query | stringa, ricerca per nome (bonus) | no |
@@ -127,14 +137,14 @@ Pagina "Tornei": stato=aperto. Pagina "Tornei chiusi": stato=chiuso,concluso.
 
 **Risposta 200**
 [ { "id": 3, "nome": "Torneo d'autunno", "gioco": "Calcio virtuale", "categoria": "Calcio",
-    "modalita": "singolo", "giocatoriPerSquadra": 1, "stato": "aperto",
+    "modalita": "singolo", "giocatoriPerSquadra": 1, "stato": "aperto", "inCorso": false,
     "dataOra": "2026-10-16T15:00:00", "dataFine": "2026-10-17T19:00:00",
     "postiMax": 16, "iscritti": 7, "foto": "img/calcio.jpg" } ]
 
 **Errori**
 | Codice | Causa | Risposta |
 |--------|-------|----------|
-| 400 | valore di stato, ordina o direzione non valido | {"errore": "Parametro non valido"} |
+| 400 | valore di stato, inCorso, ordina o direzione non valido | {"errore": "Parametro non valido"} |
 | 404 | categoria inesistente | {"errore": "Categoria non trovata"} |
 
 ## GET /api/tornei/top
@@ -143,7 +153,7 @@ I 3 tornei con più iscritti. Accesso: pubblico.
 **Risposta 200** come l'elenco dei tornei (3 elementi, ordinati per iscritti).
 
 ## GET /api/tornei/live
-Tornei in corso adesso: stato "chiuso" e ora attuale tra dataOra e dataFine. Accesso: pubblico.
+Tornei in corso adesso: stato "chiuso" e ora attuale tra dataOra e dataFine, cioè `inCorso` true (come GET /api/tornei?inCorso=true). Accesso: pubblico.
 
 **Risposta 200** come l'elenco dei tornei (array vuoto se nessun torneo è in corso).
 
@@ -157,7 +167,7 @@ Dettaglio di un torneo. Accesso: pubblico. Con la sessione aperta `miaSquadra` i
 **Risposta 200**
 { "id": 5, "nome": "Sfida di Natale", "descrizione": "Squadre da 3, gironi all'italiana.",
   "gioco": "Calcio virtuale", "categoria": "Calcio", "modalita": "squadra", "giocatoriPerSquadra": 3,
-  "stato": "chiuso", "dataOra": "2026-10-12T10:00:00", "dataFine": "2026-10-12T20:00:00",
+  "stato": "chiuso", "inCorso": true, "dataOra": "2026-10-12T10:00:00", "dataFine": "2026-10-12T20:00:00",
   "postiMax": 4, "iscritti": 3, "foto": "img/calcio.jpg",
   "miaSquadra": { "id": 51, "nome": "Team Alfa", "sonoCapitano": true } }
 
@@ -270,6 +280,7 @@ Squadre iscritte a un torneo con i componenti (nei tornei singoli ogni squadra h
 Iscrive l'utente autenticato al torneo. Accesso: utente.
 Torneo singolo: nessun body, la squadra da 1 giocatore si crea in automatico.
 Torneo duo o squadra: l'utente crea la squadra e ne diventa il capitano; indica nome e email degli altri componenti (utenti già registrati, controllabili con GET /api/utenti/cerca), che vengono iscritti con lui.
+Limite di tornei attivi: l'iscrizione è rifiutata se l'utente, o uno dei componenti indicati, ha già raggiunto `maxTorneiAttivi` tornei attivi (aperti o chiusi).
 
 | Parametro | Dove | Tipo | Obbligatorio |
 |-----------|------|------|--------------|
@@ -294,6 +305,8 @@ Torneo duo o squadra: l'utente crea la squadra e ne diventa il capitano; indica 
 | 409 | nome squadra già usato nel torneo | {"errore": "Nome squadra già usato in questo torneo"} |
 | 422 | email di un componente non registrata | {"errore": "luigi.bruni@mail.it non è registrato: deve prima creare un account"} |
 | 422 | torneo chiuso o pieno | {"errore": "Torneo chiuso o senza posti liberi"} |
+| 422 | l'utente ha raggiunto il limite di tornei attivi | {"errore": "Hai già raggiunto il limite di 3 tornei attivi"} |
+| 422 | un componente ha raggiunto il limite | {"errore": "Elena Conti ha già raggiunto il limite di 3 tornei attivi"} |
 
 ## DELETE /api/tornei/{id}/iscrizioni
 Annulla l'iscrizione dell'utente autenticato. Possibile solo con torneo aperto. Nei tornei duo e squadra la può annullare solo il capitano: la squadra viene sciolta. Accesso: utente.
@@ -319,7 +332,7 @@ Annulla l'iscrizione dell'utente autenticato. Possibile solo con torneo aperto. 
 
 **Risposta 200**
 [ { "id": 5, "nome": "Sfida di Natale", "gioco": "Calcio virtuale", "categoria": "Calcio",
-    "modalita": "squadra", "giocatoriPerSquadra": 3, "stato": "chiuso",
+    "modalita": "squadra", "giocatoriPerSquadra": 3, "stato": "chiuso", "inCorso": true,
     "dataOra": "2026-10-12T10:00:00", "dataFine": "2026-10-12T20:00:00",
     "postiMax": 4, "iscritti": 3, "foto": "img/calcio.jpg",
     "squadra": { "id": 51, "nome": "Team Alfa", "sonoCapitano": true },
@@ -331,14 +344,14 @@ Annulla l'iscrizione dell'utente autenticato. Possibile solo con torneo aperto. 
 | 401 | utente non autenticato | {"errore": "Utente non autenticato"} |
 
 ## GET /api/utenti/cerca
-Cerca un utente registrato per email esatta. Serve alla pagina di iscrizione a un torneo duo o squadra, per controllare ogni componente mentre si scrive la sua email. Restituisce solo nome e cognome. Accesso: utente.
+Cerca un utente registrato per email esatta. Serve alla pagina di iscrizione a un torneo duo o squadra, per controllare ogni componente mentre si scrive la sua email. Restituisce nome e cognome e `puoIscriversi`: false se l'utente ha già raggiunto il limite di tornei attivi (il frontend mostra ✗ accanto al componente). Accesso: utente.
 
 | Parametro | Dove | Tipo | Obbligatorio |
 |-----------|------|------|--------------|
 | email | query | stringa, email esatta | sì |
 
 **Risposta 200**
-{ "utenteId": 13, "nome": "Luca", "cognome": "Verdi" }
+{ "utenteId": 13, "nome": "Luca", "cognome": "Verdi", "puoIscriversi": true }
 
 **Errori**
 | Codice | Causa | Risposta |
@@ -348,10 +361,11 @@ Cerca un utente registrato per email esatta. Serve alla pagina di iscrizione a u
 | 404 | nessun utente con quell'email | {"errore": "Utente non registrato"} |
 
 ## GET /api/utenti/me/statistiche
-Pagina profilo, riepilogo: punti totali, posizione nella classifica generale, numero di tornei e partite, punti e posizione per ogni categoria. I punti sono quelli delle sole partite concluse (individuali se inseriti, altrimenti della squadra). `posizione` è null se l'utente non ha ancora partite concluse. Accesso: utente.
+Pagina profilo, riepilogo: punti totali, posizione nella classifica generale, numero di tornei e partite, tornei attivi e limite massimo, punti e posizione per ogni categoria. `torniAttivi` conta i tornei aperti o chiusi a cui l'utente è iscritto; `maxTorneiAttivi` è il limite deciso dall'admin (il frontend disattiva "Iscriviti" quando `torniAttivi` è uguale o maggiore). I punti sono quelli delle sole partite concluse (individuali se inseriti, altrimenti della squadra). `posizione` è null se l'utente non ha ancora partite concluse. Accesso: utente.
 
 **Risposta 200**
-{ "punti": 13, "posizione": 2, "tornei": 3, "partiteGiocate": 2, "partiteDaGiocare": 1,
+{ "punti": 13, "posizione": 2, "tornei": 3, "torniAttivi": 2, "maxTorneiAttivi": 3,
+  "partiteGiocate": 2, "partiteDaGiocare": 1,
   "perCategoria": [ { "categoria": "Calcio", "punti": 3, "posizione": 1 },
                     { "categoria": "Sparatutto", "punti": 10, "posizione": 2 } ] }
 
@@ -526,6 +540,73 @@ Inserisce o corregge i punti di una partita. Punti di squadra obbligatori per tu
 | 404 | id inesistente | {"errore": "Partita non trovata"} |
 | 422 | torneo concluso | {"errore": "Il torneo è concluso: i punti non sono più modificabili"} |
 
+## GET /api/giocate
+Elenco delle top giocate, dalla più recente. Serve alla pagina "Top giocate" del menu (tutti i tornei) e alla scheda "Top giocate" del dettaglio torneo (con `torneoId`). Il frontend incorpora il video con `https://www.youtube.com/embed/{youtubeId}?start={inizioSec}&end={fineSec}`. Accesso: pubblico.
+
+| Parametro | Dove | Tipo | Obbligatorio |
+|-----------|------|------|--------------|
+| torneoId | query | intero | no |
+| categoria | query | stringa | no |
+
+**Risposta 200**
+[ { "id": 8, "torneoId": 5, "torneo": "Sfida di Natale", "titolo": "Gol al volo",
+    "youtubeId": "Xk3fPq9LmZ8", "inizioSec": 90, "fineSec": 135,
+    "partitaId": 31, "turno": "Girone 1", "utenteId": 12, "giocatore": "Mario Rossi" } ]
+`partitaId`, `turno`, `utenteId` e `giocatore` sono null se la clip non è collegata a una partita o a un giocatore. Array vuoto se non ci sono clip.
+
+**Errori**
+| Codice | Causa | Risposta |
+|--------|-------|----------|
+| 400 | torneoId non numerico | {"errore": "Parametro non valido"} |
+| 404 | torneo inesistente | {"errore": "Torneo non trovato"} |
+| 404 | categoria inesistente | {"errore": "Categoria non trovata"} |
+
+## POST /api/tornei/{id}/giocate
+Aggiunge una top giocata a un torneo (anche aperto o concluso). L'admin incolla il link YouTube e il frontend ne ricava l'ID; i tempi si inseriscono come min:sec e si inviano in secondi. Accesso: admin.
+
+| Parametro | Dove | Tipo | Obbligatorio |
+|-----------|------|------|--------------|
+| id | path | intero | sì |
+| titolo | body | stringa, massimo 100 caratteri | sì |
+| youtubeId | body | stringa, ID del video (non il link intero) | sì |
+| inizioSec | body | intero >= 0 | sì |
+| fineSec | body | intero, maggiore di inizioSec | sì |
+| partitaId | body | intero, partita dello stesso torneo | no |
+| utenteId | body | intero, giocatore registrato | no |
+
+**Risposta 201**
+{ "id": 8, "torneoId": 5, "torneo": "Sfida di Natale", "titolo": "Gol al volo",
+  "youtubeId": "Xk3fPq9LmZ8", "inizioSec": 90, "fineSec": 135,
+  "partitaId": 31, "turno": "Girone 1", "utenteId": 12, "giocatore": "Mario Rossi" }
+
+**Errori**
+| Codice | Causa | Risposta |
+|--------|-------|----------|
+| 400 | campi mancanti o non validi | {"errore": "Dati non validi"} |
+| 400 | fine non dopo l'inizio | {"errore": "La fine deve essere dopo l'inizio"} |
+| 401 | utente non autenticato | {"errore": "Utente non autenticato"} |
+| 403 | ruolo non admin | {"errore": "Operazione non consentita"} |
+| 404 | id torneo inesistente | {"errore": "Torneo non trovato"} |
+| 422 | partita di un altro torneo | {"errore": "La partita 40 non appartiene a questo torneo"} |
+| 422 | giocatore non registrato | {"errore": "Il giocatore 99 non esiste"} |
+
+## DELETE /api/giocate/{id}
+Elimina una top giocata. Accesso: admin.
+
+| Parametro | Dove | Tipo | Obbligatorio |
+|-----------|------|------|--------------|
+| id | path | intero | sì |
+
+**Risposta 204** (nessun contenuto)
+
+**Errori**
+| Codice | Causa | Risposta |
+|--------|-------|----------|
+| 400 | id non numerico | {"errore": "Parametro non valido"} |
+| 401 | utente non autenticato | {"errore": "Utente non autenticato"} |
+| 403 | ruolo non admin | {"errore": "Operazione non consentita"} |
+| 404 | id inesistente | {"errore": "Giocata non trovata"} |
+
 ---
 
 ## GET /api/tornei/{id}/classifica
@@ -582,3 +663,28 @@ Somma dei punti nei soli tornei della categoria. Accesso: pubblico.
 | Codice | Causa | Risposta |
 |--------|-------|----------|
 | 404 | categoria inesistente | {"errore": "Categoria non trovata"} |
+
+---
+
+## GET /api/impostazioni
+Impostazioni del sito. Per ora una sola: il numero massimo di tornei attivi per utente (default 3). Serve alle pagine di iscrizione e "I miei tornei" (testo "Tornei attivi: 2 / 3") e alla pagina admin "Impostazioni". Accesso: pubblico.
+
+**Risposta 200**
+{ "maxTorneiAttivi": 3 }
+
+## PUT /api/impostazioni
+Modifica il limite di tornei attivi per utente. Vale subito per tutti i tornei e tutti gli utenti, ma solo per le nuove iscrizioni: chi supera il nuovo limite resta iscritto, senza poter iscriversi ad altri tornei finché non scende sotto il limite. Accesso: admin.
+
+| Parametro | Dove | Tipo | Obbligatorio |
+|-----------|------|------|--------------|
+| maxTorneiAttivi | body | intero da 1 a 3 | sì |
+
+**Risposta 200**
+{ "maxTorneiAttivi": 2 }
+
+**Errori**
+| Codice | Causa | Risposta |
+|--------|-------|----------|
+| 400 | valore mancante, non intero o fuori da 1-3 | {"errore": "Dati non validi: il limite deve essere un numero intero da 1 a 3"} |
+| 401 | utente non autenticato | {"errore": "Utente non autenticato"} |
+| 403 | ruolo non admin | {"errore": "Operazione non consentita"} |

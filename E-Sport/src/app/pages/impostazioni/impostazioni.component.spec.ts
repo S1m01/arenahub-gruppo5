@@ -24,30 +24,30 @@ describe('ImpostazioniComponent', () => {
     expect((el.querySelector('input') as HTMLInputElement).value).toBe('3');
   });
 
-  it.each(['0', '21', '2.5', ''])('rifiuta il valore "%s"', async (valore) => {
+  it.each(['0', '4', '2.5', ''])('rifiuta il valore "%s"', async (valore) => {
     const { f, el } = await crea();
     scrivi(el, 'input', valore);
     invia(el);
     f.detectChanges();
-    expect(testo(el)).toContain('Il limite deve essere un numero intero da 1 a 20');
+    expect(testo(el)).toContain('Il limite deve essere un numero intero da 1 a 3');
     http().expectNone('/api/impostazioni');
   });
 
   it('salva il nuovo limite', async () => {
     const { f, el } = await crea();
-    scrivi(el, 'input', '5');
+    scrivi(el, 'input', '2');
     invia(el);
     const req = http().expectOne('/api/impostazioni');
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual({ maxTorneiAttivi: 5 });
-    req.flush({ maxTorneiAttivi: 5 });
+    expect(req.request.body).toEqual({ maxTorneiAttivi: 2 });
+    req.flush({ maxTorneiAttivi: 2 });
     f.detectChanges();
-    expect(testo(el)).toContain('Limite salvato: 5 tornei attivi per utente');
+    expect(testo(el)).toContain('Limite salvato: 2 tornei attivi per utente');
   });
 
   it("mostra l'errore del backend", async () => {
     const { f, el } = await crea();
-    scrivi(el, 'input', '5');
+    scrivi(el, 'input', '2');
     invia(el);
     rispondiErrore(http().expectOne('/api/impostazioni'), 403, 'Operazione non consentita');
     f.detectChanges();

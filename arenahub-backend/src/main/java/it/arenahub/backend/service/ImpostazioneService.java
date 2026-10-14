@@ -44,9 +44,9 @@ public class ImpostazioneService {
 	}
 
 	public ImpostazioniResponse modifica(ImpostazioniRequest req) {
-		if (req == null || !(req.maxTorneiAttivi() instanceof Integer valore) || valore < 1 || valore > 20) {
+		if (req == null || !(req.maxTorneiAttivi() instanceof Integer valore) || valore < 1 || valore > 3) {
 			throw new ApiException(HttpStatus.BAD_REQUEST,
-					"Dati non validi: il limite deve essere un numero intero da 1 a 20");
+					"Dati non validi: il limite deve essere un numero intero da 1 a 3");
 		}
 		impostazioneRepository.save(new Impostazione(MAX_TORNEI_ATTIVI, valore));
 		return new ImpostazioniResponse(valore);
