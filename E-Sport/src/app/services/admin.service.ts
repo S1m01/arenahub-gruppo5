@@ -27,6 +27,13 @@ export class AdminService {
     return this.http.get<IscrittiSquadraApi[]>(`/api/tornei/${id}/iscritti`);
   }
 
+  creaPartita(
+    torneoId: number,
+    dati: { turno: string | null; dataOra: string | null; squadre: number[] }
+  ): Observable<unknown> {
+    return this.http.post(`/api/tornei/${torneoId}/partite`, dati);
+  }
+
   cambiaStato(id: number, stato: 'chiuso' | 'concluso'): Observable<{ id: number; stato: string }> {
     return this.http.patch<{ id: number; stato: string }>(`/api/tornei/${id}/stato`, { stato });
   }
