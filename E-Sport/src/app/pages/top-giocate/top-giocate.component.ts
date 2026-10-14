@@ -34,44 +34,14 @@ export class TopGiocateComponent implements OnInit {
   });
 
   ngOnInit(): void {
-<<<<<<< HEAD
     this.carica();
-=======
-    this.caricaGiocate();
->>>>>>> d967202c2733aed461fc331bdb85b4062eda44a5
 
     this.torneiService.getCategorie().subscribe({
       next: (lista) => this.categorie.set(lista),
       error: () => this.categorie.set([]),
     });
-<<<<<<< HEAD
-=======
   }
 
-  cambiaCategoria(categoria: string): void {
-    this.categoria.set(categoria);
-    this.torneo.set('TUTTI');
-    this.caricaGiocate();
-  }
-
-  caricaGiocate(): void {
-    const categoria = this.categoria() === 'TUTTE' ? undefined : this.categoria();
-    this.caricamento.set(true);
-    this.errore.set(null);
-    this.giocateService.getGiocate(undefined, categoria).subscribe({
-      next: (lista) => {
-        this.giocate.set(lista);
-        this.caricamento.set(false);
-      },
-      error: () => {
-        this.errore.set('Impossibile caricare le top giocate. Riprova più tardi.');
-        this.caricamento.set(false);
-      },
-    });
->>>>>>> d967202c2733aed461fc331bdb85b4062eda44a5
-  }
-
-  // Le giocate non hanno la categoria: il filtro lo fa il backend con ?categoria=.
   scegliCategoria(categoria: string): void {
     this.categoria.set(categoria);
     this.torneo.set('TUTTI');

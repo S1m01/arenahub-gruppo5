@@ -14,11 +14,7 @@
 
     <label class="filtro">
       <span>Categoria</span>
-<<<<<<< HEAD
       <select class="campo" [value]="categoria()" (change)="scegliCategoria(valore($event))">
-=======
-      <select class="campo" [value]="categoria()" (change)="cambiaCategoria(valore($event))">
->>>>>>> d967202c2733aed461fc331bdb85b4062eda44a5
         <option value="TUTTE">Tutte</option>
         @for (c of categorie(); track c) {
           <option [value]="c">{{ c }}</option>
