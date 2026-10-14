@@ -77,13 +77,12 @@ export interface Giocata {
   id: number;
   torneoId: number;
   torneo: string;
-  categoria: string;
   partitaId: number | null;
   turno: string | null;
   titolo: string;
   videoId: string;
   inizio: number;
   fine: number;
+  utenteId: number | null;
   giocatore: string | null;
-  squadra: string | null;
 }

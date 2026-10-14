@@ -81,12 +81,7 @@ export class CardGiocataComponent {
 
   dettagli = computed(() => {
     const g = this.giocata();
-    const autore = g.giocatore
-      ? this.mostraTorneo() || !g.squadra
-        ? g.giocatore
-        : `${g.giocatore} (${g.squadra})`
-      : g.squadra;
-    const parti = this.mostraTorneo() ? [g.torneo, g.turno, autore] : [g.turno, autore];
+    const parti = this.mostraTorneo() ? [g.torneo, g.turno, g.giocatore] : [g.turno, g.giocatore];
     return parti.filter(Boolean).join(' · ');
   });
 

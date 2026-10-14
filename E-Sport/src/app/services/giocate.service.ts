@@ -9,8 +9,10 @@ import { daGiocataApi } from './mappa-api';
 export class GiocateService {
   private http = inject(HttpClient);
 
-  getGiocate(torneoId?: number): Observable<Giocata[]> {
-    const params = torneoId === undefined ? undefined : new HttpParams().set('torneoId', torneoId);
+  getGiocate(torneoId?: number, categoria?: string): Observable<Giocata[]> {
+    let params = new HttpParams();
+    if (torneoId !== undefined) params = params.set('torneoId', torneoId);
+    if (categoria !== undefined) params = params.set('categoria', categoria);
     return this.http
       .get<GiocataApi[]>('/api/giocate', { params })
       .pipe(map((lista) => lista.map(daGiocataApi)));

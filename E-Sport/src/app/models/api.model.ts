@@ -28,15 +28,14 @@ export interface GiocataApi {
   id: number;
   torneoId: number;
   torneo: string;
-  categoria: string;
-  partitaId: number | null;
-  turno: string | null;
   titolo: string;
-  idYoutube: string;
+  youtubeId: string;
   inizioSec: number;
   fineSec: number;
+  partitaId: number | null;
+  turno: string | null;
+  utenteId: number | null;
   giocatore: string | null;
-  squadra: string | null;
 }
 
 export interface TorneoRichiestaApi {
