@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { TorneoApi } from '../models/api.model';
-import { Torneo } from '../models/torneo.model';
+import { TorneoApi, TorneoRichiestaApi } from '../models/api.model';
+import { Torneo, TorneoDettaglio } from '../models/torneo.model';
 import { daTorneoApi } from './mappa-api';
 
 @Injectable({ providedIn: 'root' })
@@ -13,6 +13,14 @@ export class AdminService {
     return this.http
       .get<TorneoApi[]>('/api/tornei')
       .pipe(map((lista) => lista.map((t) => daTorneoApi(t))));
+  }
+
+  creaTorneo(dati: TorneoRichiestaApi): Observable<TorneoDettaglio> {
+    return this.http.post<TorneoApi>('/api/tornei', dati).pipe(map((t) => daTorneoApi(t)));
+  }
+
+  modificaTorneo(id: number, dati: TorneoRichiestaApi): Observable<TorneoDettaglio> {
+    return this.http.put<TorneoApi>(`/api/tornei/${id}`, dati).pipe(map((t) => daTorneoApi(t)));
   }
 
   cambiaStato(id: number, stato: 'chiuso' | 'concluso'): Observable<{ id: number; stato: string }> {

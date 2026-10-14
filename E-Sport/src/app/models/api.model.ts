@@ -38,3 +38,16 @@ export interface GiocataApi {
   giocatore: string | null;
   squadra: string | null;
 }
+
+export interface TorneoRichiestaApi {
+  nome: string;
+  descrizione: string | null;
+  gioco: string;
+  categoria: string;
+  modalita: 'singolo' | 'duo' | 'squadra';
+  giocatoriPerSquadra: number;
+  dataOra: string;
+  dataFine: string;
+  postiMax: number;
+  foto: string | null;
+}

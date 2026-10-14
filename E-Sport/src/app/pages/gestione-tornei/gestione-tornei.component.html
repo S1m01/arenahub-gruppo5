@@ -6,7 +6,7 @@
         <p class="riepilogo">{{ riepilogo() }}</p>
       }
     </div>
-    <button type="button" class="btn-pieno" disabled title="Presto disponibile">+ Nuovo torneo</button>
+    <a routerLink="/admin/tornei/nuovo" class="btn-pieno">+ Nuovo torneo</a>
   </div>
 
   @if (esito(); as e) {
@@ -45,7 +45,7 @@
               <td>
                 <div class="azioni-riga">
                   @if (t.stato === 'APERTO') {
-                    <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Modifica</button>
+                    <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'modifica']">Modifica</a>
                   } @else {
                     <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Partite</button>
                     <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Giocate</button>

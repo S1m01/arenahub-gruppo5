@@ -8,6 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegistrazioneComponent } from './pages/registrazione/registrazione.component';
 import { TopGiocateComponent } from './pages/top-giocate/top-giocate.component';
 import { TopTorneiComponent } from './pages/top-tornei/top-tornei.component';
+import { TorneoFormComponent } from './pages/torneo-form/torneo-form.component';
 import { TorneoComponent } from './pages/torneo/torneo.component';
 
 export const routes: Routes = [
@@ -47,6 +48,18 @@ export const routes: Routes = [
     component: GestioneTorneiComponent,
     canActivate: [adminGuard],
     title: 'Gestione tornei · ArenaHub',
+  },
+  {
+    path: 'admin/tornei/nuovo',
+    component: TorneoFormComponent,
+    canActivate: [adminGuard],
+    title: 'Nuovo torneo · ArenaHub',
+  },
+  {
+    path: 'admin/tornei/:id/modifica',
+    component: TorneoFormComponent,
+    canActivate: [adminGuard],
+    title: 'Modifica torneo · ArenaHub',
   },
   { path: '**', redirectTo: '' },
 ];

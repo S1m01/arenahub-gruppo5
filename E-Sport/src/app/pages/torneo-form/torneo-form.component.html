@@ -1,0 +1,165 @@
+<section class="pagina">
+  <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento torneo...</p>
+  } @else if (erroreCaricamento()) {
+    <p class="messaggio errore">{{ erroreCaricamento() }}</p>
+  } @else {
+    <form class="scheda" [formGroup]="form" (ngSubmit)="salva()" novalidate>
+      <h1 class="intestazione">{{ id ? 'Modifica torneo' : 'Nuovo torneo' }}</h1>
+
+      <div class="corpo">
+        @if (torneo()?.stato === 'CONCLUSO') {
+          <p class="errore-server">Un torneo concluso non è modificabile.</p>
+        }
+
+        <div class="griglia">
+          <label class="campo-gruppo intera">
+            <span>Nome</span>
+            <input type="text" class="campo" formControlName="nome" [class.non-valido]="nonValido('nome')" />
+            @if (nonValido('nome')) {
+              <small class="errore-campo">Inserisci il nome (massimo 100 caratteri)</small>
+            }
+          </label>
+
+          <label class="campo-gruppo intera">
+            <span>Descrizione</span>
+            <textarea class="campo" rows="3" formControlName="descrizione"></textarea>
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Gioco</span>
+            <input
+              type="text"
+              class="campo"
+              formControlName="gioco"
+              placeholder="Calcio virtuale"
+              [class.non-valido]="nonValido('gioco')"
+            />
+            @if (nonValido('gioco')) {
+              <small class="errore-campo">Inserisci il gioco</small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Categoria</span>
+            <select class="campo" formControlName="categoria" [class.non-valido]="nonValido('categoria')">
+              @for (c of categorie(); track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+            @if (nonValido('categoria')) {
+              <small class="errore-campo">Scegli una categoria</small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Modalità</span>
+            <select class="campo" formControlName="modalita">
+              <option value="singolo">Singolo</option>
+              <option value="duo">Duo</option>
+              <option value="squadra">Squadra</option>
+            </select>
+            @if (conIscritti() && torneo()?.stato !== 'CONCLUSO') {
+              <small class="aiuto">Non modificabile: ci sono già iscritti</small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Giocatori per squadra</span>
+            <input
+              type="number"
+              class="campo"
+              min="1"
+              formControlName="giocatoriPerSquadra"
+              [class.non-valido]="nonValido('giocatoriPerSquadra')"
+            />
+            @if (nonValido('giocatoriPerSquadra')) {
+              <small class="errore-campo">Una squadra ha almeno 3 giocatori</small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Data e ora inizio</span>
+            <input
+              type="datetime-local"
+              class="campo"
+              formControlName="dataOra"
+              [class.non-valido]="nonValido('dataOra')"
+            />
+            @if (nonValido('dataOra')) {
+              <small class="errore-campo">Inserisci data e ora di inizio</small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Data e ora fine</span>
+            <input
+              type="datetime-local"
+              class="campo"
+              formControlName="dataFine"
+              [class.non-valido]="nonValido('dataFine') || dateIncoerenti()"
+            />
+            @if (nonValido('dataFine')) {
+              <small class="errore-campo">Inserisci data e ora di fine</small>
+            } @else if (dateIncoerenti()) {
+              <small class="errore-campo">La fine non può essere prima dell'inizio</small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>{{ etichettaPosti() }}</span>
+            <input
+              type="number"
+              class="campo"
+              min="1"
+              formControlName="postiMax"
+              [class.non-valido]="nonValido('postiMax')"
+            />
+            @if (nonValido('postiMax')) {
+              <small class="errore-campo">
+                @if (conIscritti()) {
+                  Almeno {{ torneo()!.iscritti }} (gli iscritti attuali)
+                } @else {
+                  Inserisci un numero maggiore di 0
+                }
+              </small>
+            }
+          </label>
+
+          <label class="campo-gruppo">
+            <span>Foto (percorso immagine)</span>
+            <input
+              type="text"
+              class="campo"
+              formControlName="foto"
+              list="foto-disponibili"
+              placeholder="img/fifa.png"
+            />
+            <datalist id="foto-disponibili">
+              @for (f of foto; track f) {
+                <option [value]="f"></option>
+              }
+            </datalist>
+          </label>
+        </div>
+
+        @if (erroreServer()) {
+          <p class="errore-server" role="alert">{{ erroreServer() }}</p>
+        }
+
+        <div class="pulsanti">
+          <button type="submit" class="btn-pieno" [disabled]="invio() || torneo()?.stato === 'CONCLUSO'">
+            @if (invio()) {
+              Salvataggio...
+            } @else {
+              {{ id ? 'Salva modifiche' : 'Crea torneo' }}
+            }
+          </button>
+          <a routerLink="/admin" class="btn-outline">Annulla</a>
+        </div>
+      </div>
+    </form>
+  }
+</section>

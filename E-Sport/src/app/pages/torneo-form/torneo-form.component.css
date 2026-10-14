@@ -1,0 +1,136 @@
+.indietro {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--testo);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.indietro:hover {
+  text-decoration: underline;
+}
+
+.scheda {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.intestazione {
+  margin: 0;
+  padding: 16px 24px;
+  background: var(--testo);
+  color: #fff;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.corpo {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.griglia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+}
+
+.intera {
+  grid-column: 1 / -1;
+}
+
+.campo-gruppo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.campo-gruppo .campo {
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.campo:disabled {
+  background: var(--sfondo);
+  color: var(--testo-tenue);
+}
+
+textarea.campo {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.non-valido {
+  border-color: var(--rosso);
+}
+
+.errore-campo,
+.aiuto {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.errore-campo {
+  color: var(--rosso);
+  font-weight: 600;
+}
+
+.aiuto {
+  font-weight: 400;
+}
+
+.errore-server {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgb(230 50 55 / 0.1);
+  color: var(--rosso);
+  font-weight: 600;
+  text-align: center;
+}
+
+.pulsanti {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.messaggio {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+@media (max-width: 640px) {
+  .corpo {
+    padding: 18px;
+  }
+  .griglia,
+  .pulsanti {
+    grid-template-columns: 1fr;
+  }
+}
