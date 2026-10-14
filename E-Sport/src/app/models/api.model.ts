@@ -51,3 +51,11 @@ export interface TorneoRichiestaApi {
   postiMax: number;
   foto: string | null;
 }
+
+export interface IscrittiSquadraApi {
+  squadraId: number;
+  squadra: string;
+  capitanoId: number;
+  data: string;
+  componenti: { utenteId: number; nome: string; cognome: string; email: string }[];
+}

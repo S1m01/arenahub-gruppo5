@@ -50,7 +50,7 @@
                     <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Partite</button>
                     <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Giocate</button>
                   }
-                  <button type="button" class="btn-piccolo" disabled title="Presto disponibile">Iscritti</button>
+                  <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'iscritti']">Iscritti</a>
                   @if (t.stato === 'APERTO') {
                     <button
                       type="button"

@@ -3,6 +3,7 @@ import { adminGuard } from './guards/admin.guard';
 import { ClassificaComponent } from './pages/classifica/classifica.component';
 import { GestioneTorneiComponent } from './pages/gestione-tornei/gestione-tornei.component';
 import { HomeComponent } from './pages/home/home.component';
+import { IscrittiComponent } from './pages/iscritti/iscritti.component';
 import { LiveComponent } from './pages/live/live.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrazioneComponent } from './pages/registrazione/registrazione.component';
@@ -60,6 +61,12 @@ export const routes: Routes = [
     component: TorneoFormComponent,
     canActivate: [adminGuard],
     title: 'Modifica torneo · ArenaHub',
+  },
+  {
+    path: 'admin/tornei/:id/iscritti',
+    component: IscrittiComponent,
+    canActivate: [adminGuard],
+    title: 'Iscritti · ArenaHub',
   },
   { path: '**', redirectTo: '' },
 ];
