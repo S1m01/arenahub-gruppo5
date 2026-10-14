@@ -29,7 +29,9 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST, "/api/auth/registrazione", "/api/auth/login").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/categorie", "/api/tornei", "/api/tornei/top", "/api/tornei/live",
-								"/api/tornei/*", "/api/tornei/*/squadre", "/api/tornei/*/partite", "/api/partite/*").permitAll()
+								"/api/tornei/*", "/api/tornei/*/squadre", "/api/tornei/*/partite", "/api/partite/*",
+								"/api/tornei/*/classifica", "/api/tornei/*/classifica-giocatori", "/api/classifica",
+								"/api/classifica/top", "/api/classifica/categorie/*").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/tornei").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/api/tornei/*").hasRole("ADMIN")

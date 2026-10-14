@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import it.arenahub.backend.dto.ClassificaGeneraleResponse;
 import it.arenahub.backend.dto.PuntiCategoriaResponse;
 import it.arenahub.backend.model.Utente;
 
@@ -35,4 +36,16 @@ public interface UtenteRepository extends JpaRepository<Utente, Integer> {
 			+ "JOIN categoria c ON c.id_categoria = cc.id_categoria "
 			+ "WHERE cc.id_utente = :idUtente ORDER BY c.nome", nativeQuery = true)
 	List<PuntiCategoriaResponse> puntiPerCategoria(@Param("idUtente") Integer idUtente);
+
+	@Query(value = "SELECT ROW_NUMBER() OVER (ORDER BY punti DESC, giocatore) AS posizione, id_utente AS \"utenteId\", "
+			+ "giocatore, punti FROM classifica_generale ORDER BY posizione", nativeQuery = true)
+	List<ClassificaGeneraleResponse> classificaGenerale();
+
+	@Query(value = "SELECT ROW_NUMBER() OVER (ORDER BY punti DESC, giocatore) AS posizione, id_utente AS \"utenteId\", "
+			+ "giocatore, punti FROM classifica_generale ORDER BY posizione LIMIT 3", nativeQuery = true)
+	List<ClassificaGeneraleResponse> classificaTop();
+
+	@Query(value = "SELECT ROW_NUMBER() OVER (ORDER BY punti DESC, giocatore) AS posizione, id_utente AS \"utenteId\", "
+			+ "giocatore, punti FROM classifica_categoria WHERE id_categoria = :idCategoria ORDER BY posizione", nativeQuery = true)
+	List<ClassificaGeneraleResponse> classificaCategoria(@Param("idCategoria") Integer idCategoria);
 }
