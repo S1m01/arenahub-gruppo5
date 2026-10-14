@@ -187,3 +187,6 @@ INSERT INTO punti_giocatore (id_partita, id_utente, id_squadra, punti) VALUES
 (9, 8,  13, 2),
 (9, 13, 13, 2),
 (9, 16, 13, 1);
+
+---- Nuova insert 
+INSERT INTO impostazione (chiave, valore) VALUES ('max_tornei_attivi', 3);

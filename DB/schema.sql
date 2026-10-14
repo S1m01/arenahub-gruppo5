@@ -100,6 +100,12 @@ CREATE TABLE giocata (
   FOREIGN KEY (id_utente) REFERENCES utente(id_utente)
 );
 
+---- Nuova table 
+CREATE TABLE impostazione (
+  chiave VARCHAR(40) PRIMARY KEY,
+  valore INT NOT NULL CHECK (valore >= 1)
+);
+
 CREATE VIEW classifica_torneo AS
 SELECT s.id_torneo, s.id_squadra, s.nome AS squadra,
        COALESCE(SUM(CASE WHEN p.id_partita IS NOT NULL THEN ps.punti ELSE 0 END), 0) AS punti,
