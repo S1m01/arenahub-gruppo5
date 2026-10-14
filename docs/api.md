@@ -2,7 +2,6 @@
 
 Convenzioni comuni:
 - Nomi dei campi in camelCase
-- Date in formato ISO 8601
 - Elenchi restituiti come array JSON
 - Errori sempre nella forma {"errore": "..."}
 - Autenticazione: sessione aperta dal login (cookie di sessione)

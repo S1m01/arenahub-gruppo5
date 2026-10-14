@@ -3,8 +3,11 @@ import { adminGuard } from './guards/admin.guard';
 import { ClassificaComponent } from './pages/classifica/classifica.component';
 import { GestioneTorneiComponent } from './pages/gestione-tornei/gestione-tornei.component';
 import { HomeComponent } from './pages/home/home.component';
+import { IscrittiComponent } from './pages/iscritti/iscritti.component';
 import { LiveComponent } from './pages/live/live.component';
 import { LoginComponent } from './pages/login/login.component';
+import { PartiteComponent } from './pages/partite/partite.component';
+import { PuntiComponent } from './pages/punti/punti.component';
 import { RegistrazioneComponent } from './pages/registrazione/registrazione.component';
 import { TopGiocateComponent } from './pages/top-giocate/top-giocate.component';
 import { TopTorneiComponent } from './pages/top-tornei/top-tornei.component';
@@ -60,6 +63,24 @@ export const routes: Routes = [
     component: TorneoFormComponent,
     canActivate: [adminGuard],
     title: 'Modifica torneo · ArenaHub',
+  },
+  {
+    path: 'admin/tornei/:id/iscritti',
+    component: IscrittiComponent,
+    canActivate: [adminGuard],
+    title: 'Iscritti · ArenaHub',
+  },
+  {
+    path: 'admin/tornei/:id/partite',
+    component: PartiteComponent,
+    canActivate: [adminGuard],
+    title: 'Partite · ArenaHub',
+  },
+  {
+    path: 'admin/partite/:id/punti',
+    component: PuntiComponent,
+    canActivate: [adminGuard],
+    title: 'Inserimento punti · ArenaHub',
   },
   { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,107 @@
+<section class="pagina">
+  <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento partite...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (torneo(); as t) {
+    <h1 class="titolo">{{ t.nome }} - Partite</h1>
+
+    @if (partite().length === 0) {
+      <p class="messaggio">Nessuna partita ancora creata.</p>
+    } @else {
+      <div class="contenitore-tabella">
+        <table class="tabella">
+          <thead>
+            <tr>
+              <th>Turno</th>
+              <th>Squadre</th>
+              <th>Data e ora</th>
+              <th>Stato</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of partite(); track p.id) {
+              <tr>
+                <td>{{ p.turno || '-' }}</td>
+                <td>{{ sfidanti(p) }}</td>
+                <td class="numero">{{ p.dataOra ? (p.dataOra | date: 'dd/MM HH:mm') : '-' }}</td>
+                <td>
+                  <span class="stato" [class.conclusa]="p.stato === 'CONCLUSA'">{{ p.stato }}</span>
+                </td>
+                <td class="destra">
+                  @if (t.stato !== 'CONCLUSO') {
+                    <a class="btn-piccolo" [routerLink]="['/admin/partite', p.id, 'punti']">
+                      {{ p.stato === 'CONCLUSA' ? 'Modifica punti' : 'Inserisci punti' }}
+                    </a>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (t.stato === 'CHIUSO') {
+      <form class="scheda" (submit)="$event.preventDefault(); crea()" novalidate>
+        <h2 class="intestazione">Nuova partita</h2>
+        <div class="corpo">
+          <div class="nuova-partita">
+            <div class="campi">
+              <label class="campo-gruppo">
+                <span>Turno</span>
+                <input
+                  type="text"
+                  class="campo"
+                  name="turno"
+                  maxlength="40"
+                  placeholder="Semifinale"
+                  [value]="turno()"
+                  (input)="turno.set(valore($event))"
+                />
+              </label>
+              <label class="campo-gruppo">
+                <span>Data e ora</span>
+                <input
+                  type="datetime-local"
+                  class="campo"
+                  name="dataOra"
+                  [value]="dataOra()"
+                  (input)="dataOra.set(valore($event))"
+                />
+              </label>
+            </div>
+
+            <fieldset class="squadre">
+              <legend class="campo-gruppo">Squadre (almeno 2)</legend>
+              @if (squadre().length < 2) {
+                <p class="tenue">Servono almeno 2 squadre iscritte.</p>
+              }
+              <div class="caselle">
+                @for (s of squadre(); track s.id) {
+                  <label class="casella" [class.scelta]="scelte().has(s.id)">
+                    <input type="checkbox" [checked]="scelte().has(s.id)" (change)="alterna(s.id)" />
+                    {{ s.nome }}
+                  </label>
+                }
+              </div>
+            </fieldset>
+          </div>
+
+          @if (esito(); as e) {
+            <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+          }
+
+          <button type="submit" class="btn-pieno crea" [disabled]="invio() || scelte().size < 2">
+            {{ invio() ? 'Creazione...' : 'Crea partita' }}
+          </button>
+        </div>
+      </form>
+    } @else if (t.stato === 'APERTO') {
+      <p class="messaggio avviso">Le partite si creano dopo aver chiuso le iscrizioni del torneo.</p>
+    }
+  }
+</section>

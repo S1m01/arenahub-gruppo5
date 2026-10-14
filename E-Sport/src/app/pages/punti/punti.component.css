@@ -1,0 +1,130 @@
+.indietro {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--testo);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.indietro:hover {
+  text-decoration: underline;
+}
+
+.titolo {
+  margin: 0;
+}
+
+.sottotitolo {
+  margin: 6px 0 20px;
+  color: var(--testo-tenue);
+}
+
+.squadre {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 20px;
+}
+
+.scheda {
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.intestazione {
+  margin: 0;
+  padding: 14px 24px;
+  background: var(--testo);
+  color: #fff;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.corpo {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.riga-punti {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items: center;
+  gap: 12px;
+}
+
+.riga-punti .campo {
+  width: 100%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.principale {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.etichetta-giocatori {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.esito {
+  margin: 20px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgb(230 50 55 / 0.1);
+  color: var(--rosso);
+  font-weight: 600;
+  text-align: center;
+}
+
+.esito.ok {
+  background: rgb(46 139 110 / 0.12);
+  color: var(--verde);
+}
+
+.pulsanti {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.pulsanti button {
+  min-width: 220px;
+}
+
+.messaggio {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+@media (max-width: 520px) {
+  .corpo {
+    padding: 16px;
+  }
+  .pulsanti button {
+    width: 100%;
+  }
+}

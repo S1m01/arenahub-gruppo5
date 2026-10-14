@@ -1,0 +1,53 @@
+<section class="pagina">
+  <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento iscritti...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (torneo(); as t) {
+    <h1 class="titolo">{{ t.nome }} - Iscritti</h1>
+    <p class="riepilogo">{{ riepilogo(t) }}</p>
+
+    @if (squadre().length === 0) {
+      <p class="messaggio">Ancora nessun iscritto.</p>
+    } @else {
+      <div class="contenitore-tabella">
+        <table class="tabella">
+          <thead>
+            <tr>
+              @if (t.modalita === 'SINGOLO') {
+                <th>Giocatore</th>
+                <th>Email</th>
+              } @else {
+                <th>Squadra</th>
+                <th>Capitano</th>
+                <th>Componenti</th>
+              }
+              <th>Iscritta il</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of squadre(); track s.squadraId) {
+              <tr>
+                @if (t.modalita === 'SINGOLO') {
+                  <td><strong>{{ s.squadra }}</strong></td>
+                  <td class="tenue">{{ s.componenti[0]?.email }}</td>
+                } @else {
+                  <td><strong>{{ s.squadra }}</strong></td>
+                  <td>{{ capitano(s) }}</td>
+                  <td>
+                    @for (c of s.componenti; track c.utenteId; let ultimo = $last) {
+                      <span [title]="c.email">{{ c.nome }} {{ c.cognome }}</span>@if (!ultimo) {, }
+                    }
+                  </td>
+                }
+                <td class="numero">{{ s.data | date: 'dd/MM HH:mm' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

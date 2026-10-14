@@ -1,0 +1,82 @@
+<section class="pagina">
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento partita...</p>
+  } @else if (errore()) {
+    <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (partita(); as p) {
+    <a [routerLink]="['/admin/tornei', p.torneoId, 'partite']" class="indietro">‹ Partite del torneo</a>
+
+    <h1 class="titolo">
+      {{ p.turno || 'Partita' }}
+      @if (p.dataOra) {
+        - {{ p.dataOra | date: 'dd/MM HH:mm' }}
+      }
+      - {{ p.torneo }}
+    </h1>
+    <p class="sottotitolo">
+      {{ p.stato === 'conclusa' ? 'Partita conclusa: stai correggendo i punti' : 'Partita programmata' }}
+    </p>
+
+    <form (submit)="$event.preventDefault(); salva(false)" novalidate>
+      <div class="squadre">
+        @for (r of righe(); track r.squadraId) {
+          <div class="scheda">
+            <h2 class="intestazione">{{ r.nome }}</h2>
+            <div class="corpo">
+              <label class="riga-punti principale">
+                <span>Punti squadra</span>
+                <input
+                  type="number"
+                  class="campo"
+                  min="0"
+                  step="1"
+                  inputmode="numeric"
+                  [name]="'squadra-' + r.squadraId"
+                  [value]="r.punti"
+                  (input)="r.punti = valore($event)"
+                />
+              </label>
+
+              @if (r.giocatori.length > 0) {
+                <p class="etichetta-giocatori">Punti dei giocatori (facoltativi: tutti o nessuno)</p>
+                @for (g of r.giocatori; track g.utenteId) {
+                  <label class="riga-punti">
+                    <span>{{ g.nome }}</span>
+                    <input
+                      type="number"
+                      class="campo"
+                      min="0"
+                      step="1"
+                      inputmode="numeric"
+                      [name]="'giocatore-' + r.squadraId + '-' + g.utenteId"
+                      [value]="g.punti"
+                      (input)="g.punti = valore($event)"
+                    />
+                  </label>
+                }
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (esito(); as e) {
+        <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+      }
+
+      <div class="pulsanti">
+        @if (p.stato === 'conclusa') {
+          <button type="submit" class="btn-pieno" [disabled]="invio()">
+            {{ invio() ? 'Salvataggio...' : 'Salva correzione' }}
+          </button>
+        } @else {
+          <button type="submit" class="btn-outline" [disabled]="invio()">Salva punti</button>
+          <button type="button" class="btn-pieno" [disabled]="invio()" (click)="salva(true)">
+            {{ invio() ? 'Salvataggio...' : 'Salva e concludi partita' }}
+          </button>
+        }
+      </div>
+    </form>
+  }
+</section>
