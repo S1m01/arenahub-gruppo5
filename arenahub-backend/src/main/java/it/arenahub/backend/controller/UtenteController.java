@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.arenahub.backend.dto.CambioPasswordRequest;
 import it.arenahub.backend.dto.ComponenteResponse;
+import it.arenahub.backend.dto.MiaPartitaResponse;
 import it.arenahub.backend.dto.MioTorneoResponse;
 import it.arenahub.backend.dto.ProfiloRequest;
+import it.arenahub.backend.dto.StatisticheResponse;
 import it.arenahub.backend.dto.UtenteResponse;
+import it.arenahub.backend.model.StatoPartita;
+import it.arenahub.backend.service.PartitaService;
 import it.arenahub.backend.service.UtenteService;
 import jakarta.validation.Valid;
 
@@ -25,9 +29,22 @@ import jakarta.validation.Valid;
 public class UtenteController {
 
 	private final UtenteService utenteService;
+	private final PartitaService partitaService;
 
-	public UtenteController(UtenteService utenteService) {
+	public UtenteController(UtenteService utenteService, PartitaService partitaService) {
 		this.utenteService = utenteService;
+		this.partitaService = partitaService;
+	}
+
+	@GetMapping("/me/statistiche")
+	public StatisticheResponse statistiche(@AuthenticationPrincipal Integer idUtente) {
+		return utenteService.statistiche(idUtente);
+	}
+
+	@GetMapping("/me/partite")
+	public List<MiaPartitaResponse> miePartite(@AuthenticationPrincipal Integer idUtente,
+			@RequestParam(required = false) Integer torneoId, @RequestParam(required = false) StatoPartita stato) {
+		return partitaService.miePartite(idUtente, torneoId, stato);
 	}
 
 	@GetMapping("/cerca")
