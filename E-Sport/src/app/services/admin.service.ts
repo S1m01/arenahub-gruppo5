@@ -57,6 +57,14 @@ export class AdminService {
     return this.http.delete<void>(`/api/giocate/${id}`);
   }
 
+  getImpostazioni(): Observable<{ maxTorneiAttivi: number }> {
+    return this.http.get<{ maxTorneiAttivi: number }>('/api/impostazioni');
+  }
+
+  salvaImpostazioni(maxTorneiAttivi: number): Observable<{ maxTorneiAttivi: number }> {
+    return this.http.put<{ maxTorneiAttivi: number }>('/api/impostazioni', { maxTorneiAttivi });
+  }
+
   cambiaStato(id: number, stato: 'chiuso' | 'concluso'): Observable<{ id: number; stato: string }> {
     return this.http.patch<{ id: number; stato: string }>(`/api/tornei/${id}/stato`, { stato });
   }

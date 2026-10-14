@@ -1,0 +1,43 @@
+<section class="pagina">
+  <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
+
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento impostazioni...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else {
+    <form class="scheda" (submit)="$event.preventDefault(); salva()" novalidate>
+      <h1 class="intestazione">Impostazioni</h1>
+      <div class="corpo">
+        <label class="campo-gruppo">
+          <span>Tornei attivi per utente (massimo)</span>
+          <input
+            type="number"
+            class="campo"
+            min="1"
+            max="20"
+            step="1"
+            [formControl]="limite"
+            [class.non-valido]="limite.invalid && limite.touched"
+          />
+          @if (limite.invalid && limite.touched) {
+            <small class="errore-campo">Il limite deve essere un numero intero da 1 a 20</small>
+          } @else {
+            <small class="aiuto">
+              Quanti tornei aperti o chiusi (non conclusi) può avere ogni utente, come capitano o
+              componente. Vale solo per le nuove iscrizioni: chi è già iscritto non viene tolto.
+            </small>
+          }
+        </label>
+
+        @if (esito(); as e) {
+          <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+        }
+
+        <button type="submit" class="btn-pieno" [disabled]="invio()">
+          {{ invio() ? 'Salvataggio...' : 'Salva' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

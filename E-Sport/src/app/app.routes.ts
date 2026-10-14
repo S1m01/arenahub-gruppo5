@@ -4,6 +4,7 @@ import { ClassificaComponent } from './pages/classifica/classifica.component';
 import { GestioneTorneiComponent } from './pages/gestione-tornei/gestione-tornei.component';
 import { GiocateAdminComponent } from './pages/giocate-admin/giocate-admin.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ImpostazioniComponent } from './pages/impostazioni/impostazioni.component';
 import { IscrittiComponent } from './pages/iscritti/iscritti.component';
 import { LiveComponent } from './pages/live/live.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -88,6 +89,12 @@ export const routes: Routes = [
     component: GiocateAdminComponent,
     canActivate: [adminGuard],
     title: 'Top giocate del torneo · ArenaHub',
+  },
+  {
+    path: 'admin/impostazioni',
+    component: ImpostazioniComponent,
+    canActivate: [adminGuard],
+    title: 'Impostazioni · ArenaHub',
   },
   { path: '**', redirectTo: '' },
 ];

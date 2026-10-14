@@ -6,7 +6,10 @@
         <p class="riepilogo">{{ riepilogo() }}</p>
       }
     </div>
-    <a routerLink="/admin/tornei/nuovo" class="btn-pieno">+ Nuovo torneo</a>
+    <div class="pulsanti-testata">
+      <a routerLink="/admin/impostazioni" class="btn-outline">Impostazioni</a>
+      <a routerLink="/admin/tornei/nuovo" class="btn-pieno">+ Nuovo torneo</a>
+    </div>
   </div>
 
   @if (esito(); as e) {
