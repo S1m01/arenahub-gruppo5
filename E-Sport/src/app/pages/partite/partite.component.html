@@ -33,9 +33,9 @@
                 </td>
                 <td class="destra">
                   @if (t.stato !== 'CONCLUSO') {
-                    <button type="button" class="btn-piccolo" disabled title="Presto disponibile">
+                    <a class="btn-piccolo" [routerLink]="['/admin/partite', p.id, 'punti']">
                       {{ p.stato === 'CONCLUSA' ? 'Modifica punti' : 'Inserisci punti' }}
-                    </button>
+                    </a>
                   }
                 </td>
               </tr>

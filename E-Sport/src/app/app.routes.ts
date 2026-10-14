@@ -7,6 +7,7 @@ import { IscrittiComponent } from './pages/iscritti/iscritti.component';
 import { LiveComponent } from './pages/live/live.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PartiteComponent } from './pages/partite/partite.component';
+import { PuntiComponent } from './pages/punti/punti.component';
 import { RegistrazioneComponent } from './pages/registrazione/registrazione.component';
 import { TopGiocateComponent } from './pages/top-giocate/top-giocate.component';
 import { TopTorneiComponent } from './pages/top-tornei/top-tornei.component';
@@ -74,6 +75,12 @@ export const routes: Routes = [
     component: PartiteComponent,
     canActivate: [adminGuard],
     title: 'Partite · ArenaHub',
+  },
+  {
+    path: 'admin/partite/:id/punti',
+    component: PuntiComponent,
+    canActivate: [adminGuard],
+    title: 'Inserimento punti · ArenaHub',
   },
   { path: '**', redirectTo: '' },
 ];

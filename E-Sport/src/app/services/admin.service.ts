@@ -1,7 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { IscrittiSquadraApi, TorneoApi, TorneoRichiestaApi } from '../models/api.model';
+import {
+  IscrittiSquadraApi,
+  PartitaDettaglioApi,
+  PuntiRichiestaApi,
+  TorneoApi,
+  TorneoRichiestaApi,
+} from '../models/api.model';
 import { Torneo, TorneoDettaglio } from '../models/torneo.model';
 import { daTorneoApi } from './mappa-api';
 
@@ -32,6 +38,14 @@ export class AdminService {
     dati: { turno: string | null; dataOra: string | null; squadre: number[] }
   ): Observable<unknown> {
     return this.http.post(`/api/tornei/${torneoId}/partite`, dati);
+  }
+
+  getPartita(id: number): Observable<PartitaDettaglioApi> {
+    return this.http.get<PartitaDettaglioApi>(`/api/partite/${id}`);
+  }
+
+  salvaPunti(id: number, dati: PuntiRichiestaApi): Observable<PartitaDettaglioApi> {
+    return this.http.put<PartitaDettaglioApi>(`/api/partite/${id}/punti`, dati);
   }
 
   cambiaStato(id: number, stato: 'chiuso' | 'concluso'): Observable<{ id: number; stato: string }> {

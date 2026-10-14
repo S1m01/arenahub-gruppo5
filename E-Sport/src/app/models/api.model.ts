@@ -59,3 +59,27 @@ export interface IscrittiSquadraApi {
   data: string;
   componenti: { utenteId: number; nome: string; cognome: string; email: string }[];
 }
+
+export interface PartitaDettaglioApi {
+  id: number;
+  torneoId: number;
+  torneo: string;
+  turno: string | null;
+  dataOra: string | null;
+  stato: 'programmata' | 'conclusa';
+  squadre: {
+    squadraId: number;
+    nome: string;
+    punti: number | null;
+    giocatori: { utenteId: number; nome: string; cognome: string; punti: number | null }[];
+  }[];
+}
+
+export interface PuntiRichiestaApi {
+  concludi: boolean;
+  squadre: {
+    squadraId: number;
+    punti: number;
+    giocatori?: { utenteId: number; punti: number }[];
+  }[];
+}
