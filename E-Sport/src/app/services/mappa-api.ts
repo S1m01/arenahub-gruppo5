@@ -39,14 +39,13 @@ export function daGiocataApi(g: GiocataApi): Giocata {
     id: g.id,
     torneoId: g.torneoId,
     torneo: g.torneo,
-    categoria: g.categoria,
     partitaId: g.partitaId,
     turno: g.turno,
     titolo: g.titolo,
-    videoId: g.idYoutube,
+    videoId: g.youtubeId,
     inizio: g.inizioSec,
     fine: g.fineSec,
+    utenteId: g.utenteId,
     giocatore: g.giocatore,
-    squadra: g.squadra,
   };
 }
