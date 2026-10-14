@@ -1,5 +1,10 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './guards/admin.guard';
+import { utenteGuard } from './guards/utente.guard';
+import { IscrizioneComponent } from './pages/iscrizione/iscrizione.component';
+import { MieiTorneiComponent } from './pages/miei-tornei/miei-tornei.component';
+import { ModificaProfiloComponent } from './pages/modifica-profilo/modifica-profilo.component';
+import { ProfiloComponent } from './pages/profilo/profilo.component';
 import { ClassificaComponent } from './pages/classifica/classifica.component';
 import { GestioneTorneiComponent } from './pages/gestione-tornei/gestione-tornei.component';
 import { GiocateAdminComponent } from './pages/giocate-admin/giocate-admin.component';
@@ -25,6 +30,25 @@ export const routes: Routes = [
     title: 'Tornei chiusi · ArenaHub',
   },
   { path: 'tornei/:id', component: TorneoComponent, title: 'Dettaglio torneo · ArenaHub' },
+  {
+    path: 'tornei/:id/iscrizione',
+    component: IscrizioneComponent,
+    canActivate: [utenteGuard],
+    title: 'Iscrizione · ArenaHub',
+  },
+  { path: 'profilo', component: ProfiloComponent, canActivate: [utenteGuard], title: 'Profilo · ArenaHub' },
+  {
+    path: 'profilo/modifica',
+    component: ModificaProfiloComponent,
+    canActivate: [utenteGuard],
+    title: 'Modifica profilo · ArenaHub',
+  },
+  {
+    path: 'miei-tornei',
+    component: MieiTorneiComponent,
+    canActivate: [utenteGuard],
+    title: 'I miei tornei · ArenaHub',
+  },
   { path: 'top-giocate', component: TopGiocateComponent, title: 'Top giocate · ArenaHub' },
   { path: 'top-tornei', component: TopTorneiComponent, title: 'Top tornei · ArenaHub' },
   { path: 'live', component: LiveComponent, title: 'Live · ArenaHub' },

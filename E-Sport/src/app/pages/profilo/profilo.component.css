@@ -1,0 +1,186 @@
+.testata,
+.testata-partite {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titolo {
+  margin: 0;
+}
+
+.pulsanti,
+.filtri-partite {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.griglia-alta {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+  margin: 20px 0 28px;
+  align-items: start;
+}
+
+.riquadro {
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.dati-utente p {
+  margin: 0 0 8px;
+}
+
+.nome {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.colonna {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.riquadri-numeri {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.numero-grande {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+}
+
+.numero-grande strong {
+  font-size: 1.6rem;
+}
+
+.etichetta,
+.sottotitolo {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+}
+
+.sottotitolo {
+  margin: 28px 0 10px;
+}
+
+.colonna .sottotitolo {
+  margin: 0;
+}
+
+.testata-partite .sottotitolo {
+  margin: 28px 0 10px;
+}
+
+.filtro {
+  padding: 6px 14px;
+  border: 1px solid var(--testo);
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.filtro.attivo {
+  background: var(--testo);
+  color: #fff;
+}
+
+.tabella {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabella th {
+  padding: 12px 14px;
+  background: var(--testo);
+  color: #fff;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tabella td {
+  padding: 12px 14px;
+  border-top: 1px solid var(--bordo);
+}
+
+.tabella tbody tr:first-child td {
+  border-top: 0;
+}
+
+.tabella a {
+  color: var(--testo);
+  font-weight: 700;
+}
+
+.destra {
+  text-align: right !important;
+}
+
+.numero {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.tenue {
+  color: var(--testo-tenue);
+}
+
+.messaggio {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.piccolo {
+  padding: 16px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+@media (max-width: 800px) {
+  .griglia-alta {
+    grid-template-columns: 1fr;
+  }
+
+  .riquadri-numeri {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tabella {
+    display: block;
+    overflow-x: auto;
+  }
+}

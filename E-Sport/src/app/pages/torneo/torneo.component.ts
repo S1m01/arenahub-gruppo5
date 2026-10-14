@@ -9,17 +9,22 @@ import {
   PosizioneGiocatore,
   PosizioneSquadra,
   Squadra,
+  Statistiche,
   TorneoDettaglio,
 } from '../../models/torneo.model';
+import { messaggioErrore } from '../../services/admin.service';
 import { AuthService } from '../../services/auth.service';
 import { GiocateService } from '../../services/giocate.service';
 import { TorneiService } from '../../services/tornei.service';
+import { UtenteService } from '../../services/utente.service';
 
 type Scheda = 'PARTITE' | 'CLASSIFICA_SQUADRE' | 'CLASSIFICA_GIOCATORI' | 'TOP_GIOCATE';
 
 type Azione =
   | { tipo: 'ACCEDI' }
-  | { tipo: 'ISCRIVITI'; etichetta: string; attiva: boolean }
+  | { tipo: 'ISCRIVITI' }
+  | { tipo: 'CREA_SQUADRA' }
+  | { tipo: 'ISCRITTO'; squadra: string; puoAnnullare: boolean }
   | { tipo: 'MESSAGGIO'; testo: string };
 
 @Component({
@@ -32,7 +37,10 @@ export class TorneoComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private torneiService = inject(TorneiService);
   private giocateService = inject(GiocateService);
+  private utenteService = inject(UtenteService);
   auth = inject(AuthService);
+
+  statistiche = signal<Statistiche | null>(null);
 
   torneo = signal<TorneoDettaglio | null>(null);
   squadre = signal<Squadra[]>([]);
@@ -74,12 +82,18 @@ export class TorneoComponent implements OnInit {
   azione = computed<Azione | null>(() => {
     const t = this.torneo();
     if (!t || t.stato === 'CONCLUSO') return null;
+    if (t.miaSquadra) {
+      const puoAnnullare = t.stato === 'APERTO' && t.miaSquadra.sonoCapitano;
+      return { tipo: 'ISCRITTO', squadra: t.miaSquadra.nome, puoAnnullare };
+    }
     if (t.stato === 'CHIUSO') return { tipo: 'MESSAGGIO', testo: 'Le iscrizioni sono chiuse' };
     if (this.postiLiberi() === 0) return { tipo: 'MESSAGGIO', testo: 'Il torneo è completo' };
     if (!this.auth.loggato()) return { tipo: 'ACCEDI' };
-    return t.modalita === 'SINGOLO'
-      ? { tipo: 'ISCRIVITI', etichetta: 'Iscriviti', attiva: true }
-      : { tipo: 'ISCRIVITI', etichetta: 'Crea squadra e iscriviti', attiva: false };
+    const s = this.statistiche();
+    if (s && s.torniAttivi >= s.maxTorneiAttivi) {
+      return { tipo: 'MESSAGGIO', testo: `Hai raggiunto il limite di ${s.maxTorneiAttivi} tornei attivi` };
+    }
+    return t.modalita === 'SINGOLO' ? { tipo: 'ISCRIVITI' } : { tipo: 'CREA_SQUADRA' };
   });
 
   ngOnInit(): void {
@@ -103,6 +117,7 @@ export class TorneoComponent implements OnInit {
         this.caricamento.set(false);
       },
     });
+    this.caricaStatistiche();
   }
 
   iscriviti(): void {
@@ -116,17 +131,46 @@ export class TorneoComponent implements OnInit {
       next: () => {
         this.invioIscrizione.set(false);
         this.esitoIscrizione.set({ ok: true, testo: 'Iscrizione completata!' });
-        this.torneo.set({ ...t, iscritti: t.iscritti + 1 });
-        this.torneiService.getSquadre(t.id).subscribe((s) => this.squadre.set(s));
+        this.ricarica(t.id);
       },
       error: (err: HttpErrorResponse) => {
         this.invioIscrizione.set(false);
-        const testo =
-          err.status >= 400 && err.status < 500
-            ? (err.error?.errore ?? 'Iscrizione non riuscita')
-            : 'Errore di connessione al server. Riprova.';
-        this.esitoIscrizione.set({ ok: false, testo });
+        this.esitoIscrizione.set({ ok: false, testo: messaggioErrore(err, 'Iscrizione non riuscita') });
       },
+    });
+  }
+
+  annullaIscrizione(): void {
+    const t = this.torneo();
+    if (!t || !confirm(`Vuoi annullare l'iscrizione a "${t.nome}"?`)) return;
+
+    this.invioIscrizione.set(true);
+    this.esitoIscrizione.set(null);
+
+    this.utenteService.annullaIscrizione(t.id).subscribe({
+      next: () => {
+        this.invioIscrizione.set(false);
+        this.esitoIscrizione.set({ ok: true, testo: 'Iscrizione annullata' });
+        this.ricarica(t.id);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.invioIscrizione.set(false);
+        this.esitoIscrizione.set({ ok: false, testo: messaggioErrore(err, 'Annullamento non riuscito') });
+      },
+    });
+  }
+
+  private ricarica(id: number): void {
+    this.torneiService.getTorneo(id).subscribe((t) => this.torneo.set(t));
+    this.torneiService.getSquadre(id).subscribe((s) => this.squadre.set(s));
+    this.caricaStatistiche();
+  }
+
+  private caricaStatistiche(): void {
+    if (!this.auth.loggato()) return;
+    this.utenteService.getStatistiche().subscribe({
+      next: (s) => this.statistiche.set(s),
+      error: () => this.statistiche.set(null),
     });
   }
 

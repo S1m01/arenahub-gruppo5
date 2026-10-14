@@ -35,6 +35,8 @@
       </div>
     </dl>
 
+    <ng-content />
+
     <a [routerLink]="['/tornei', torneo().id]" class="btn-pieno largo">{{ etichettaPulsante() }}</a>
   </div>
 </article>

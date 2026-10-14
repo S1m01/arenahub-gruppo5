@@ -10,6 +10,8 @@
         @if (auth.admin()) {
           <a routerLink="/admin" routerLinkActive="corrente" class="btn-outline gestione">Gestione</a>
         }
+        <a routerLink="/profilo" routerLinkActive="corrente" class="btn-outline">Profilo</a>
+        <a routerLink="/miei-tornei" routerLinkActive="corrente" class="btn-outline">I miei tornei</a>
         <button type="button" class="btn-outline" (click)="esci()">Esci</button>
       } @else {
         <a routerLink="/login" class="btn-pieno">Accedi</a>

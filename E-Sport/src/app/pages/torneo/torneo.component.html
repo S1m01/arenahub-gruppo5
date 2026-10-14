@@ -68,15 +68,23 @@
           @if (a.tipo === 'ACCEDI') {
             <a routerLink="/login" class="btn-pieno azione">Accedi per iscriverti</a>
           } @else if (a.tipo === 'ISCRIVITI') {
-            <button
-              type="button"
-              class="btn-pieno azione"
-              [disabled]="!a.attiva || invioIscrizione()"
-              [title]="a.attiva ? '' : 'Presto disponibile'"
-              (click)="iscriviti()"
-            >
-              {{ invioIscrizione() ? 'Iscrizione in corso...' : a.etichetta }}
+            <button type="button" class="btn-pieno azione" [disabled]="invioIscrizione()" (click)="iscriviti()">
+              {{ invioIscrizione() ? 'Iscrizione in corso...' : 'Iscriviti' }}
             </button>
+          } @else if (a.tipo === 'CREA_SQUADRA') {
+            <a [routerLink]="['/tornei', t.id, 'iscrizione']" class="btn-pieno azione">Crea squadra e iscriviti</a>
+          } @else if (a.tipo === 'ISCRITTO') {
+            <p class="azione avviso">Sei iscritto · squadra {{ a.squadra }}</p>
+            @if (a.puoAnnullare) {
+              <button
+                type="button"
+                class="btn-outline azione"
+                [disabled]="invioIscrizione()"
+                (click)="annullaIscrizione()"
+              >
+                {{ invioIscrizione() ? 'Annullamento...' : 'Annulla iscrizione' }}
+              </button>
+            }
           } @else {
             <p class="azione avviso">{{ a.testo }}</p>
           }

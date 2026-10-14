@@ -1,5 +1,13 @@
-import { GiocataApi, PartitaApi, TorneoApi } from '../models/api.model';
-import { Giocata, Modalita, Partita, StatoTorneo, TorneoDettaglio } from '../models/torneo.model';
+import { GiocataApi, MiaPartitaApi, MioTorneoApi, PartitaApi, TorneoApi } from '../models/api.model';
+import {
+  Giocata,
+  MiaPartita,
+  MioTorneo,
+  Modalita,
+  Partita,
+  StatoTorneo,
+  TorneoDettaglio,
+} from '../models/torneo.model';
 
 export function daTorneoApi(t: TorneoApi, adesso = Date.now()): TorneoDettaglio {
   const stato = t.stato.toUpperCase() as StatoTorneo;
@@ -20,6 +28,26 @@ export function daTorneoApi(t: TorneoApi, adesso = Date.now()): TorneoDettaglio 
     stato,
     inCorso: t.inCorso ?? (stato === 'CHIUSO' && adesso >= inizio && adesso <= fine),
     foto: t.foto ?? null,
+    miaSquadra: t.miaSquadra ?? null,
+  };
+}
+
+export function daMioTorneoApi(t: MioTorneoApi): MioTorneo {
+  return {
+    ...daTorneoApi(t),
+    squadra: t.squadra,
+    dataIscrizione: t.dataIscrizione,
+    punti: t.punti,
+    posizione: t.posizione,
+  };
+}
+
+export function daMiaPartitaApi(p: MiaPartitaApi): MiaPartita {
+  return {
+    ...daPartitaApi(p),
+    torneo: p.torneo,
+    miaSquadraId: p.miaSquadraId,
+    mieiPunti: p.mieiPunti,
   };
 }
 

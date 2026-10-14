@@ -13,6 +13,20 @@ export interface TorneoApi {
   postiMax: number;
   iscritti: number;
   foto?: string | null;
+  miaSquadra?: { id: number; nome: string; sonoCapitano: boolean } | null;
+}
+
+export interface MioTorneoApi extends TorneoApi {
+  squadra: { id: number; nome: string; sonoCapitano: boolean };
+  dataIscrizione: string;
+  punti: number | null;
+  posizione: number | null;
+}
+
+export interface MiaPartitaApi extends PartitaApi {
+  torneo: string;
+  miaSquadraId: number;
+  mieiPunti: number | null;
 }
 
 export interface PartitaApi {

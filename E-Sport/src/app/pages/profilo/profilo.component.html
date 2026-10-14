@@ -1,0 +1,142 @@
+<section class="pagina">
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento profilo...</p>
+  } @else if (errore()) {
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (utente(); as u) {
+    <div class="testata">
+      <h1 class="titolo">Profilo utente</h1>
+      <div class="pulsanti">
+        <a routerLink="/profilo/modifica" class="btn-outline">Modifica profilo</a>
+        <a routerLink="/profilo/modifica" fragment="password" class="btn-outline">Cambia password</a>
+      </div>
+    </div>
+
+    <div class="griglia-alta">
+      <div class="riquadro dati-utente">
+        <p class="nome">{{ u.nome }} {{ u.cognome }}</p>
+        <p>{{ u.email }}</p>
+        <p class="tenue">Ruolo: {{ u.ruolo }}</p>
+      </div>
+
+      <div class="colonna">
+        @if (statistiche(); as s) {
+          <div class="riquadri-numeri">
+            <div class="riquadro numero-grande">
+              <span class="etichetta">Punti totali</span>
+              <strong>{{ s.punti }}</strong>
+            </div>
+            <div class="riquadro numero-grande">
+              <span class="etichetta">Posizione generale</span>
+              <strong>{{ s.posizione ? s.posizione + '°' : '-' }}</strong>
+            </div>
+            <div class="riquadro numero-grande">
+              <span class="etichetta">Tornei</span>
+              <strong>{{ s.tornei }}</strong>
+            </div>
+            <div class="riquadro numero-grande">
+              <span class="etichetta">Partite giocate</span>
+              <strong>{{ s.partiteGiocate }}</strong>
+            </div>
+          </div>
+
+          <h2 class="sottotitolo">Punti per categoria</h2>
+          @if (s.perCategoria.length === 0) {
+            <p class="messaggio piccolo">Nessun punto ancora: contano solo le partite concluse.</p>
+          } @else {
+            <table class="tabella">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th class="destra">Punti</th>
+                  <th class="destra">Posizione</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (c of s.perCategoria; track c.categoria) {
+                  <tr>
+                    <td>{{ c.categoria }}</td>
+                    <td class="destra numero">{{ c.punti }}</td>
+                    <td class="destra numero">{{ c.posizione }}°</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        }
+      </div>
+    </div>
+
+    <h2 class="sottotitolo">I miei tornei</h2>
+    @if (tornei().length === 0) {
+      <p class="messaggio piccolo">Non sei ancora iscritto a nessun torneo.</p>
+    } @else {
+      <table class="tabella">
+        <thead>
+          <tr>
+            <th>Torneo</th>
+            <th>Squadra</th>
+            <th>Stato</th>
+            <th class="destra">I miei punti</th>
+            <th class="destra">Pos. squadra</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of tornei(); track t.id) {
+            <tr>
+              <td><a [routerLink]="['/tornei', t.id]">{{ t.nome }}</a></td>
+              <td>{{ t.squadra.nome }}</td>
+              <td>{{ etichettaStato(t) }}</td>
+              <td class="destra numero">{{ t.punti ?? '-' }}</td>
+              <td class="destra numero">{{ t.posizione ? t.posizione + '°' : '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    <div class="testata-partite">
+      <h2 class="sottotitolo">Le mie partite</h2>
+      <div class="filtri-partite">
+        @for (f of filtri; track f.id) {
+          <button
+            type="button"
+            class="filtro"
+            [class.attivo]="filtro() === f.id"
+            (click)="scegliFiltro(f.id)"
+          >
+            {{ f.label }}
+          </button>
+        }
+      </div>
+    </div>
+    @if (partite().length === 0) {
+      <p class="messaggio piccolo">Nessuna partita.</p>
+    } @else {
+      <table class="tabella">
+        <thead>
+          <tr>
+            <th>Torneo</th>
+            <th>Turno</th>
+            <th>Data</th>
+            <th>Squadre</th>
+            <th>Stato</th>
+            <th class="destra">Miei pt</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of partite(); track p.id) {
+            <tr>
+              <td><a [routerLink]="['/tornei', p.torneoId]">{{ p.torneo }}</a></td>
+              <td>{{ p.turno }}</td>
+              <td>{{ p.dataOra ? (p.dataOra | date: 'dd/MM HH:mm') : '-' }}</td>
+              <td>{{ risultato(p) }}</td>
+              <td>{{ p.stato === 'CONCLUSA' ? 'Conclusa' : 'Programmata' }}</td>
+              <td class="destra numero">{{ p.mieiPunti ?? '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</section>

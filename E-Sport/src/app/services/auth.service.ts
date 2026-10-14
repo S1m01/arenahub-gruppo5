@@ -54,6 +54,10 @@ export class AuthService {
     return this.http.post<void>('/api/auth/logout', {}).pipe(finalize(() => this.salvaUtente(null)));
   }
 
+  aggiorna(utente: Utente): void {
+    this.salvaUtente(utente);
+  }
+
   private verificaSessione(): void {
     this.http.get<Utente>('/api/auth/me').subscribe({
       next: (utente) => this.salvaUtente(utente),

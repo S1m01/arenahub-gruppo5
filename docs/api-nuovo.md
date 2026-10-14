@@ -10,7 +10,7 @@ Convenzioni comuni:
 - Il partecipante di un torneo è sempre una squadra (nei tornei singoli è una squadra da 1 giocatore)
 - Nelle classifiche contano solo le partite concluse
 - `stato` del torneo: aperto, chiuso o concluso. `inCorso` (true/false) è derivato, non è una colonna del DB: vale true solo se `stato` è chiuso e l'ora attuale è tra `dataOra` e `dataFine`. Il frontend mostra l'etichetta APERTO / CHIUSO / IN CORSO (se `inCorso` è true) / CONCLUSO
-- Limite di tornei attivi: un utente può essere iscritto, come capitano o come componente di una squadra, al massimo a `maxTorneiAttivi` tornei attivi (aperti o chiusi, cioè non conclusi). Il valore (default 3) lo decide l'admin, vale per tutti i tornei e si legge con `GET /api/impostazioni`. Il limite riguarda solo le nuove iscrizioni: chi è già iscritto non viene tolto se il limite si abbassa. Un torneo concluso o un'iscrizione annullata libera un posto
+- Limite di tornei attivi: un utente può essere iscritto, come capitano o come componente di una squadra, al massimo a `maxTorneiAttivi` tornei attivi (aperti o chiusi, cioè non conclusi). Il valore (da 1 a 3, default 3) lo decide l'admin, vale per tutti i tornei e si legge con `GET /api/impostazioni`. Il limite riguarda solo le nuove iscrizioni: chi è già iscritto non viene tolto se il limite si abbassa. Un torneo concluso o un'iscrizione annullata libera un posto
 - Le top giocate sono clip di un video YouTube: si salvano solo l'ID del video e i secondi di inizio e fine, il video non viene scaricato
 
 ## Indice degli endpoint
@@ -677,14 +677,14 @@ Modifica il limite di tornei attivi per utente. Vale subito per tutti i tornei e
 
 | Parametro | Dove | Tipo | Obbligatorio |
 |-----------|------|------|--------------|
-| maxTorneiAttivi | body | intero da 1 a 20 | sì |
+| maxTorneiAttivi | body | intero da 1 a 3 | sì |
 
 **Risposta 200**
-{ "maxTorneiAttivi": 5 }
+{ "maxTorneiAttivi": 2 }
 
 **Errori**
 | Codice | Causa | Risposta |
 |--------|-------|----------|
-| 400 | valore mancante, non intero o fuori da 1-20 | {"errore": "Dati non validi: il limite deve essere un numero intero da 1 a 20"} |
+| 400 | valore mancante, non intero o fuori da 1-3 | {"errore": "Dati non validi: il limite deve essere un numero intero da 1 a 3"} |
 | 401 | utente non autenticato | {"errore": "Utente non autenticato"} |
 | 403 | ruolo non admin | {"errore": "Operazione non consentita"} |

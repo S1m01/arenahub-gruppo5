@@ -1,0 +1,58 @@
+<section class="pagina">
+  @if (caricamento()) {
+    <p class="messaggio">Caricamento torneo...</p>
+  } @else if (errore()) {
+    <a routerLink="/" class="indietro">‹ Tutti i tornei</a>
+    <p class="messaggio errore">{{ errore() }}</p>
+  } @else if (torneo(); as t) {
+    <a [routerLink]="['/tornei', t.id]" class="indietro">‹ {{ t.nome }}</a>
+
+    <form class="scheda" (submit)="$event.preventDefault(); iscrivi()" novalidate>
+      <h1 class="intestazione">
+        Iscrizione: {{ t.nome }} ({{ t.modalita === 'DUO' ? 'duo' : 'squadra da ' + t.giocatoriPerSquadra }})
+      </h1>
+      <div class="corpo">
+        <label class="campo-gruppo">
+          <span>Nome squadra</span>
+          <input
+            class="campo"
+            maxlength="60"
+            [value]="nomeSquadra()"
+            (input)="nomeSquadra.set(valore($event))"
+          />
+        </label>
+
+        <div class="campo-gruppo">
+          <span>Componenti (utenti registrati, cerca per email)</span>
+          <p class="capitano">1. {{ auth.utente()?.nome }} {{ auth.utente()?.cognome }} (tu, capitano)</p>
+          @for (c of componenti(); track $index) {
+            <div class="riga-componente">
+              <input
+                type="email"
+                class="campo"
+                [placeholder]="'Email del componente ' + ($index + 2)"
+                [value]="c.email"
+                (input)="scriviEmail($index, valore($event))"
+                (blur)="controlla($index)"
+              />
+              @if (c.controllo; as k) {
+                <span class="controllo" [class.ok]="k.ok">{{ k.ok ? '✓' : '✗' }} {{ k.testo }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (esito(); as e) {
+          <p class="esito" role="alert">{{ e }}</p>
+        }
+
+        <div class="azioni">
+          <button type="submit" class="btn-pieno" [disabled]="invio()">
+            {{ invio() ? 'Iscrizione in corso...' : 'Crea squadra e iscriviti' }}
+          </button>
+          <a [routerLink]="['/tornei', t.id]" class="btn-outline">Annulla</a>
+        </div>
+      </div>
+    </form>
+  }
+</section>

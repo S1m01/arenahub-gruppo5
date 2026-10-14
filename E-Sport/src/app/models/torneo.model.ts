@@ -20,6 +20,44 @@ export interface Torneo {
 
 export interface TorneoDettaglio extends Torneo {
   descrizione: string | null;
+  miaSquadra?: MiaSquadra | null;
+}
+
+export interface MiaSquadra {
+  id: number;
+  nome: string;
+  sonoCapitano: boolean;
+}
+
+export interface MioTorneo extends Torneo {
+  squadra: MiaSquadra;
+  dataIscrizione: string;
+  punti: number | null;
+  posizione: number | null;
+}
+
+export interface MiaPartita extends Partita {
+  torneo: string;
+  miaSquadraId: number;
+  mieiPunti: number | null;
+}
+
+export interface Statistiche {
+  punti: number;
+  posizione: number | null;
+  tornei: number;
+  torniAttivi: number;
+  maxTorneiAttivi: number;
+  partiteGiocate: number;
+  partiteDaGiocare: number;
+  perCategoria: { categoria: string; punti: number; posizione: number }[];
+}
+
+export interface UtenteCercato {
+  utenteId: number;
+  nome: string;
+  cognome: string;
+  puoIscriversi: boolean;
 }
 
 export interface Componente {

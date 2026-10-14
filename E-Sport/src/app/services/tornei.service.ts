@@ -62,8 +62,8 @@ export class TorneiService {
     return this.http.get<PosizioneGiocatore[]>(`/api/tornei/${id}/classifica-giocatori`);
   }
 
-  iscriviti(id: number): Observable<unknown> {
-    return this.http.post(`/api/tornei/${id}/iscrizioni`, {});
+  iscriviti(id: number, squadra?: { squadraNome: string; componenti: string[] }): Observable<unknown> {
+    return this.http.post(`/api/tornei/${id}/iscrizioni`, squadra ?? {});
   }
 
   private elenco(params: HttpParams): Observable<Torneo[]> {
