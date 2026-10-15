@@ -1,42 +1,38 @@
-<article class="card">
-  <div class="foto" [style.background-image]="sfondo()">
+<article class="riga" [style.--foto]="sfondo()" [style.--fuoco]="fuoco()">
+  <div class="foto" role="img" [attr.aria-label]="torneo().gioco">
     @if (posizione(); as pos) {
-      <span class="badge classifica">#{{ pos }} · {{ torneo().iscritti }} iscritti</span>
-    } @else {
-      <span [class]="classeStato()">
-        @if (torneo().inCorso && torneo().stato !== 'CONCLUSO') {
-          <span class="pallino" aria-hidden="true"></span>
-        }
-        {{ etichettaStato() }}
-      </span>
+      <span class="badge-classifica">#{{ pos }} · {{ torneo().iscritti }} iscritti</span>
     }
   </div>
 
-  <div class="corpo">
-    <h2 class="nome">{{ torneo().nome }}</h2>
+  <div class="col">
+    <h2 class="nome-torneo">{{ torneo().nome }}</h2>
     <p class="gioco">{{ torneo().gioco }} · {{ torneo().categoria }}</p>
+    <div class="date">
+      <span>Inizio <strong>{{ torneo().dataInizio | date: 'dd/MM/yyyy HH:mm' }}</strong></span>
+      <span>Fine <strong>{{ torneo().dataFine | date: 'dd/MM/yyyy HH:mm' }}</strong></span>
+    </div>
+  </div>
 
-    <dl class="dati">
-      <div>
-        <dt>Inizio</dt>
-        <dd>{{ torneo().dataInizio | date: 'dd/MM/yyyy HH:mm' }}</dd>
+  <div class="col">
+    <div class="pillole">
+      <span class="pill pill-modalita">{{ etichettaModalita() }}</span>
+      <span [class]="classeStato()">{{ etichettaStato() }}</span>
+    </div>
+    <div class="posti">
+      <div class="posti-testo">
+        <span>Partecipanti {{ torneo().iscritti }}/{{ torneo().postiMassimi }}</span>
+        <span>{{ liberi() > 0 ? liberi() + ' liberi' : 'Completo' }}</span>
       </div>
-      <div>
-        <dt>Fine</dt>
-        <dd>{{ torneo().dataFine | date: 'dd/MM/yyyy HH:mm' }}</dd>
-      </div>
-      <div>
-        <dt>Modalità</dt>
-        <dd>{{ etichettaModalita() }}</dd>
-      </div>
-      <div>
-        <dt>Partecipanti</dt>
-        <dd>{{ torneo().iscritti }}/{{ torneo().postiMassimi }}</dd>
-      </div>
-    </dl>
-
+      @if (liberi() > 0) {
+        <div class="barra" [class.piena]="liberi() <= 1"><i [style.width.%]="percentuale()"></i></div>
+      }
+    </div>
     <ng-content />
+  </div>
 
-    <a [routerLink]="['/tornei', torneo().id]" class="btn-pieno largo">{{ etichettaPulsante() }}</a>
+  <div class="azioni-card">
+    <a [class]="classePulsante()" [routerLink]="['/tornei', torneo().id]">{{ etichettaPulsante() }}</a>
+    <ng-content select="[azione-card]" />
   </div>
 </article>

@@ -1,37 +1,13 @@
-.titolo {
-  margin: 0 0 20px;
-}
-
 .filtri {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: flex-end;
-  margin-bottom: 24px;
+  align-items: end;
 }
 
-.ricerca {
-  flex: 1 1 260px;
+.filtri.senza-stato {
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
 }
 
-.filtro {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--testo-tenue);
-}
-
-.griglia {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.messaggio {
-  margin: 1em 0;
-  padding: 32px;
+@media (max-width: 640px) {
+  .filtri.senza-stato {
+    grid-template-columns: 1fr 1fr;
+  }
 }

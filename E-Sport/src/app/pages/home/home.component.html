@@ -1,18 +1,18 @@
 <section class="pagina">
   <h1 class="titolo">{{ chiusi ? 'Tornei chiusi' : 'Tornei aperti' }}</h1>
 
-  <div class="filtri">
+  <div class="filtri" [class.senza-stato]="chiusi">
     <input
       type="search"
-      class="campo ricerca"
+      class="campo cerca"
       placeholder="Cerca torneo..."
       aria-label="Cerca torneo"
       [value]="ricerca()"
       (input)="ricerca.set(valore($event))"
     />
 
-    <label class="filtro">
-      <span>Categoria</span>
+    <label class="etichetta-campo">
+      Categoria
       <select class="campo" [value]="categoria()" (change)="categoria.set(valore($event))">
         <option value="TUTTE">Tutte</option>
         @for (c of categorie(); track c) {
@@ -22,8 +22,8 @@
     </label>
 
     @if (!chiusi) {
-      <label class="filtro">
-        <span>Stato</span>
+      <label class="etichetta-campo">
+        Stato
         <select class="campo" [value]="stato()" (change)="stato.set($any(valore($event)))">
           <option value="TUTTI">Tutti</option>
           <option value="APERTO">Aperto</option>
@@ -33,8 +33,8 @@
       </label>
     }
 
-    <label class="filtro">
-      <span>Ordina per</span>
+    <label class="etichetta-campo">
+      Ordina per
       <select class="campo" [value]="ordine()" (change)="ordine.set($any(valore($event)))">
         <option value="DATA">Data inizio</option>
         <option value="NOME">Nome</option>
@@ -44,16 +44,24 @@
   </div>
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento tornei...</p>
+    <p class="caricamento">Caricamento tornei...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (torneiFiltrati().length === 0) {
-    <p class="messaggio">Nessun torneo trovato.</p>
+    <p class="vuoto">Nessun torneo trovato.</p>
   } @else {
-    <div class="griglia">
+    <div class="lista">
       @for (t of torneiFiltrati(); track t.id) {
         <app-card-torneo [torneo]="t" />
       }
     </div>
+  }
+
+  @if (!chiusi) {
+    <p class="legenda">
+      <span class="pill pill-aperto">Aperto</span> iscrizioni aperte
+      <span class="pill pill-chiuso">Chiuso</span> iscrizioni chiuse
+      <span class="pill pill-in-corso">In corso</span> partite in svolgimento
+    </p>
   }
 </section>
