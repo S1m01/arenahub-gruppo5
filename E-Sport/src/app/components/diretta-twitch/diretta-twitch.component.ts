@@ -33,16 +33,16 @@ const CANALE_VALIDO = /^[A-Za-z0-9_]{3,25}$/;
     .diretta {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 340px;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
-      background: #0e0e10;
+      background: var(--notte-2);
       border: 1px solid var(--bordo);
     }
     .player {
       aspect-ratio: 16 / 9;
     }
     .chat {
-      border-left: 1px solid #26262c;
+      border-left: 1px solid var(--bordo);
     }
     iframe {
       width: 100%;
@@ -53,15 +53,15 @@ const CANALE_VALIDO = /^[A-Za-z0-9_]{3,25}$/;
     .link {
       display: inline-block;
       margin-top: 10px;
-      color: #9146ff;
-      font-weight: 800;
-      font-size: 0.85rem;
-      letter-spacing: 0.05em;
+      color: var(--testo-2);
+      font-family: var(--font-titoli);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       text-decoration: none;
     }
     .link:hover {
-      text-decoration: underline;
+      color: var(--giallo);
     }
     @media (max-width: 900px) {
       .diretta {
@@ -70,7 +70,7 @@ const CANALE_VALIDO = /^[A-Za-z0-9_]{3,25}$/;
       .chat {
         height: 380px;
         border-left: 0;
-        border-top: 1px solid #26262c;
+        border-top: 1px solid var(--bordo);
       }
     }
   `,

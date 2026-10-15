@@ -1,5 +1,4 @@
 .titolo {
-  margin: 0 0 20px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -11,66 +10,24 @@
   flex: none;
   border-radius: 50%;
   background: var(--rosso);
-  box-shadow: 0 0 0 0 rgb(230 50 55 / 0.6);
-  animation: impulso 1.6s infinite;
-}
-
-@keyframes impulso {
-  70% {
-    box-shadow: 0 0 0 10px rgb(230 50 55 / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgb(230 50 55 / 0);
-  }
+  animation: pulsa 1.2s infinite;
 }
 
 .sezione {
-  margin-bottom: 32px;
-}
-
-.sottotitolo {
-  margin: 0 0 12px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--testo-tenue);
-}
-
-.griglia {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.vuoto {
-  padding: 48px 24px;
-  text-align: center;
-  background: var(--superficie);
-  border: 1px dashed var(--bordo);
-  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .vuoto-titolo {
-  margin: 0 0 8px;
+  margin: 0;
+  font-family: var(--font-titoli);
   font-size: 1.1rem;
-  font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  color: var(--testo);
 }
 
 .vuoto-testo {
   margin: 0;
-  color: var(--testo-tenue);
-}
-
-.messaggio {
-  margin: 1em 0;
-  padding: 32px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .punto-live {
-    animation: none;
-  }
 }

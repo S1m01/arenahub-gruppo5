@@ -7,7 +7,6 @@ import { TorneiService } from '../../services/tornei.service';
   selector: 'app-top-tornei',
   imports: [CardTorneoComponent],
   templateUrl: './top-tornei.component.html',
-  styleUrl: './top-tornei.component.css',
 })
 export class TopTorneiComponent implements OnInit {
   private torneiService = inject(TorneiService);
