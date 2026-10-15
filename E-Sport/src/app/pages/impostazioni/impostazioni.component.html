@@ -2,15 +2,15 @@
   <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento impostazioni...</p>
+    <p class="caricamento">Caricamento impostazioni...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else {
-    <form class="scheda" (submit)="$event.preventDefault(); salva()" novalidate>
-      <h1 class="intestazione">Impostazioni</h1>
+    <form class="scheda-modulo" (submit)="$event.preventDefault(); salva()" novalidate>
+      <h1>Impostazioni</h1>
       <div class="corpo">
-        <label class="campo-gruppo">
-          <span>Tornei attivi per utente (massimo)</span>
+        <label class="etichetta-campo">
+          Numero massimo di tornei attivi per utente
           <input
             type="number"
             class="campo"
@@ -18,7 +18,7 @@
             max="3"
             step="1"
             [formControl]="limite"
-            [class.non-valido]="limite.invalid && limite.touched"
+            [class.errore]="limite.invalid && limite.touched"
           />
           @if (limite.invalid && limite.touched) {
             <small class="errore-campo">Il limite deve essere un numero intero da 1 a 3</small>
@@ -31,12 +31,15 @@
         </label>
 
         @if (esito(); as e) {
-          <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+          <p [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
         }
 
-        <button type="submit" class="btn-pieno" [disabled]="invio()">
-          {{ invio() ? 'Salvataggio...' : 'Salva' }}
-        </button>
+        <div class="fila-pulsanti">
+          <button type="submit" class="btn btn-primario" [disabled]="invio()">
+            {{ invio() ? 'Salvataggio...' : 'Salva' }}
+          </button>
+          <a routerLink="/admin" class="btn btn-contorno">Annulla</a>
+        </div>
       </div>
     </form>
   }
