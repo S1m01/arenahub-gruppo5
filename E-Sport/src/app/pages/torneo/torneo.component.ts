@@ -12,6 +12,7 @@ import {
   Statistiche,
   TorneoDettaglio,
 } from '../../models/torneo.model';
+import { fuoco } from '../../models/foto';
 import { messaggioErrore } from '../../services/admin.service';
 import { AuthService } from '../../services/auth.service';
 import { GiocateService } from '../../services/giocate.service';
@@ -25,7 +26,7 @@ type Azione =
   | { tipo: 'ISCRIVITI' }
   | { tipo: 'CREA_SQUADRA' }
   | { tipo: 'ISCRITTO'; squadra: string; puoAnnullare: boolean }
-  | { tipo: 'MESSAGGIO'; testo: string };
+  | { tipo: 'MESSAGGIO'; testo: string; limite?: boolean };
 
 @Component({
   selector: 'app-torneo',
@@ -91,7 +92,11 @@ export class TorneoComponent implements OnInit {
     if (!this.auth.loggato()) return { tipo: 'ACCEDI' };
     const s = this.statistiche();
     if (s && s.torniAttivi >= s.maxTorneiAttivi) {
-      return { tipo: 'MESSAGGIO', testo: `Hai raggiunto il limite di ${s.maxTorneiAttivi} tornei attivi` };
+      return {
+        tipo: 'MESSAGGIO',
+        testo: `Hai raggiunto il limite di ${s.maxTorneiAttivi} tornei attivi`,
+        limite: true,
+      };
     }
     return t.modalita === 'SINGOLO' ? { tipo: 'ISCRIVITI' } : { tipo: 'CREA_SQUADRA' };
   });
@@ -217,13 +222,17 @@ export class TorneoComponent implements OnInit {
   }
 
   classeStato(t: TorneoDettaglio): string {
-    if (t.stato === 'CONCLUSO') return 'badge concluso';
-    if (t.inCorso) return 'badge in-corso';
-    return t.stato === 'APERTO' ? 'badge aperto' : 'badge chiuso';
+    if (t.stato === 'CONCLUSO') return 'pill pill-concluso';
+    if (t.inCorso) return 'pill pill-in-corso';
+    return t.stato === 'APERTO' ? 'pill pill-aperto' : 'pill pill-chiuso';
   }
 
   sfondo(t: TorneoDettaglio): string | null {
     return t.foto ? `url('${t.foto}')` : null;
+  }
+
+  fuoco(t: TorneoDettaglio): string {
+    return fuoco(t.foto);
   }
 
   sfidanti(p: Partita): string {
