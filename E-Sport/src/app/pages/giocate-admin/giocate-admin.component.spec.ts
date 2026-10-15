@@ -133,7 +133,7 @@ describe('GiocateAdminComponent', () => {
   it('elimina una giocata dopo la conferma', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     const { f, el } = await crea();
-    (el.querySelector('.pericolo') as HTMLButtonElement).click();
+    (el.querySelector('.btn-pericolo') as HTMLButtonElement).click();
     const req = http().expectOne('/api/giocate/91');
     expect(req.request.method).toBe('DELETE');
     req.flush(null, { status: 204, statusText: 'No Content' });

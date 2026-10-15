@@ -2,20 +2,20 @@
   <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento giocate...</p>
+    <p class="caricamento">Caricamento giocate...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (torneo(); as t) {
     <h1 class="titolo">{{ t.nome }} - Top giocate</h1>
 
     @if (erroreElenco()) {
-      <p class="esito" role="alert">{{ erroreElenco() }}</p>
+      <p class="msg-errore" role="alert">{{ erroreElenco() }}</p>
     }
 
     @if (giocate().length === 0) {
-      <p class="messaggio">Nessuna giocata per questo torneo.</p>
+      <p class="vuoto">Nessuna giocata per questo torneo.</p>
     } @else {
-      <div class="contenitore-tabella">
+      <div class="tabella-box">
         <table class="tabella">
           <thead>
             <tr>
@@ -37,13 +37,13 @@
                     >{{ g.titolo }}</a
                   >
                 </td>
-                <td class="numero">{{ tempo(g.inizio) }} - {{ tempo(g.fine) }}</td>
+                <td class="tempo">{{ tempo(g.inizio) }} - {{ tempo(g.fine) }}</td>
                 <td>{{ g.turno || '-' }}</td>
                 <td>{{ g.giocatore || '-' }}</td>
                 <td class="destra">
                   <button
                     type="button"
-                    class="btn-piccolo pericolo"
+                    class="btn btn-piccolo btn-pericolo"
                     [disabled]="eliminazione() === g.id"
                     (click)="elimina(g)"
                   >
@@ -57,101 +57,99 @@
       </div>
     }
 
-    <form class="scheda" (submit)="$event.preventDefault(); aggiungi()" novalidate>
-      <h2 class="intestazione">Nuova giocata</h2>
-      <div class="corpo">
-        <div class="campi">
-          <label class="campo-gruppo link">
-            <span>Link YouTube</span>
-            <input
-              type="url"
-              class="campo"
-              name="link"
-              placeholder="https://www.youtube.com/watch?v=..."
-              [value]="link()"
-              [class.non-valido]="link().trim() !== '' && !idVideo()"
-              (input)="link.set(valore($event))"
-            />
-            @if (link().trim() !== '') {
-              @if (idVideo(); as v) {
-                <small class="aiuto">ID del video: {{ v }}</small>
-              } @else {
-                <small class="errore-campo">Link non riconosciuto</small>
-              }
+    <form class="riquadro" (submit)="$event.preventDefault(); aggiungi()" novalidate>
+      <h2 class="sottotitolo">Nuova giocata</h2>
+      <div class="griglia-modulo">
+        <label class="etichetta-campo intera">
+          Link YouTube
+          <input
+            type="url"
+            class="campo"
+            name="link"
+            placeholder="https://www.youtube.com/watch?v=..."
+            [value]="link()"
+            [class.errore]="link().trim() !== '' && !idVideo()"
+            (input)="link.set(valore($event))"
+          />
+          @if (link().trim() !== '') {
+            @if (idVideo(); as v) {
+              <small class="aiuto">ID del video: {{ v }}</small>
+            } @else {
+              <small class="errore-campo">Link non riconosciuto</small>
             }
-          </label>
+          }
+        </label>
 
-          <label class="campo-gruppo titolo-giocata">
-            <span>Titolo</span>
-            <input
-              type="text"
-              class="campo"
-              name="titolo"
-              maxlength="100"
-              placeholder="Gol al volo"
-              [value]="titolo()"
-              (input)="titolo.set(valore($event))"
-            />
-          </label>
+        <label class="etichetta-campo intera">
+          Titolo
+          <input
+            type="text"
+            class="campo"
+            name="titolo"
+            maxlength="100"
+            placeholder="Gol al volo"
+            [value]="titolo()"
+            (input)="titolo.set(valore($event))"
+          />
+        </label>
 
-          <label class="campo-gruppo">
-            <span>Inizio (min:sec)</span>
-            <input
-              type="text"
-              class="campo"
-              name="inizio"
-              inputmode="numeric"
-              placeholder="1:30"
-              [value]="inizio()"
-              (input)="inizio.set(valore($event))"
-            />
-          </label>
+        <label class="etichetta-campo">
+          Inizio (min:sec)
+          <input
+            type="text"
+            class="campo"
+            name="inizio"
+            inputmode="numeric"
+            placeholder="1:30"
+            [value]="inizio()"
+            (input)="inizio.set(valore($event))"
+          />
+        </label>
 
-          <label class="campo-gruppo">
-            <span>Fine (min:sec)</span>
-            <input
-              type="text"
-              class="campo"
-              name="fine"
-              inputmode="numeric"
-              placeholder="2:15"
-              [value]="fine()"
-              (input)="fine.set(valore($event))"
-            />
-          </label>
+        <label class="etichetta-campo">
+          Fine (min:sec)
+          <input
+            type="text"
+            class="campo"
+            name="fine"
+            inputmode="numeric"
+            placeholder="2:15"
+            [value]="fine()"
+            (input)="fine.set(valore($event))"
+          />
+        </label>
 
-          <label class="campo-gruppo">
-            <span>Partita (facoltativa)</span>
-            <select class="campo" name="partita" [value]="partitaId()" (change)="partitaId.set(valore($event))">
-              <option value="">Nessuna</option>
-              @for (p of partite(); track p.id) {
-                <option [value]="p.id">{{ p.turno || 'Partita ' + p.id }}</option>
-              }
-            </select>
-          </label>
+        <label class="etichetta-campo">
+          Partita (facoltativa)
+          <select class="campo" name="partita" [value]="partitaId()" (change)="partitaId.set(valore($event))">
+            <option value="">Nessuna</option>
+            @for (p of partite(); track p.id) {
+              <option [value]="p.id">{{ p.turno || 'Partita ' + p.id }}</option>
+            }
+          </select>
+        </label>
 
-          <label class="campo-gruppo">
-            <span>Giocatore (facoltativo)</span>
-            <select class="campo" name="giocatore" [value]="utenteId()" (change)="utenteId.set(valore($event))">
-              <option value="">Nessuno</option>
-              @for (g of giocatori(); track g.id) {
-                <option [value]="g.id">{{ g.nome }}</option>
-              }
-            </select>
-          </label>
-        </div>
-
-        <div class="riga-invio">
-          <button type="submit" class="btn-pieno" [disabled]="invio()">
-            {{ invio() ? 'Salvataggio...' : 'Aggiungi giocata' }}
-          </button>
-          <span class="aiuto">Dal link si estrae l'ID del video. I tempi vengono salvati in secondi.</span>
-        </div>
-
-        @if (esito(); as e) {
-          <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
-        }
+        <label class="etichetta-campo">
+          Giocatore (facoltativo)
+          <select class="campo" name="giocatore" [value]="utenteId()" (change)="utenteId.set(valore($event))">
+            <option value="">Nessuno</option>
+            @for (g of giocatori(); track g.id) {
+              <option [value]="g.id">{{ g.nome }}</option>
+            }
+          </select>
+        </label>
       </div>
+
+      <div class="riga-invio">
+        <button type="submit" class="btn btn-primario" [disabled]="invio()">
+          {{ invio() ? 'Salvataggio...' : 'Aggiungi giocata' }}
+        </button>
+        <span class="aiuto">Dal link si estrae l'ID del video. I tempi vengono salvati in secondi.</span>
+      </div>
+
+      @if (esito(); as e) {
+        <p [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
+      }
     </form>
   }
 </section>

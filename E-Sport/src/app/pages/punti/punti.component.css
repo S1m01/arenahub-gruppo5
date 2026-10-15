@@ -1,101 +1,98 @@
-.titolo {
-  margin: 0;
-}
-
-.sottotitolo {
-  margin: 6px 0 20px;
-  color: var(--testo-tenue);
-}
-
-.squadre {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  gap: 20px;
-}
-
-.scheda {
-  background: var(--superficie);
-  border: 1px solid var(--bordo);
-  border-radius: 12px;
-  overflow: hidden;
+.indietro {
+  align-self: flex-start;
 }
 
 .intestazione {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modulo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.squadre-punti {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 20px;
+}
+
+.riquadro-squadra {
+  background: var(--pannello);
+  border: 1px solid var(--bordo);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.riquadro-squadra h2 {
   margin: 0;
-  padding: 14px 24px;
-  background: var(--testo);
-  color: #fff;
-  font-size: 1.05rem;
+  padding: 14px 20px;
+  background: var(--notte-2);
+  font-family: var(--font-titoli);
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-align: center;
 }
 
-.corpo {
-  padding: 20px 24px;
+.riquadro-squadra .corpo {
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.riga-punti {
-  display: grid;
-  grid-template-columns: 1fr 120px;
+.riquadro-squadra .sottotitolo {
+  margin-top: 6px;
+}
+
+.punti-squadra {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-titoli);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.punti-squadra .campo {
+  width: 110px;
+  text-align: center;
+  font-family: var(--font-titoli);
+  font-size: 1.3rem;
+}
+
+.punti-giocatore {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-.riga-punti .campo {
-  width: 100%;
+.punti-giocatore .campo {
+  width: 90px;
   text-align: center;
   font-variant-numeric: tabular-nums;
-}
-
-.principale {
-  font-weight: 800;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.etichetta-giocatori {
-  margin: 8px 0 0;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--testo-tenue);
-}
-
-.esito {
-  margin: 20px 0 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: rgb(230 50 55 / 0.1);
-  color: var(--rosso);
-  font-weight: 600;
-  text-align: center;
-}
-
-.esito.ok {
-  background: rgb(46 139 110 / 0.12);
-  color: var(--verde);
 }
 
 .pulsanti {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 20px;
 }
 
-.pulsanti button {
+.pulsanti .btn {
   min-width: 220px;
 }
 
-@media (max-width: 520px) {
-  .corpo {
-    padding: 16px;
-  }
-  .pulsanti button {
+@media (max-width: 640px) {
+  .pulsanti .btn {
     width: 100%;
   }
 }

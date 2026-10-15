@@ -1,31 +1,33 @@
 <section class="pagina">
   @if (caricamento()) {
-    <p class="messaggio">Caricamento partita...</p>
+    <p class="caricamento">Caricamento partita...</p>
   } @else if (errore()) {
     <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (partita(); as p) {
     <a [routerLink]="['/admin/tornei', p.torneoId, 'partite']" class="indietro">‹ Partite del torneo</a>
 
-    <h1 class="titolo">
-      {{ p.turno || 'Partita' }}
-      @if (p.dataOra) {
-        - {{ p.dataOra | date: 'dd/MM HH:mm' }}
-      }
-      - {{ p.torneo }}
-    </h1>
-    <p class="sottotitolo">
-      {{ p.stato === 'conclusa' ? 'Partita conclusa: stai correggendo i punti' : 'Partita programmata' }}
-    </p>
+    <div class="intestazione">
+      <h1 class="titolo">
+        {{ p.turno || 'Partita' }}
+        @if (p.dataOra) {
+          - {{ p.dataOra | date: 'dd/MM HH:mm' }}
+        }
+        - {{ p.torneo }}
+      </h1>
+      <p class="sottotitolo">
+        {{ p.stato === 'conclusa' ? 'Partita conclusa: stai correggendo i punti' : 'Partita programmata' }}
+      </p>
+    </div>
 
-    <form (submit)="$event.preventDefault(); salva(false)" novalidate>
-      <div class="squadre">
+    <form class="modulo" (submit)="$event.preventDefault(); salva(false)" novalidate>
+      <div class="squadre-punti">
         @for (r of righe(); track r.squadraId) {
-          <div class="scheda">
-            <h2 class="intestazione">{{ r.nome }}</h2>
+          <div class="riquadro-squadra">
+            <h2>{{ r.nome }}</h2>
             <div class="corpo">
-              <label class="riga-punti principale">
-                <span>Punti squadra</span>
+              <label class="punti-squadra">
+                Punti squadra
                 <input
                   type="number"
                   class="campo"
@@ -39,10 +41,10 @@
               </label>
 
               @if (r.giocatori.length > 0) {
-                <p class="etichetta-giocatori">Punti dei giocatori (facoltativi: tutti o nessuno)</p>
+                <p class="sottotitolo">Punti dei giocatori (facoltativi: tutti o nessuno)</p>
                 @for (g of r.giocatori; track g.utenteId) {
-                  <label class="riga-punti">
-                    <span>{{ g.nome }}</span>
+                  <label class="punti-giocatore">
+                    {{ g.nome }}
                     <input
                       type="number"
                       class="campo"
@@ -62,17 +64,17 @@
       </div>
 
       @if (esito(); as e) {
-        <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+        <p class="esito" [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
       }
 
       <div class="pulsanti">
         @if (p.stato === 'conclusa') {
-          <button type="submit" class="btn-pieno" [disabled]="invio()">
+          <button type="submit" class="btn btn-primario" [disabled]="invio()">
             {{ invio() ? 'Salvataggio...' : 'Salva correzione' }}
           </button>
         } @else {
-          <button type="submit" class="btn-outline" [disabled]="invio()">Salva punti</button>
-          <button type="button" class="btn-pieno" [disabled]="invio()" (click)="salva(true)">
+          <button type="submit" class="btn btn-contorno" [disabled]="invio()">Salva punti</button>
+          <button type="button" class="btn btn-primario" [disabled]="invio()" (click)="salva(true)">
             {{ invio() ? 'Salvataggio...' : 'Salva e concludi partita' }}
           </button>
         }
