@@ -24,7 +24,7 @@ const ID_VALIDO = /^[A-Za-z0-9_-]{11}$/;
       aspect-ratio: 16 / 9;
       border-radius: 10px;
       overflow: hidden;
-      background: #111;
+      background: var(--notte-2);
     }
     iframe {
       width: 100%;
@@ -36,8 +36,11 @@ const ID_VALIDO = /^[A-Za-z0-9_-]{11}$/;
       height: 100%;
       display: grid;
       place-items: center;
-      color: rgb(255 255 255 / 0.7);
-      font-weight: 600;
+      color: var(--testo-2);
+      font-family: var(--font-titoli);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
   `,
 })

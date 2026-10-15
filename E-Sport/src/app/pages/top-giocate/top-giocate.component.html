@@ -2,8 +2,8 @@
   <h1 class="titolo">Top giocate</h1>
 
   <div class="filtri">
-    <label class="filtro">
-      <span>Torneo</span>
+    <label class="etichetta-campo">
+      Torneo
       <select class="campo" [value]="torneo()" (change)="torneo.set(valore($event))">
         <option value="TUTTI">Tutti</option>
         @for (t of tornei(); track t.id) {
@@ -12,8 +12,8 @@
       </select>
     </label>
 
-    <label class="filtro">
-      <span>Categoria</span>
+    <label class="etichetta-campo">
+      Categoria
       <select class="campo" [value]="categoria()" (change)="scegliCategoria(valore($event))">
         <option value="TUTTE">Tutte</option>
         @for (c of categorie(); track c) {
@@ -24,13 +24,13 @@
   </div>
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento giocate...</p>
+    <p class="caricamento">Caricamento giocate...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (giocateFiltrate().length === 0) {
-    <p class="messaggio">Nessuna giocata per i filtri scelti.</p>
+    <p class="vuoto">Nessuna giocata per i filtri scelti.</p>
   } @else {
-    <div class="griglia">
+    <div class="griglia-video">
       @for (g of giocateFiltrate(); track g.id) {
         <app-card-giocata [giocata]="g" />
       }

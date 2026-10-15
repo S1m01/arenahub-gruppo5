@@ -7,71 +7,50 @@ import { VideoYoutubeComponent } from '../video-youtube/video-youtube.component'
   selector: 'app-card-giocata',
   imports: [RouterLink, VideoYoutubeComponent],
   template: `
-    <article class="card">
+    <article class="riquadro">
       <app-video-youtube
         [videoId]="giocata().videoId"
         [inizio]="giocata().inizio"
         [fine]="giocata().fine"
         [titolo]="giocata().titolo"
       />
-      <div class="testo">
-        <h2 class="titolo">{{ giocata().titolo }}</h2>
-        <p class="dettagli">{{ dettagli() }}</p>
-        <p class="durata">{{ tempo(giocata().inizio) }} - {{ tempo(giocata().fine) }}</p>
-        @if (mostraTorneo()) {
-          <a [routerLink]="['/tornei', giocata().torneoId]" class="vai">Vai al torneo ›</a>
-        }
-      </div>
+      <h2 class="titolo-video">{{ giocata().titolo }}</h2>
+      <p class="info-video">{{ dettagli() }}</p>
+      <p class="info-video durata">{{ tempo(giocata().inizio) }} - {{ tempo(giocata().fine) }}</p>
+      @if (mostraTorneo()) {
+        <a class="indietro" [routerLink]="['/tornei', giocata().torneoId]">Vai al torneo ›</a>
+      }
     </article>
   `,
   styles: `
     :host {
       display: block;
     }
-    .card {
+    .riquadro {
       height: 100%;
-      padding: 12px;
-      background: var(--superficie);
-      border: 1px solid var(--bordo);
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
-    .testo {
-      padding: 0 4px 4px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    app-video-youtube {
+      margin-bottom: 6px;
     }
-    .titolo {
+    .titolo-video {
       margin: 0;
+      font-family: var(--font-titoli);
+      font-weight: 400;
       font-size: 1.05rem;
-      text-transform: none;
-      letter-spacing: normal;
+      text-transform: uppercase;
     }
-    .dettagli,
-    .durata {
+    .info-video {
       margin: 0;
-      color: var(--testo-tenue);
+      color: var(--testo-2);
       font-size: 0.9rem;
     }
     .durata {
       font-variant-numeric: tabular-nums;
-      font-size: 0.8rem;
     }
-    .vai {
-      margin-top: 6px;
+    .indietro {
+      margin-top: auto;
       align-self: flex-start;
-      color: var(--testo);
-      font-weight: 800;
-      font-size: 0.82rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      text-decoration: none;
-    }
-    .vai:hover {
-      text-decoration: underline;
     }
   `,
 })
