@@ -1,69 +1,61 @@
-<header class="navbar">
-  <div class="riga-alta">
-    <a routerLink="/" class="logo" aria-label="Lazio Digital - torna alla home">
-      <img src="logo-laziodigital.png" alt="Lazio Digital ITS Academy" />
-    </a>
-
-    <div class="azioni">
-      @if (auth.loggato()) {
-        <span class="saluto">Ciao, {{ auth.utente()?.nome ?? 'utente' }}</span>
-        @if (auth.admin()) {
-          <a routerLink="/admin" routerLinkActive="corrente" class="btn-outline gestione">Gestione</a>
-        }
-        <a routerLink="/profilo" routerLinkActive="corrente" class="btn-outline">Profilo</a>
-        <a routerLink="/miei-tornei" routerLinkActive="corrente" class="btn-outline">I miei tornei</a>
-        <button type="button" class="btn-outline" (click)="esci()">Esci</button>
-      } @else {
-        <a routerLink="/login" class="btn-pieno">Accedi</a>
-      }
-    </div>
+<header class="testata">
+  <div class="marchi">
+    <a class="nome-sito" routerLink="/">ARENA<span>HUB</span></a>
+    <span class="separatore" aria-hidden="true"></span>
+    <img class="logo-ld" src="logo-laziodigital.png" alt="Lazio Digital ITS Academy" />
   </div>
 
-  <nav class="menu" aria-label="Menu principale">
-    <ul class="barra">
-      @for (voce of voci; track voce.label) {
-        @if (voce.tendina; as elementi) {
-          <li class="con-tendina">
-            <button
-              type="button"
-              class="voce cliccabile"
-              [class.attiva]="attiva(voce)"
-              [attr.aria-expanded]="tendinaAperta() === voce.label"
-              aria-haspopup="true"
-              (click)="apriChiudiTendina(voce, $event)"
-            >
-              {{ voce.label }} <span class="freccia" aria-hidden="true">▾</span>
-            </button>
-
-            @if (tendinaAperta() === voce.label) {
-              <ul class="tendina" role="menu">
-                @for (el of elementi; track el.link) {
-                  <li role="none">
-                    <a
-                      role="menuitem"
-                      [routerLink]="el.link"
-                      routerLinkActive="corrente"
-                      [routerLinkActiveOptions]="{ exact: true }"
-                      (click)="chiudiTendina()"
-                      >{{ el.label }}</a
-                    >
-                  </li>
-                }
-              </ul>
-            }
-          </li>
-        } @else if (voce.link) {
-          <li>
-            <a class="voce cliccabile" [routerLink]="voce.link" routerLinkActive="attiva">{{
-              voce.label
-            }}</a>
-          </li>
-        } @else {
-          <li>
-            <span class="voce" aria-disabled="true" title="Presto disponibile">{{ voce.label }}</span>
-          </li>
-        }
+  <div class="azioni-testata">
+    @if (auth.loggato()) {
+      <span class="saluto">Ciao, {{ auth.utente()?.nome ?? 'utente' }}</span>
+      @if (auth.admin()) {
+        <a class="btn btn-primario" routerLink="/admin" routerLinkActive="attiva">Gestione</a>
       }
-    </ul>
-  </nav>
+      <a class="btn btn-contorno-chiaro" routerLink="/profilo" routerLinkActive="attiva">Profilo</a>
+      <a class="btn btn-contorno-chiaro" routerLink="/miei-tornei" routerLinkActive="attiva">I miei tornei</a>
+      <button class="btn btn-scuro" type="button" (click)="esci()">Esci</button>
+    } @else {
+      <a class="btn btn-scuro" routerLink="/login">Login</a>
+    }
+  </div>
 </header>
+
+<nav class="menu" aria-label="Menu principale">
+  @for (voce of voci; track voce.label) {
+    @if (voce.tendina; as elementi) {
+      <div class="con-tendina">
+        <button
+          type="button"
+          class="voce"
+          [class.attiva]="attiva(voce)"
+          [attr.aria-expanded]="tendinaAperta() === voce.label"
+          aria-haspopup="true"
+          (click)="apriChiudiTendina(voce, $event)"
+        >
+          {{ voce.label }} ▾
+        </button>
+
+        @if (tendinaAperta() === voce.label) {
+          <div class="tendina" role="menu">
+            @for (el of elementi; track el.link) {
+              <a
+                role="menuitem"
+                [routerLink]="el.link"
+                routerLinkActive="attiva"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="chiudiTendina()"
+                >{{ el.label }}</a
+              >
+            }
+          </div>
+        }
+      </div>
+    } @else if (voce.link) {
+      <a [routerLink]="voce.link" routerLinkActive="attiva" [class.live]="voce.link === '/live'">{{
+        voce.label
+      }}</a>
+    } @else {
+      <span class="voce" aria-disabled="true" title="Presto disponibile">{{ voce.label }}</span>
+    }
+  }
+</nav>
