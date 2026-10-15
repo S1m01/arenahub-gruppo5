@@ -188,5 +188,133 @@ INSERT INTO punti_giocatore (id_partita, id_utente, id_squadra, punti) VALUES
 (9, 13, 13, 2),
 (9, 16, 13, 1);
 
+INSERT INTO giocata (id_giocata, id_torneo, id_partita, id_utente, titolo, id_youtube, inizio_sec, fine_sec) OVERRIDING SYSTEM VALUE VALUES
+(1, 4, 9,    3,  'Clip R6',           'HOdTUJylJeg', 0, 15),
+(2, 4, 10,   18, 'Clip Beaulo',       '14XIiU5t3_o', 1, 7),
+(3, 1, 2,    8,  'Clip Fortnite',     'J-Yjyr6OM4Y', 0, 22),
+(4, 7, NULL, 9,  'The best comeback', 'pXxwFCwoUH0', 0, 54);
+
+INSERT INTO iscrizione (id_torneo, id_utente, id_squadra, data) VALUES
+(4, 4,  12, '2026-09-22 18:25'),
+(4, 6,  12, '2026-09-22 18:25'),
+(4, 9,  13, '2026-09-25 20:10'),
+(4, 11, 13, '2026-09-25 20:10'),
+(4, 15, 14, '2026-10-01 15:35'),
+(4, 17, 14, '2026-10-01 15:35');
+
+INSERT INTO iscrizione (id_torneo, id_utente, id_squadra, data) VALUES
+(8, 16, 27, '2026-10-11 19:00'),
+(8, 18, 27, '2026-10-11 19:00'),
+(8, 19, 27, '2026-10-11 19:00'),
+(8, 3,  28, '2026-10-12 21:45'),
+(8, 5,  28, '2026-10-12 21:45'),
+(8, 7,  28, '2026-10-12 21:45');
+
+INSERT INTO iscrizione (id_torneo, id_utente, id_squadra, data) VALUES
+(9,  3,  29, '2026-07-20 18:00'),
+(9,  4,  29, '2026-07-20 18:00'),
+(9,  5,  29, '2026-07-20 18:00'),
+(9,  6,  29, '2026-07-20 18:00'),
+(9,  7,  29, '2026-07-20 18:00'),
+(9,  8,  30, '2026-07-22 21:00'),
+(9,  9,  30, '2026-07-22 21:00'),
+(9,  10, 30, '2026-07-22 21:00'),
+(9,  11, 30, '2026-07-22 21:00'),
+(9,  12, 30, '2026-07-22 21:00'),
+(10, 13, 31, '2026-08-10 10:00'),
+(10, 15, 32, '2026-08-11 17:30'),
+(10, 17, 33, '2026-08-13 20:15'),
+(10, 19, 34, '2026-08-15 09:40');
+
+INSERT INTO iscrizione (id_torneo, id_utente, id_squadra, data) VALUES
+(11, 9,  35, '2026-08-30 19:10'),
+(11, 14, 36, '2026-09-01 12:30'),
+(11, 16, 37, '2026-09-03 21:00'),
+(11, 18, 38, '2026-09-05 16:45');
+
+INSERT INTO iscrizione (id_torneo, id_utente, id_squadra, data) VALUES
+(12, 14, 39, '2026-10-10 18:20'),
+(12, 11, 40, '2026-10-11 21:05'),
+(12, 8,  41, '2026-10-13 12:40'),
+(13, 4,  42, '2026-10-12 19:30'),
+(13, 6,  42, '2026-10-12 19:30'),
+(14, 15, 43, '2026-10-11 16:15'),
+(14, 16, 43, '2026-10-11 16:15'),
+(14, 17, 43, '2026-10-11 16:15'),
+(15, 9,  44, '2026-10-13 22:00'),
+(15, 10, 45, '2026-10-14 09:10');
+
+INSERT INTO partita (id_partita, id_torneo, turno, data_ora, stato) OVERRIDING SYSTEM VALUE VALUES
+(15, 9,  'Finale',       '2026-08-01 18:00', 'conclusa'),
+(16, 10, 'Semifinale 1', '2026-08-22 16:00', 'conclusa'),
+(17, 10, 'Semifinale 2', '2026-08-22 16:45', 'conclusa'),
+(18, 10, 'Finale',       '2026-08-22 18:00', 'conclusa');
+
+INSERT INTO partita (id_partita, id_torneo, turno, data_ora, stato) OVERRIDING SYSTEM VALUE VALUES
+(19, 11, 'Semifinale 1', '2026-09-12 20:00', 'conclusa'),
+(20, 11, 'Semifinale 2', '2026-09-12 20:45', 'conclusa'),
+(21, 11, 'Finale',       '2026-09-12 22:00', 'conclusa');
+
+INSERT INTO partita_squadra (id_partita, id_squadra, id_torneo, punti) VALUES
+(15, 29, 9,  5),
+(15, 30, 9,  3),
+(16, 31, 10, 2),
+(16, 32, 10, 1),
+(17, 33, 10, 0),
+(17, 34, 10, 2),
+(18, 31, 10, 2),
+(18, 34, 10, 1);
+
+INSERT INTO partita_squadra (id_partita, id_squadra, id_torneo, punti) VALUES
+(19, 35, 11, 2),
+(19, 37, 11, 1),
+(20, 36, 11, 2),
+(20, 38, 11, 0),
+(21, 35, 11, 2),
+(21, 36, 11, 1);
+
+INSERT INTO punti_giocatore (id_partita, id_utente, id_squadra, punti) VALUES
+(9, 4,  12, 2),
+(9, 6,  12, 0),
+(9, 9,  13, 2),
+(9, 11, 13, 0);
+
+INSERT INTO squadra (id_squadra, id_torneo, nome, id_capitano) OVERRIDING SYSTEM VALUE VALUES
+(29, 9,  'Red Wolves',       3),
+(30, 9,  'Night Raid',       8),
+(31, 10, 'Chiara Ricci',     13),
+(32, 10, 'Alessia Marino',   15),
+(33, 10, 'Federica Costa',   17),
+(34, 10, 'Martina Esposito', 19);
+
+INSERT INTO squadra (id_squadra, id_torneo, nome, id_capitano) OVERRIDING SYSTEM VALUE VALUES
+(35, 11, 'Marco Riva',     9),
+(36, 11, 'Matteo Greco',   14),
+(37, 11, 'Lorenzo Bruno',  16),
+(38, 11, 'Andrea Ferrari', 18);
+
+INSERT INTO squadra (id_squadra, id_torneo, nome, id_capitano) OVERRIDING SYSTEM VALUE VALUES
+(39, 12, 'Matteo Greco',   14),
+(40, 12, 'Davide Fontana', 11),
+(41, 12, 'Giulia Bianchi', 8),
+(42, 13, 'Storm Riders',   4),
+(43, 14, 'Turbo Boost',    15),
+(44, 15, 'Marco Riva',     9),
+(45, 15, 'Anna Gallo',     10);
+
+INSERT INTO torneo (id_torneo, nome, descrizione, gioco, id_categoria, modalita, giocatori_per_squadra, data_inizio, data_fine, posti_max, stato, foto) OVERRIDING SYSTEM VALUE VALUES
+(9,  'R6 Summer Major',         'Squadre da 5, finale secca al meglio di 9 round.', 'Rainbow Six Siege', 1, 'squadra', 5, '2026-08-01 18:00', '2026-08-01 22:00', 4, 'concluso', 'img/R6.png'),
+(10, 'Clash Royale Summer Cup', 'Sfida 1 contro 1 a eliminazione diretta.',         'Clash Royale',      5, 'singolo', 1, '2026-08-22 16:00', '2026-08-22 19:00', 8, 'concluso', 'img/clashroyale.png');
+
+INSERT INTO torneo (id_torneo, nome, descrizione, gioco, id_categoria, modalita, giocatori_per_squadra, data_inizio, data_fine, posti_max, stato, foto) OVERRIDING SYSTEM VALUE VALUES
+(11, 'Mortal Kombat Summer Fight', 'Sfida 1 contro 1 a eliminazione diretta, al meglio dei 3 round.', 'Mortal Kombat 1', 4, 'singolo', 1, '2026-09-12 20:00', '2026-09-12 23:00', 8, 'concluso', 'img/mortal.png');
+
+INSERT INTO torneo (id_torneo, nome, descrizione, gioco, id_categoria, modalita, giocatori_per_squadra, data_inizio, data_fine, posti_max, stato, foto) OVERRIDING SYSTEM VALUE VALUES
+(12, 'Street Fighter Rush',   'Sfide 1 contro 1 al meglio dei 3 round, eliminazione diretta.', 'Street Fighter 6',  4, 'singolo', 1, '2026-10-16 20:00', '2026-10-16 23:00', 16, 'aperto', 'img/street.png'),
+(13, 'Fortnite Autumn Cup',   'Coppie, tre partite: vince chi somma più eliminazioni.',        'Fortnite',          3, 'duo',     2, '2026-10-17 18:00', '2026-10-17 22:00', 50, 'aperto', 'img/fortnite.png'),
+(14, 'Rocket League Weekend', 'Squadre da 3, gironi e finale.',                                'Rocket League',     2, 'squadra', 3, '2026-10-18 15:00', '2026-10-18 19:00', 8,  'aperto', 'img/rocket.png'),
+(15, 'EA FC Derby Night',     'Sfida 1 contro 1, partite da 6 minuti.',                        'EA Sports FC 26',   2, 'singolo', 1, '2026-10-19 21:00', '2026-10-19 23:30', 8,  'aperto', 'img/fifa.png'),
+(16, 'R6 Open Qualifier',     'Squadre da 5, qualificazione al prossimo major.',               'Rainbow Six Siege', 1, 'squadra', 5, '2026-10-20 20:00', '2026-10-20 23:59', 8,  'aperto', 'img/R6.png');
+
 ---- Nuova insert 
 INSERT INTO impostazione (chiave, valore) VALUES ('max_tornei_attivi', 3);
