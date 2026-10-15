@@ -1,152 +1,82 @@
-.titolo {
-  margin: 0 0 20px;
-}
-
 .filtro {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 260px;
-  margin-bottom: 24px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--testo-tenue);
-}
-
-.tabella th {
-  padding: 14px 18px;
-}
-
-.tabella td {
-  padding: 14px 18px;
-}
-
-.tabella tbody tr:hover td {
-  background: var(--sfondo);
-}
-
-.podio-riga td {
-  font-weight: 700;
+  max-width: 320px;
 }
 
 .stretta {
   width: 90px;
 }
 
-.destra {
-  text-align: right !important;
-}
-
-.numero {
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
+.tabella tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .podio {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
   gap: 16px;
   max-width: 720px;
-  margin: 56px auto 0;
-  padding-bottom: 0;
-  border-bottom: 3px solid var(--testo);
+  width: 100%;
+  margin: 0 auto;
 }
 
 .gradino {
-  flex: 1;
+  background: var(--pannello);
+  border: 1px solid var(--bordo);
+  border-radius: 14px;
+  padding: 20px 14px;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 6px;
-  padding: 20px 12px;
-  background: var(--superficie);
-  border: 2px solid var(--bordo);
-  border-bottom: 0;
-  border-radius: 12px 12px 0 0;
-  text-align: center;
+}
+
+.gradino .pos {
+  font-family: var(--font-titoli);
+  font-size: 2rem;
+}
+
+.gradino .chi {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.gradino .punti {
+  color: var(--testo-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .gradino.primo {
-  min-height: 240px;
+  min-height: 230px;
   border-color: var(--giallo);
-  border-width: 3px;
+}
+
+.gradino.primo .pos {
+  color: var(--giallo);
 }
 
 .gradino.secondo {
   min-height: 190px;
-  border-color: #b8bcc4;
 }
 
 .gradino.terzo {
-  min-height: 150px;
-  border-color: #cd8a4f;
-}
-
-.medaglia {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  font-weight: 800;
-  color: var(--testo);
-  background: var(--sfondo);
-}
-
-.primo .medaglia {
-  background: var(--giallo);
-}
-
-.secondo .medaglia {
-  background: #dfe2e7;
-}
-
-.terzo .medaglia {
-  background: #ecc39d;
-}
-
-.podio-nome {
-  font-weight: 800;
-  font-size: 1.05rem;
-}
-
-.podio-punti {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--testo-tenue);
+  min-height: 160px;
 }
 
 .centro {
   display: flex;
   justify-content: center;
-  margin-top: 28px;
 }
 
-.messaggio {
-  margin: 1em 0;
-  padding: 32px;
-}
-
-@media (max-width: 560px) {
+@media (max-width: 640px) {
   .filtro {
-    display: flex;
-    min-width: 0;
+    max-width: none;
   }
   .podio {
     gap: 8px;
   }
   .gradino {
     padding: 14px 6px;
-  }
-  .podio-nome {
-    font-size: 0.9rem;
-  }
-  .tabella th,
-  .tabella td {
-    padding: 12px;
   }
 }
