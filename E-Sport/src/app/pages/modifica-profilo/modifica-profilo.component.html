@@ -2,37 +2,37 @@
   <a routerLink="/profilo" class="indietro">‹ Profilo</a>
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento profilo...</p>
+    <p class="caricamento">Caricamento profilo...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else {
-    <div class="griglia">
-      <form class="scheda" [formGroup]="profilo" (submit)="$event.preventDefault(); salvaProfilo()" novalidate>
-        <h1 class="intestazione">Modifica profilo</h1>
+    <div class="griglia-due">
+      <form class="scheda-modulo" [formGroup]="profilo" (submit)="$event.preventDefault(); salvaProfilo()" novalidate>
+        <h1>Modifica profilo</h1>
         <div class="corpo">
-          <label class="campo-gruppo">
-            <span>Nome</span>
-            <input class="campo" formControlName="nome" [class.non-valido]="nonValido(profilo, 'nome')" />
+          <label class="etichetta-campo">
+            Nome
+            <input class="campo" formControlName="nome" [class.errore]="nonValido(profilo, 'nome')" />
             @if (nonValido(profilo, 'nome')) {
               <small class="errore-campo">Il nome è obbligatorio</small>
             }
           </label>
 
-          <label class="campo-gruppo">
-            <span>Cognome</span>
-            <input class="campo" formControlName="cognome" [class.non-valido]="nonValido(profilo, 'cognome')" />
+          <label class="etichetta-campo">
+            Cognome
+            <input class="campo" formControlName="cognome" [class.errore]="nonValido(profilo, 'cognome')" />
             @if (nonValido(profilo, 'cognome')) {
               <small class="errore-campo">Il cognome è obbligatorio</small>
             }
           </label>
 
-          <label class="campo-gruppo">
-            <span>Email</span>
+          <label class="etichetta-campo">
+            Email
             <input
               type="email"
               class="campo"
               formControlName="email"
-              [class.non-valido]="nonValido(profilo, 'email')"
+              [class.errore]="nonValido(profilo, 'email')"
             />
             @if (nonValido(profilo, 'email')) {
               <small class="errore-campo">Inserisci un'email valida</small>
@@ -40,49 +40,49 @@
           </label>
 
           @if (esitoProfilo(); as e) {
-            <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+            <p [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
           }
 
-          <div class="azioni">
-            <button type="submit" class="btn-pieno" [disabled]="invioProfilo()">
+          <div class="fila-pulsanti">
+            <button type="submit" class="btn btn-primario" [disabled]="invioProfilo()">
               {{ invioProfilo() ? 'Salvataggio...' : 'Salva' }}
             </button>
-            <a routerLink="/profilo" class="btn-outline">Annulla</a>
+            <a routerLink="/profilo" class="btn btn-contorno">Annulla</a>
           </div>
         </div>
       </form>
 
       <form
         id="password"
-        class="scheda"
+        class="scheda-modulo"
         [formGroup]="password"
         (submit)="$event.preventDefault(); cambiaPassword()"
         novalidate
       >
-        <h2 class="intestazione">Cambia password</h2>
+        <h2>Cambia password</h2>
         <div class="corpo">
-          <label class="campo-gruppo">
-            <span>Password attuale</span>
+          <label class="etichetta-campo">
+            Password attuale
             <input
               type="password"
               class="campo"
               formControlName="passwordAttuale"
               autocomplete="current-password"
-              [class.non-valido]="nonValido(password, 'passwordAttuale')"
+              [class.errore]="nonValido(password, 'passwordAttuale')"
             />
             @if (nonValido(password, 'passwordAttuale')) {
               <small class="errore-campo">Inserisci la password attuale</small>
             }
           </label>
 
-          <label class="campo-gruppo">
-            <span>Nuova password</span>
+          <label class="etichetta-campo">
+            Nuova password
             <input
               type="password"
               class="campo"
               formControlName="passwordNuova"
               autocomplete="new-password"
-              [class.non-valido]="nonValido(password, 'passwordNuova')"
+              [class.errore]="nonValido(password, 'passwordNuova')"
             />
             @if (nonValido(password, 'passwordNuova')) {
               <small class="errore-campo">La nuova password deve avere da 8 a 72 caratteri</small>
@@ -90,10 +90,10 @@
           </label>
 
           @if (esitoPassword(); as e) {
-            <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+            <p [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
           }
 
-          <button type="submit" class="btn-pieno" [disabled]="invioPassword()">
+          <button type="submit" class="btn btn-primario btn-largo" [disabled]="invioPassword()">
             {{ invioPassword() ? 'Salvataggio...' : 'Cambia password' }}
           </button>
         </div>
