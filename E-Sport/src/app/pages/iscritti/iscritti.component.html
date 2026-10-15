@@ -2,17 +2,19 @@
   <a routerLink="/admin" class="indietro">‹ Gestione tornei</a>
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento iscritti...</p>
+    <p class="caricamento">Caricamento iscritti...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (torneo(); as t) {
-    <h1 class="titolo">{{ t.nome }} - Iscritti</h1>
-    <p class="riepilogo">{{ riepilogo(t) }}</p>
+    <div class="intestazione">
+      <h1 class="titolo">{{ t.nome }} - Iscritti</h1>
+      <p class="aiuto">{{ riepilogo(t) }}</p>
+    </div>
 
     @if (squadre().length === 0) {
-      <p class="messaggio">Ancora nessun iscritto.</p>
+      <p class="vuoto">Ancora nessun iscritto.</p>
     } @else {
-      <div class="contenitore-tabella">
+      <div class="tabella-box">
         <table class="tabella">
           <thead>
             <tr>
@@ -42,7 +44,7 @@
                     }
                   </td>
                 }
-                <td class="numero">{{ s.data | date: 'dd/MM HH:mm' }}</td>
+                <td class="data">{{ s.data | date: 'dd/MM HH:mm' }}</td>
               </tr>
             }
           </tbody>
