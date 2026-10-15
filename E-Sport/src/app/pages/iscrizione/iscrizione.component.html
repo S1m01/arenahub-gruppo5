@@ -1,23 +1,23 @@
 <section class="pagina">
   @if (caricamento()) {
-    <p class="messaggio">Caricamento torneo...</p>
+    <p class="caricamento">Caricamento torneo...</p>
   } @else if (errore()) {
     @if (torneo(); as t) {
       <a [routerLink]="['/tornei', t.id]" class="indietro">‹ {{ t.nome }}</a>
     } @else {
       <a routerLink="/" class="indietro">‹ Tutti i tornei</a>
     }
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (torneo(); as t) {
     <a [routerLink]="['/tornei', t.id]" class="indietro">‹ {{ t.nome }}</a>
 
-    <form class="scheda" (submit)="$event.preventDefault(); iscrivi()" novalidate>
-      <h1 class="intestazione">
+    <form class="scheda-modulo larga" (submit)="$event.preventDefault(); iscrivi()" novalidate>
+      <h1>
         Iscrizione: {{ t.nome }} ({{ t.modalita === 'DUO' ? 'duo' : 'squadra da ' + t.giocatoriPerSquadra }})
       </h1>
       <div class="corpo">
-        <label class="campo-gruppo">
-          <span>Nome squadra</span>
+        <label class="etichetta-campo">
+          Nome squadra
           <input
             class="campo"
             maxlength="60"
@@ -26,8 +26,8 @@
           />
         </label>
 
-        <div class="campo-gruppo">
-          <span>Componenti (utenti registrati, cerca per email)</span>
+        <div class="etichetta-campo">
+          Componenti (utenti registrati, cerca per email)
           <p class="capitano">1. {{ auth.utente()?.nome }} {{ auth.utente()?.cognome }} (tu, capitano)</p>
           @for (c of componenti(); track $index) {
             <div class="riga-componente">
@@ -40,21 +40,23 @@
                 (blur)="controlla($index)"
               />
               @if (c.controllo; as k) {
-                <span class="controllo" [class.ok]="k.ok">{{ k.ok ? '✓' : '✗' }} {{ k.testo }}</span>
+                <span class="esito-componente" [class.ok]="k.ok" [class.no]="!k.ok"
+                  >{{ k.ok ? '✓' : '✗' }} {{ k.testo }}</span
+                >
               }
             </div>
           }
         </div>
 
         @if (esito(); as e) {
-          <p class="esito" role="alert">{{ e }}</p>
+          <p class="msg-errore" role="alert">{{ e }}</p>
         }
 
-        <div class="azioni">
-          <button type="submit" class="btn-pieno" [disabled]="invio() || !puoInviare()">
+        <div class="fila-pulsanti">
+          <button type="submit" class="btn btn-primario" [disabled]="invio() || !puoInviare()">
             {{ invio() ? 'Iscrizione in corso...' : 'Crea squadra e iscriviti' }}
           </button>
-          <a [routerLink]="['/tornei', t.id]" class="btn-outline">Annulla</a>
+          <a [routerLink]="['/tornei', t.id]" class="btn btn-contorno">Annulla</a>
         </div>
       </div>
     </form>

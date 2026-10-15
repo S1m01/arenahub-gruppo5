@@ -1,98 +1,45 @@
-.scheda {
-  max-width: 640px;
-  margin: 0 auto;
-  background: var(--superficie);
-  border: 1px solid var(--bordo);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.intestazione {
-  margin: 0;
-  padding: 16px 24px;
-  background: var(--testo);
-  color: #fff;
-  font-size: 1.05rem;
-  text-align: center;
-}
-
-.corpo {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.campo-gruppo {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--testo-tenue);
-}
-
-.campo-gruppo .campo {
-  font-size: 1rem;
-  text-transform: none;
-  letter-spacing: normal;
-  font-weight: 400;
+.indietro {
+  align-self: flex-start;
 }
 
 .capitano {
   margin: 0;
-  padding: 10px 12px;
+  padding: 11px 14px;
   border: 1px solid var(--bordo);
   border-radius: 8px;
   color: var(--testo);
+  font-family: var(--font-testo);
   font-size: 1rem;
-  font-weight: 700;
-  text-transform: none;
+  font-weight: 600;
   letter-spacing: normal;
+  text-transform: none;
 }
 
 .riga-componente {
   display: grid;
-  grid-template-columns: 1fr 190px;
+  grid-template-columns: minmax(0, 1fr) 200px;
   gap: 12px;
   align-items: center;
 }
 
-.controllo {
-  color: var(--rosso);
+.esito-componente {
+  font-family: var(--font-testo);
   font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: normal;
-}
-
-.controllo.ok {
-  color: var(--verde);
-}
-
-.azioni {
-  display: flex;
-  gap: 12px;
-}
-
-.azioni > * {
-  flex: 1;
-}
-
-.esito {
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: rgb(230 50 55 / 0.1);
-  color: var(--rosso);
   font-weight: 600;
-  text-align: center;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
-@media (max-width: 520px) {
+.esito-componente.ok {
+  color: #6fd3b0;
+}
+
+.esito-componente.no {
+  color: #ff8a8d;
+}
+
+@media (max-width: 640px) {
   .riga-componente {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
