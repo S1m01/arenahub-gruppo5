@@ -134,6 +134,7 @@ select.campo { appearance: none; background-image: linear-gradient(45deg, transp
 .bronzo { background: #d08a4c; }
 .vuoto { text-align: center; padding: 28px 20px; border: 1px dashed var(--bordo); border-radius: 14px; color: var(--testo-2); display: flex; flex-direction: column; gap: 12px; align-items: center; }
 .caricamento { text-align: center; padding: 28px 20px; color: var(--testo-2); }
+.azioni-riga { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
 .griglia-video { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
 
 .hero { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 340px minmax(0, 1fr); min-height: 240px; border: 1px solid var(--bordo); border-radius: 14px; background: var(--pannello); }

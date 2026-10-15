@@ -72,9 +72,9 @@ export class GestioneTorneiComponent implements OnInit {
   }
 
   classeStato(t: Torneo): string {
-    if (t.stato === 'CONCLUSO') return 'stato concluso';
-    if (t.inCorso) return 'stato in-corso';
-    return t.stato === 'APERTO' ? 'stato aperto' : 'stato';
+    if (t.stato === 'CONCLUSO') return 'pill pill-concluso';
+    if (t.inCorso) return 'pill pill-in-corso';
+    return t.stato === 'APERTO' ? 'pill pill-aperto' : 'pill pill-chiuso';
   }
 
   private cambiaStato(t: Torneo, stato: 'chiuso' | 'concluso', testoOk: string): void {

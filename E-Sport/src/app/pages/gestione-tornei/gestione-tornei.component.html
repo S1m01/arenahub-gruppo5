@@ -1,29 +1,29 @@
 <section class="pagina">
-  <div class="testata">
-    <div>
+  <div class="testa-pagina">
+    <div class="intestazione">
       <h1 class="titolo">Gestione tornei</h1>
       @if (!caricamento() && !errore()) {
-        <p class="riepilogo">{{ riepilogo() }}</p>
+        <p class="aiuto">{{ riepilogo() }}</p>
       }
     </div>
-    <div class="pulsanti-testata">
-      <a routerLink="/admin/impostazioni" class="btn-outline">Impostazioni</a>
-      <a routerLink="/admin/tornei/nuovo" class="btn-pieno">+ Nuovo torneo</a>
+    <div class="pulsanti">
+      <a routerLink="/admin/impostazioni" class="btn btn-contorno">Impostazioni</a>
+      <a routerLink="/admin/tornei/nuovo" class="btn btn-primario">+ Nuovo torneo</a>
     </div>
   </div>
 
   @if (esito(); as e) {
-    <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+    <p [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
   }
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento tornei...</p>
+    <p class="caricamento">Caricamento tornei...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (tornei().length === 0) {
-    <p class="messaggio">Nessun torneo.</p>
+    <p class="vuoto">Nessun torneo.</p>
   } @else {
-    <div class="contenitore-tabella">
+    <div class="tabella-box">
       <table class="tabella">
         <thead>
           <tr>
@@ -31,7 +31,7 @@
             <th>Modalità</th>
             <th>Stato</th>
             <th>Posti</th>
-            <th>Azioni</th>
+            <th class="destra">Azioni</th>
           </tr>
         </thead>
         <tbody>
@@ -44,20 +44,28 @@
               <td>
                 <span [class]="classeStato(t)">{{ etichettaStato(t) }}</span>
               </td>
-              <td class="numero">{{ t.iscritti }}/{{ t.postiMassimi }}</td>
+              <td>{{ t.iscritti }}/{{ t.postiMassimi }}</td>
               <td>
                 <div class="azioni-riga">
                   @if (t.stato === 'APERTO') {
-                    <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'modifica']">Modifica</a>
+                    <a class="btn btn-piccolo btn-contorno" [routerLink]="['/admin/tornei', t.id, 'modifica']"
+                      >Modifica</a
+                    >
                   } @else {
-                    <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'partite']">Partite</a>
-                    <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'giocate']">Giocate</a>
+                    <a class="btn btn-piccolo btn-contorno" [routerLink]="['/admin/tornei', t.id, 'partite']"
+                      >Partite</a
+                    >
+                    <a class="btn btn-piccolo btn-contorno" [routerLink]="['/admin/tornei', t.id, 'giocate']"
+                      >Giocate</a
+                    >
                   }
-                  <a class="btn-piccolo" [routerLink]="['/admin/tornei', t.id, 'iscritti']">Iscritti</a>
+                  <a class="btn btn-piccolo btn-contorno" [routerLink]="['/admin/tornei', t.id, 'iscritti']"
+                    >Iscritti</a
+                  >
                   @if (t.stato === 'APERTO') {
                     <button
                       type="button"
-                      class="btn-piccolo pericolo"
+                      class="btn btn-piccolo btn-pericolo"
                       [disabled]="inCorsoId() === t.id"
                       (click)="chiudi(t)"
                     >
@@ -66,7 +74,7 @@
                   } @else if (t.stato === 'CHIUSO') {
                     <button
                       type="button"
-                      class="btn-piccolo pericolo"
+                      class="btn btn-piccolo btn-pericolo"
                       [disabled]="inCorsoId() === t.id"
                       (click)="concludi(t)"
                     >

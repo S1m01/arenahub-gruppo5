@@ -1,93 +1,24 @@
-.testata {
+.intestazione {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px 20px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.pulsanti-testata {
+.aiuto {
+  margin: 0;
+}
+
+.pulsanti {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.titolo {
-  margin: 0;
-}
-
-.riepilogo {
-  margin: 6px 0 0;
-  color: var(--testo-tenue);
-}
-
-.contenitore-tabella {
-  overflow-x: auto;
-  border-radius: 12px;
-}
-
-.tabella th {
+.tabella th,
+.tabella .pill {
   white-space: nowrap;
 }
 
 .tabella td {
-  padding: 10px 14px;
   vertical-align: middle;
-}
-
-.tabella td a {
-  color: var(--testo);
-  font-weight: 600;
-}
-
-.numero {
-  font-variant-numeric: tabular-nums;
-}
-
-.stato {
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.stato.aperto {
-  color: var(--verde);
-}
-
-.stato.in-corso {
-  color: var(--rosso);
-}
-
-.stato.concluso {
-  color: var(--blu);
-}
-
-.azioni-riga {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.esito {
-  margin: 0 0 16px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: rgb(230 50 55 / 0.1);
-  color: var(--rosso);
-  font-weight: 600;
-  text-align: center;
-}
-
-.esito.ok {
-  background: rgb(46 139 110 / 0.12);
-  color: var(--verde);
-}
-
-@media (max-width: 640px) {
-  .tabella th,
-  .tabella td {
-    padding: 9px 10px;
-  }
 }
