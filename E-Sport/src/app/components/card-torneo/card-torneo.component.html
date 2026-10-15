@@ -12,6 +12,7 @@
       <span>Inizio <strong>{{ torneo().dataInizio | date: 'dd/MM/yyyy HH:mm' }}</strong></span>
       <span>Fine <strong>{{ torneo().dataFine | date: 'dd/MM/yyyy HH:mm' }}</strong></span>
     </div>
+    <ng-content />
   </div>
 
   <div class="col">
@@ -28,7 +29,6 @@
         <div class="barra" [class.piena]="liberi() <= 1"><i [style.width.%]="percentuale()"></i></div>
       }
     </div>
-    <ng-content />
   </div>
 
   <div class="azioni-card">

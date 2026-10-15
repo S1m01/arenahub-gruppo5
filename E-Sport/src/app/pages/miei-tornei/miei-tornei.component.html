@@ -1,5 +1,5 @@
 <section class="pagina">
-  <div class="testata">
+  <div class="testa-pagina">
     <h1 class="titolo">I miei tornei</h1>
     @if (statistiche(); as s) {
       <span class="contatore" [class.pieno]="s.torniAttivi >= s.maxTorneiAttivi">
@@ -7,41 +7,42 @@
       </span>
     }
   </div>
-  <p class="spiegazione">
+  <p class="aiuto spiegazione">
     Un torneo è attivo se è aperto o chiuso (non concluso). Quando un torneo si conclude, o annulli
     l'iscrizione, si libera un posto.
   </p>
 
   @if (esito(); as e) {
-    <p class="esito" [class.ok]="e.ok" role="status">{{ e.testo }}</p>
+    <p [class]="e.ok ? 'msg-ok' : 'msg-errore'" role="status">{{ e.testo }}</p>
   }
 
   @if (caricamento()) {
-    <p class="messaggio">Caricamento tornei...</p>
+    <p class="caricamento">Caricamento tornei...</p>
   } @else if (errore()) {
-    <p class="messaggio errore">{{ errore() }}</p>
+    <p class="msg-errore">{{ errore() }}</p>
   } @else if (tornei().length === 0) {
-    <p class="messaggio">
+    <div class="vuoto">
       Non sei ancora iscritto a nessun torneo.
-      <a routerLink="/" class="btn-pieno vuoto">Guarda i tornei aperti</a>
-    </p>
+      <a routerLink="/" class="btn btn-primario">Guarda i tornei aperti</a>
+    </div>
   } @else {
-    <div class="griglia">
+    <div class="lista">
       @for (t of tornei(); track t.id) {
         <app-card-torneo [torneo]="t">
           <div class="mia-squadra">
             <span>Squadra: <strong>{{ t.squadra.nome }}</strong></span>
-            @if (puoAnnullare(t)) {
-              <button
-                type="button"
-                class="btn-outline"
-                [disabled]="inAnnullamento() === t.id"
-                (click)="annulla(t)"
-              >
-                {{ inAnnullamento() === t.id ? 'Annullamento...' : 'Annulla iscrizione' }}
-              </button>
-            }
           </div>
+          @if (puoAnnullare(t)) {
+            <button
+              azione-card
+              type="button"
+              class="btn btn-pericolo"
+              [disabled]="inAnnullamento() === t.id"
+              (click)="annulla(t)"
+            >
+              {{ inAnnullamento() === t.id ? 'Annullamento...' : 'Annulla iscrizione' }}
+            </button>
+          }
         </app-card-torneo>
       }
     </div>
