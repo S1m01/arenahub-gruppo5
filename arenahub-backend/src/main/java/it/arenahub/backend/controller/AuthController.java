@@ -57,6 +57,8 @@ public class AuthController {
 	}
 
 	private void apriSessione(Utente utente, HttpServletRequest request, HttpServletResponse response) {
+		request.getSession(true);
+		request.changeSessionId();
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 				utente.getId(), null, List.of(new SimpleGrantedAuthority("ROLE_" + utente.getRuolo().name())));
 		SecurityContext context = SecurityContextHolder.createEmptyContext();

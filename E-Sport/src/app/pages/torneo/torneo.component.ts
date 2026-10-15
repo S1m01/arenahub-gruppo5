@@ -65,7 +65,7 @@ export class TorneoComponent implements OnInit {
 
   conRisultati = computed(() => {
     const t = this.torneo();
-    return !!t && (t.stato === 'CONCLUSO' || t.inCorso);
+    return !!t && t.stato !== 'APERTO';
   });
 
   indietro = computed(() =>
@@ -97,7 +97,21 @@ export class TorneoComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe((parametri) => this.carica(Number(parametri.get('id'))));
+  }
+
+  private carica(id: number): void {
+    this.torneo.set(null);
+    this.squadre.set([]);
+    this.partite.set([]);
+    this.classifica.set([]);
+    this.classificaGiocatori.set([]);
+    this.giocate.set([]);
+    this.errore.set(null);
+    this.esitoIscrizione.set(null);
+    this.scheda.set('PARTITE');
+    this.caricamento.set(true);
+
     if (!Number.isInteger(id) || id <= 0) {
       this.errore.set('Torneo non trovato.');
       this.caricamento.set(false);
@@ -230,6 +244,10 @@ export class TorneoComponent implements OnInit {
       next: (s) => this.squadre.set(s),
       error: () => this.squadre.set([]),
     });
+    this.giocateService.getGiocate(t.id).subscribe({
+      next: (g) => this.giocate.set(g),
+      error: () => this.giocate.set([]),
+    });
 
     if (!this.conRisultati()) return;
 
@@ -244,10 +262,6 @@ export class TorneoComponent implements OnInit {
     this.torneiService.getClassificaGiocatori(t.id).subscribe({
       next: (c) => this.classificaGiocatori.set(c),
       error: () => this.classificaGiocatori.set([]),
-    });
-    this.giocateService.getGiocate(t.id).subscribe({
-      next: (g) => this.giocate.set(g),
-      error: () => this.giocate.set([]),
     });
   }
 }

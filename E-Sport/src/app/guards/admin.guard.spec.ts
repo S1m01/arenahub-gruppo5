@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { providerAdmin } from '../testing/admin-test-utils';
+import { Observable } from 'rxjs';
+import { http, providerAdmin, rispondiErrore } from '../testing/admin-test-utils';
 import { adminGuard } from './admin.guard';
 
 describe('adminGuard', () => {
   function esegui(ruolo: 'admin' | 'utente' | null) {
     TestBed.configureTestingModule({ providers: providerAdmin() });
-    localStorage.clear();
-    const auth = TestBed.inject(AuthService) as unknown as {
-      utenteCorrente: { set(v: unknown): void };
-    };
-    auth.utenteCorrente.set(ruolo ? { id: 1, nome: 'Test', cognome: 'T', ruolo } : null);
-    const esito = TestBed.runInInjectionContext(() =>
-      adminGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot)
+    let esito: boolean | UrlTree | undefined;
+    TestBed.runInInjectionContext(() =>
+      (adminGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot) as Observable<boolean | UrlTree>)
+        .subscribe((r) => (esito = r))
     );
+    const req = http().expectOne('/api/auth/me');
+    if (ruolo) req.flush({ id: 1, nome: 'Test', cognome: 'T', ruolo });
+    else rispondiErrore(req, 401, 'Utente non autenticato');
     const router = TestBed.inject(Router);
     return esito instanceof UrlTree ? router.serializeUrl(esito) : esito;
   }

@@ -156,11 +156,7 @@
           @if (giocate().length === 0) {
             <p class="messaggio">Nessuna giocata per questo torneo.</p>
           } @else {
-            <div class="griglia-giocate">
-              @for (g of giocate(); track g.id) {
-                <app-card-giocata [giocata]="g" [mostraTorneo]="false" />
-              }
-            </div>
+            <ng-container *ngTemplateOutlet="elencoGiocate" />
           }
         }
         @case ('CLASSIFICA_GIOCATORI') {
@@ -191,6 +187,9 @@
           }
         }
       }
+    } @else if (giocate().length > 0) {
+      <h2 class="sottotitolo">Top giocate del torneo</h2>
+      <ng-container *ngTemplateOutlet="elencoGiocate" />
     }
 
     <div class="riquadro iscritte">
@@ -210,6 +209,14 @@
         </ul>
       }
     </div>
+
+    <ng-template #elencoGiocate>
+      <div class="griglia-giocate">
+        @for (g of giocate(); track g.id) {
+          <app-card-giocata [giocata]="g" [mostraTorneo]="false" />
+        }
+      </div>
+    </ng-template>
 
     <ng-template #tabellaSquadre>
       @if (classifica().length === 0) {

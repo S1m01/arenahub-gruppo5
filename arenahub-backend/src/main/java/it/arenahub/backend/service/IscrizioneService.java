@@ -46,8 +46,9 @@ public class IscrizioneService {
 
 	@Transactional
 	public IscrizioneResponse iscrivi(Integer idTorneo, Integer idUtente, IscrizioneRequest req) {
-		Torneo torneo = trovaTorneo(idTorneo);
-		Utente capitano = utenteRepository.findById(idUtente)
+		Torneo torneo = torneoRepository.findByIdForUpdate(idTorneo)
+				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Torneo non trovato"));
+		Utente capitano = utenteRepository.findByIdForUpdate(idUtente)
 				.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Utente non autenticato"));
 
 		if (iscrizioneRepository.existsByTorneoIdAndUtenteId(idTorneo, idUtente)) {
@@ -78,11 +79,16 @@ public class IscrizioneService {
 				throw new ApiException(HttpStatus.BAD_REQUEST, erroreSquadra);
 			}
 			Set<String> emailViste = new HashSet<>();
-			emailViste.add(capitano.getEmail().toLowerCase());
 			for (String e : email) {
-				String normalizzata = e == null ? "" : e.trim().toLowerCase();
+				if (e == null || e.isBlank()) {
+					throw new ApiException(HttpStatus.BAD_REQUEST, "Inserisci l'email di tutti i componenti");
+				}
+				String normalizzata = e.trim().toLowerCase();
+				if (normalizzata.equals(capitano.getEmail().toLowerCase())) {
+					throw new ApiException(HttpStatus.BAD_REQUEST, "Non puoi inserire la tua email");
+				}
 				if (!emailViste.add(normalizzata)) {
-					throw new ApiException(HttpStatus.BAD_REQUEST, erroreSquadra);
+					throw new ApiException(HttpStatus.BAD_REQUEST, "Hai inserito due volte la stessa email");
 				}
 			}
 			if (squadraRepository.existsByTorneoIdAndNomeIgnoreCase(idTorneo, nomeSquadra)) {

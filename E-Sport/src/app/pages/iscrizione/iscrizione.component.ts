@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TorneoDettaglio } from '../../models/torneo.model';
 import { messaggioErrore } from '../../services/admin.service';
@@ -34,11 +34,18 @@ export class IscrizioneComponent implements OnInit {
   invio = signal(false);
   esito = signal<string | null>(null);
 
+  puoInviare = computed(
+    () =>
+      this.nomeSquadra().trim().length > 0 &&
+      this.componenti().every((c) => c.email !== '' && c.controllo?.ok !== false)
+  );
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.torneiService.getTorneo(id).subscribe({
       next: (t) => {
         this.torneo.set(t);
+        this.errore.set(this.motivoBlocco(t));
         const posti = Array.from({ length: t.giocatoriPerSquadra - 1 }, () => ({ email: '', controllo: null }));
         this.componenti.set(posti);
         this.caricamento.set(false);
@@ -60,12 +67,14 @@ export class IscrizioneComponent implements OnInit {
 
     this.utenteService.cerca(email).subscribe({
       next: (u) => {
+        if (this.componenti()[indice].email !== email) return;
         const controllo = u.puoIscriversi
           ? { ok: true, testo: `${u.nome} ${u.cognome}` }
           : { ok: false, testo: 'limite raggiunto' };
         this.aggiorna(indice, { email, controllo });
       },
       error: (err: HttpErrorResponse) => {
+        if (this.componenti()[indice].email !== email) return;
         const testo = err.status === 404 ? 'non registrato' : 'controllo non riuscito';
         this.aggiorna(indice, { email, controllo: { ok: false, testo } });
       },
@@ -74,7 +83,7 @@ export class IscrizioneComponent implements OnInit {
 
   iscrivi(): void {
     const t = this.torneo();
-    if (!t) return;
+    if (!t || !this.puoInviare()) return;
 
     this.invio.set(true);
     this.esito.set(null);
@@ -96,6 +105,14 @@ export class IscrizioneComponent implements OnInit {
 
   valore(evento: Event): string {
     return (evento.target as HTMLInputElement).value;
+  }
+
+  private motivoBlocco(t: TorneoDettaglio): string | null {
+    if (t.miaSquadra) return 'Sei già iscritto a questo torneo.';
+    if (t.stato !== 'APERTO') return 'Le iscrizioni a questo torneo sono chiuse.';
+    if (t.modalita === 'SINGOLO') return 'Questo torneo è singolo: iscriviti dalla pagina del torneo.';
+    if (t.iscritti >= t.postiMassimi) return 'Il torneo è completo.';
+    return null;
   }
 
   private aggiorna(indice: number, componente: Componente): void {

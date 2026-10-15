@@ -2,7 +2,11 @@
   @if (caricamento()) {
     <p class="messaggio">Caricamento torneo...</p>
   } @else if (errore()) {
-    <a routerLink="/" class="indietro">‹ Tutti i tornei</a>
+    @if (torneo(); as t) {
+      <a [routerLink]="['/tornei', t.id]" class="indietro">‹ {{ t.nome }}</a>
+    } @else {
+      <a routerLink="/" class="indietro">‹ Tutti i tornei</a>
+    }
     <p class="messaggio errore">{{ errore() }}</p>
   } @else if (torneo(); as t) {
     <a [routerLink]="['/tornei', t.id]" class="indietro">‹ {{ t.nome }}</a>
@@ -47,7 +51,7 @@
         }
 
         <div class="azioni">
-          <button type="submit" class="btn-pieno" [disabled]="invio()">
+          <button type="submit" class="btn-pieno" [disabled]="invio() || !puoInviare()">
             {{ invio() ? 'Iscrizione in corso...' : 'Crea squadra e iscriviti' }}
           </button>
           <a [routerLink]="['/tornei', t.id]" class="btn-outline">Annulla</a>

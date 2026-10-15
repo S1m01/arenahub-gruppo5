@@ -24,7 +24,7 @@ export class RegistrazioneComponent {
     nome: ['', [Validators.required, Validators.maxLength(50)]],
     cognome: ['', [Validators.required, Validators.maxLength(50)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(72)]],
   });
 
   registrati(): void {
@@ -74,7 +74,7 @@ export class RegistrazioneComponent {
     }
     if (c.hasError('email')) return 'Email non valida';
     if (c.hasError('minlength')) return 'Almeno 8 caratteri';
-    if (c.hasError('maxlength')) return 'Massimo 50 caratteri';
+    if (c.hasError('maxlength')) return nome === 'password' ? 'Massimo 72 caratteri' : 'Massimo 50 caratteri';
     return '';
   }
 }

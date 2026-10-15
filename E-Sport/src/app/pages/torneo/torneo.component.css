@@ -1,18 +1,3 @@
-.indietro {
-  display: inline-block;
-  margin-bottom: 16px;
-  color: var(--testo);
-  font-weight: 800;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.indietro:hover {
-  text-decoration: underline;
-}
-
 .hero {
   display: grid;
   grid-template-columns: 3fr 2fr;
@@ -238,36 +223,6 @@
   gap: 20px;
 }
 
-.tabella {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--superficie);
-  border: 1px solid var(--bordo);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.tabella th {
-  padding: 12px 14px;
-  background: var(--testo);
-  color: #fff;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.tabella td {
-  padding: 12px 14px;
-  border-top: 1px solid var(--bordo);
-}
-
-.tabella tbody tr:first-child td {
-  border-top: 0;
-}
-
 .tabella tr.primo td {
   font-weight: 800;
 }
@@ -310,16 +265,7 @@
 }
 
 .messaggio {
-  padding: 24px;
-  text-align: center;
-  color: var(--testo-tenue);
-  background: var(--superficie);
-  border: 1px dashed var(--bordo);
-  border-radius: 12px;
-}
-
-.messaggio.errore {
-  color: var(--rosso);
+  margin: 1em 0;
 }
 
 @media (max-width: 800px) {

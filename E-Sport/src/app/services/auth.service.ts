@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, finalize, tap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, tap } from 'rxjs';
 
 export interface LoginRequest {
   email: string;
@@ -34,10 +34,6 @@ export class AuthService {
   readonly loggato = computed(() => this.utenteCorrente() !== null);
   readonly admin = computed(() => this.utenteCorrente()?.ruolo === 'admin');
 
-  constructor() {
-    if (this.utenteCorrente()) this.verificaSessione();
-  }
-
   login(dati: LoginRequest): Observable<Utente> {
     return this.http
       .post<Utente>('/api/auth/login', dati)
@@ -58,13 +54,21 @@ export class AuthService {
     this.salvaUtente(utente);
   }
 
-  private verificaSessione(): void {
-    this.http.get<Utente>('/api/auth/me').subscribe({
-      next: (utente) => this.salvaUtente(utente),
-      error: (err: HttpErrorResponse) => {
+  esci(): void {
+    this.salvaUtente(null);
+  }
+
+  verifica(): Observable<boolean> {
+    return this.http.get<Utente>('/api/auth/me').pipe(
+      map((utente) => {
+        this.salvaUtente(utente);
+        return true;
+      }),
+      catchError((err: HttpErrorResponse) => {
         if (err.status === 401) this.salvaUtente(null);
-      },
-    });
+        return of(this.loggato());
+      })
+    );
   }
 
   private salvaUtente(utente: Utente | null): void {

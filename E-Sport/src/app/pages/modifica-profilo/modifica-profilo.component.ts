@@ -24,7 +24,10 @@ export class ModificaProfiloComponent implements OnInit {
 
   password = new FormGroup({
     passwordAttuale: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    passwordNuova: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    passwordNuova: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)],
+    }),
   });
 
   caricamento = signal(true);

@@ -93,3 +93,98 @@ h2 {
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+.btn-piccolo {
+  padding: 6px 12px;
+  border: 1px solid var(--testo);
+  border-radius: 7px;
+  background: var(--superficie);
+  color: var(--testo);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-piccolo:hover:not(:disabled) {
+  background: var(--testo);
+  color: #fff;
+}
+
+.btn-piccolo.pericolo {
+  border-color: var(--rosso);
+  color: var(--rosso);
+}
+
+.btn-piccolo.pericolo:hover:not(:disabled) {
+  background: var(--rosso);
+  color: #fff;
+}
+
+.btn-piccolo:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.indietro {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--testo);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.indietro:hover {
+  text-decoration: underline;
+}
+
+.messaggio {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--testo-tenue);
+  background: var(--superficie);
+  border: 1px dashed var(--bordo);
+  border-radius: 12px;
+}
+
+.messaggio.errore {
+  color: var(--rosso);
+}
+
+.tabella {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--superficie);
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabella th {
+  padding: 12px 14px;
+  background: var(--testo);
+  color: #fff;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tabella td {
+  padding: 12px 14px;
+  border-top: 1px solid var(--bordo);
+}
+
+.tabella tbody tr:first-child td {
+  border-top: 0;
+}

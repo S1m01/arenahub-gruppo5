@@ -59,17 +59,7 @@
 }
 
 .messaggio {
-  margin: 0;
   padding: 32px;
-  text-align: center;
-  color: var(--testo-tenue);
-  background: var(--superficie);
-  border: 1px dashed var(--bordo);
-  border-radius: 12px;
-}
-
-.messaggio.errore {
-  color: var(--rosso);
 }
 
 .vuoto {

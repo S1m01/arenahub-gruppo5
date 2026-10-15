@@ -1,18 +1,3 @@
-.indietro {
-  display: inline-block;
-  margin-bottom: 16px;
-  color: var(--testo);
-  font-weight: 800;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.indietro:hover {
-  text-decoration: underline;
-}
-
 .titolo {
   margin: 0 0 12px;
 }
@@ -35,35 +20,12 @@
   border-radius: 12px;
 }
 
-.tabella {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--superficie);
-  border: 1px solid var(--bordo);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
 .tabella th {
-  padding: 12px 14px;
-  background: var(--testo);
-  color: #fff;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .tabella td {
   padding: 10px 14px;
-  border-top: 1px solid var(--bordo);
-}
-
-.tabella tbody tr:first-child td {
-  border-top: 0;
 }
 
 .numero {
@@ -73,20 +35,6 @@
 
 .tenue {
   color: var(--testo-tenue);
-}
-
-.messaggio {
-  margin: 0;
-  padding: 24px;
-  text-align: center;
-  color: var(--testo-tenue);
-  background: var(--superficie);
-  border: 1px dashed var(--bordo);
-  border-radius: 12px;
-}
-
-.messaggio.errore {
-  color: var(--rosso);
 }
 
 @media (max-width: 640px) {
