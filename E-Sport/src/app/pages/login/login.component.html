@@ -1,45 +1,47 @@
-<section class="pagina centrata">
-  <form class="scheda" [formGroup]="form" (ngSubmit)="accedi()" novalidate>
-    <h1 class="titolo">Accedi</h1>
+<section class="pagina">
+  <form class="scheda-modulo" [formGroup]="form" (ngSubmit)="accedi()" novalidate>
+    <h1>Login</h1>
 
-    @if (erroreServer()) {
-      <p class="errore-server" role="alert">{{ erroreServer() }}</p>
-    }
-
-    <label class="campo-gruppo">
-      <span>Email</span>
-      <input
-        type="email"
-        class="campo"
-        formControlName="email"
-        autocomplete="email"
-        [class.non-valido]="campoNonValido('email')"
-      />
-      @if (campoNonValido('email')) {
-        <small class="errore-campo">
-          {{ form.controls.email.hasError('required') ? 'Inserisci la tua email' : 'Email non valida' }}
-        </small>
+    <div class="corpo">
+      @if (erroreServer()) {
+        <p class="msg-errore" role="alert">{{ erroreServer() }}</p>
       }
-    </label>
 
-    <label class="campo-gruppo">
-      <span>Password</span>
-      <input
-        type="password"
-        class="campo"
-        formControlName="password"
-        autocomplete="current-password"
-        [class.non-valido]="campoNonValido('password')"
-      />
-      @if (campoNonValido('password')) {
-        <small class="errore-campo">Inserisci la password</small>
-      }
-    </label>
+      <label class="etichetta-campo">
+        Email
+        <input
+          type="email"
+          class="campo"
+          formControlName="email"
+          autocomplete="email"
+          [class.errore]="campoNonValido('email')"
+        />
+        @if (campoNonValido('email')) {
+          <small class="errore-campo">
+            {{ form.controls.email.hasError('required') ? 'Inserisci la tua email' : 'Email non valida' }}
+          </small>
+        }
+      </label>
 
-    <button type="submit" class="btn-pieno largo" [disabled]="invio()">
-      {{ invio() ? 'Accesso in corso...' : 'Accedi' }}
-    </button>
+      <label class="etichetta-campo">
+        Password
+        <input
+          type="password"
+          class="campo"
+          formControlName="password"
+          autocomplete="current-password"
+          [class.errore]="campoNonValido('password')"
+        />
+        @if (campoNonValido('password')) {
+          <small class="errore-campo">Inserisci la password</small>
+        }
+      </label>
 
-    <a routerLink="/registrazione" class="btn-outline largo">Registrati</a>
+      <button type="submit" class="btn btn-primario btn-largo" [disabled]="invio()">
+        {{ invio() ? 'Accesso in corso...' : 'Login' }}
+      </button>
+
+      <p class="sotto">Non hai un account? <a routerLink="/registrazione">Registrati</a></p>
+    </div>
   </form>
 </section>

@@ -1,59 +1,59 @@
-<section class="pagina centrata">
-  <form class="scheda" [formGroup]="form" (ngSubmit)="registrati()" novalidate>
-    <h1 class="intestazione">Registrati</h1>
+<section class="pagina">
+  <form class="scheda-modulo larga" [formGroup]="form" (ngSubmit)="registrati()" novalidate>
+    <h1>Registrati</h1>
 
     <div class="corpo">
-      <div class="griglia">
-        <label class="campo-gruppo">
-          <span>Nome</span>
+      <div class="due-colonne">
+        <label class="etichetta-campo">
+          Nome
           <input
             type="text"
             class="campo"
             formControlName="nome"
             autocomplete="given-name"
-            [class.non-valido]="campoNonValido('nome')"
+            [class.errore]="campoNonValido('nome')"
           />
           @if (campoNonValido('nome')) {
             <small class="errore-campo">{{ messaggioErrore('nome') }}</small>
           }
         </label>
 
-        <label class="campo-gruppo">
-          <span>Cognome</span>
+        <label class="etichetta-campo">
+          Cognome
           <input
             type="text"
             class="campo"
             formControlName="cognome"
             autocomplete="family-name"
-            [class.non-valido]="campoNonValido('cognome')"
+            [class.errore]="campoNonValido('cognome')"
           />
           @if (campoNonValido('cognome')) {
             <small class="errore-campo">{{ messaggioErrore('cognome') }}</small>
           }
         </label>
 
-        <label class="campo-gruppo">
-          <span>Email</span>
+        <label class="etichetta-campo">
+          Email
           <input
             type="email"
             class="campo"
             formControlName="email"
             autocomplete="email"
-            [class.non-valido]="campoNonValido('email')"
+            [class.errore]="campoNonValido('email')"
           />
           @if (campoNonValido('email')) {
             <small class="errore-campo">{{ messaggioErrore('email') }}</small>
           }
         </label>
 
-        <label class="campo-gruppo">
-          <span>Password</span>
+        <label class="etichetta-campo">
+          Password
           <input
             type="password"
             class="campo"
             formControlName="password"
             autocomplete="new-password"
-            [class.non-valido]="campoNonValido('password')"
+            [class.errore]="campoNonValido('password')"
           />
           @if (campoNonValido('password')) {
             <small class="errore-campo">{{ messaggioErrore('password') }}</small>
@@ -61,17 +61,15 @@
         </label>
       </div>
 
-      <button type="submit" class="btn-pieno invia" [disabled]="invio()">
+      @if (erroreServer()) {
+        <p class="msg-errore" role="alert">{{ erroreServer() }}</p>
+      }
+
+      <button type="submit" class="btn btn-primario btn-largo" [disabled]="invio()">
         {{ invio() ? 'Registrazione in corso...' : 'Registrati' }}
       </button>
 
-      <p class="gia-registrato">
-        Hai già un account? <a routerLink="/login">Accedi</a>
-      </p>
-
-      @if (erroreServer()) {
-        <p class="errore-server" role="alert">{{ erroreServer() }}</p>
-      }
+      <p class="sotto">Hai già un account? <a routerLink="/login">Login</a></p>
     </div>
   </form>
 </section>
